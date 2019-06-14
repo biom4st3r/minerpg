@@ -1,9 +1,9 @@
 {
   "schemaVersion": 1,
-  "id": "modid",
+  "id": "minerpg",
   "version": "${version}",
 
-  "name": "Example Mod",
+  "name": "MineRPG",
   "description": "This is an example description! Tell everyone what your mod is about!",
   "authors": [
     "Me!"
@@ -23,7 +23,7 @@
     ]
   },
   "mixins": [
-    "modid.mixins.json"
+    "minerpg.mixins.json"
   ],
 
   "depends": {
