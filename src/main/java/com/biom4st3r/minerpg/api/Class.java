@@ -17,6 +17,11 @@ public abstract class Class
     
     public abstract AbilityRequirement[] abilitysAvalibleAtLevel(int Lvl);
 
+    @Override
+    public int hashCode() {
+        return name.hashCode();
+    }
+
 
 
 }
