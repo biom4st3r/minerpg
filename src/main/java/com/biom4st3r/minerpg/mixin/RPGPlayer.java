@@ -27,8 +27,6 @@ public abstract class RPGPlayer extends LivingEntity {
     int constitution;
     int charisma;
 
-    
-
     protected ArrayList<Ability> abilities;
 
     protected ArrayList<Class> classes;
