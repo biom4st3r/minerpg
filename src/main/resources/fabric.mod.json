@@ -19,7 +19,11 @@
   "environment": "*",
   "entrypoints": {
     "main": [
-      "net.fabricmc.example.ExampleMod"
+      "com.biom4st3r.minerpg.MineRPG"
+    ],
+    "client":
+    [
+      "com.biom4st3r.minerpg.ClientInit"
     ]
   },
   "mixins": [

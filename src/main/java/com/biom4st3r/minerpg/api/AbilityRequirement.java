@@ -1,6 +1,6 @@
 package com.biom4st3r.minerpg.api;
 
-import com.biom4st3r.minerpg.mixin.RPGPlayer;
+import com.biom4st3r.minerpg.util.RPGPlayer;
 
 public abstract class AbilityRequirement
 {
