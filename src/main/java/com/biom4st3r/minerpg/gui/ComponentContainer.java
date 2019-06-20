@@ -1,17 +1,21 @@
 package com.biom4st3r.minerpg.gui;
 
-import com.biom4st3r.minerpg.util.ComponentSlot;
-
-import net.minecraft.container.AnvilContainer;
 import net.minecraft.container.Container;
 import net.minecraft.container.Slot;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.inventory.BasicInventory;
 import net.minecraft.inventory.Inventory;
+import net.minecraft.item.ItemStack;
 
 public class ComponentContainer extends Container {
 
     public Inventory bag;
+    //ShulkerBoxContainer
+    public ComponentContainer(final int int_1, final PlayerInventory playerInventory_1) {
+        this(int_1, playerInventory_1, (Inventory)new BasicInventory(4*3));
+    }
+
     public ComponentContainer(int int1, PlayerInventory playerInv, Inventory components) {
         super(null, int1);
         bag = components;
@@ -36,6 +40,31 @@ public class ComponentContainer extends Container {
          }
    
 
+    }
+
+    @Override
+    public ItemStack transferSlot(final PlayerEntity playerEntity_1, final int int_1) {
+        ItemStack itemStack_1 = ItemStack.EMPTY;
+        final Slot slot_1 = this.slotList.get(int_1);
+        if (slot_1 != null && slot_1.hasStack()) {
+            final ItemStack itemStack_2 = slot_1.getStack();
+            itemStack_1 = itemStack_2.copy();
+            if (int_1 < this.bag.getInvSize()) {
+                if (!this.insertItem(itemStack_2, this.bag.getInvSize(), this.slotList.size(), true)) {
+                    return ItemStack.EMPTY;
+                }
+            }
+            else if (!this.insertItem(itemStack_2, 0, this.bag.getInvSize(), false)) {
+                return ItemStack.EMPTY;
+            }
+            if (itemStack_2.isEmpty()) {
+                slot_1.setStack(ItemStack.EMPTY);
+            }
+            else {
+                slot_1.markDirty();
+            }
+        }
+        return itemStack_1;
     }
 
     @Override
