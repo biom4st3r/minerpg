@@ -1,6 +1,5 @@
-package com.biom4st3r.minerpg.util;
+package com.biom4st3r.minerpg.gui;
 
-import net.minecraft.container.ShulkerBoxSlot;
 import net.minecraft.container.Slot;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;

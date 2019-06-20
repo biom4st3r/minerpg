@@ -1,22 +1,19 @@
 package com.biom4st3r.minerpg.gui;
 
 import com.biom4st3r.minerpg.MineRPG;
-import com.biom4st3r.minerpg.util.RPGPlayer;
 import com.mojang.blaze3d.platform.GLX;
 import com.mojang.blaze3d.platform.GlStateManager;
+
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.AbstractContainerScreen;
 import net.minecraft.client.gui.screen.ingame.InventoryScreen;
+import net.minecraft.client.gui.screen.ingame.ShulkerBoxScreen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.render.GuiLighting;
 import net.minecraft.client.render.entity.EntityRenderDispatcher;
-import net.minecraft.container.PlayerContainer;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.util.Identifier;
 
 public class RPGMenu extends AbstractContainerScreen<ComponentContainer> {
@@ -28,8 +25,10 @@ public class RPGMenu extends AbstractContainerScreen<ComponentContainer> {
     // //AnvilContainer
     // }
 
+    //ShulkerBoxScreen
+
     public RPGMenu(PlayerEntity pe) {
-        super(((RPGPlayer)(Object)pe).componentInventory, pe.inventory, new TextComponent(""));
+        super(MineRPG.toRPG(pe).getComponentContainer(), pe.inventory, new TextComponent(""));
     }
 
     public Identifier BG_Texture = new Identifier(MineRPG.MODID, "textures/gui/rpgmenu.png");

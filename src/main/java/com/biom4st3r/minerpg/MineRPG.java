@@ -23,11 +23,17 @@ public class MineRPG implements ModInitializer
     public void onInitialize() {
         ContainerProviderRegistry.INSTANCE.registerFactory(
             new Identifier(MODID, COMPONENT_BAG),
-            (int syncId, Identifier identifier, PlayerEntity player, PacketByteBuf buf) -> new ComponentContainer(syncId, player.inventory,((RPGPlayer)(Object)player).componentInventory.bag));
+            (int syncId, Identifier identifier, PlayerEntity player, PacketByteBuf buf) ->
+             new ComponentContainer(syncId, player.inventory,(toRPG(player).getComponentContainer().bag)));
         //InventoryScreen
         //MinecraftClient
         //ShulkerBoxContainer
         //ShulkerBoxScreen
+    }
+
+    public static RPGPlayer toRPG(PlayerEntity pe)
+    {
+        return (RPGPlayer)(Object)pe;
     }
 
     
