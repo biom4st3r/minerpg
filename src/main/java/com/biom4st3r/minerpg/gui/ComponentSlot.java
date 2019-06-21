@@ -1,19 +1,28 @@
 package com.biom4st3r.minerpg.gui;
 
+import net.minecraft.container.ShulkerBoxSlot;
 import net.minecraft.container.Slot;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 
 public class ComponentSlot extends Slot {
 
-    public ComponentSlot(Inventory inventory_1, int int_1, int int_2, int int_3) {
-        super(inventory_1, int_1, int_2, int_3);
-        // TODO Auto-generated constructor stub
+    int invSlot;
+    //ShulkerBoxSlot
+
+    public ComponentSlot(Inventory inventory_1, int invSlot, int xPos, int yPos) {
+        super(inventory_1, invSlot, xPos, yPos);
+        this.invSlot = invSlot;
     }
 
     @Override
     public boolean canInsert(ItemStack itemStack_1) {
         return itemStack_1.isEnchantable();
+    }
+
+    @Override
+    public ItemStack getStack() {
+        return this.inventory.getInvStack(this.invSlot);
     }
     
 }

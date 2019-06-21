@@ -4,10 +4,11 @@ import com.biom4st3r.minerpg.MineRPG;
 import com.mojang.blaze3d.platform.GLX;
 import com.mojang.blaze3d.platform.GlStateManager;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.AbstractContainerScreen;
 import net.minecraft.client.gui.screen.ingame.InventoryScreen;
-import net.minecraft.client.gui.screen.ingame.ShulkerBoxScreen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.render.GuiLighting;
 import net.minecraft.client.render.entity.EntityRenderDispatcher;
@@ -16,22 +17,27 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.util.Identifier;
 
+@Environment(EnvType.CLIENT)
 public class RPGMenu extends AbstractContainerScreen<ComponentContainer> {
-
-    // public RPGMenu(PlayerEntity pe)
-    // {
-    // super(pe.playerContainer, pe.inventory, new
-    // TranslatableComponent("container.crafting", new Object[0]));
-    // //AnvilContainer
-    // }
-
-    //ShulkerBoxScreen
+    public Identifier BG_Texture = new Identifier(MineRPG.MODID, "textures/gui/rpgmenu.png");
+    private float mouseX;
+    private float mouseY;
 
     public RPGMenu(PlayerEntity pe) {
         super(MineRPG.toRPG(pe).getComponentContainer(), pe.inventory, new TextComponent(""));
     }
 
-    public Identifier BG_Texture = new Identifier(MineRPG.MODID, "textures/gui/rpgmenu.png");
+    @Override
+    public void render(int int1,int int2, float float1)
+    {
+        this.renderBackground();
+        this.drawBackground(float1, int1, int2);
+        this.mouseX = (float)int1;
+        this.mouseY = (float)int2;
+        super.render(int1, int2, float1);
+        this.drawMouseoverTooltip(int1, int2);
+        //for(int )
+    }
 
     @Override
     protected void drawBackground(float arg0, int arg1, int arg2) 
@@ -42,39 +48,27 @@ public class RPGMenu extends AbstractContainerScreen<ComponentContainer> {
         int int_4 = this.top;
         this.blit(int_3, int_4, 0, 0, this.containerWidth, this.containerHeight);
         drawEntity(int_3 + 51-18, int_4 + 75, 30, (float)(int_3 + 51) - this.mouseX, (float)(int_4 + 75 - 50) - this.mouseY, this.minecraft.player);
-  
     }
-
-    private float mouseX;
-    private float mouseY;
 
     @Override
     protected void init()
     {
+        super.init();
         int bWidth = 26;
         int bHeight = 14;
-        this.addButton(new ButtonWidget((this.width/2)-bWidth, (this.height/2)-97, bWidth, bHeight, "Main", (ButtonWidget) ->
-        {
-            this.minecraft.openScreen(new InventoryScreen(this.minecraft.player));
+        this.addButton(
+            new ButtonWidget(
+                (this.width/2)-bWidth, (this.height/2)-97, bWidth, bHeight, "Main", (ButtonWidget) ->
+                {
+                    this.minecraft.openScreen(new InventoryScreen(this.minecraft.player));
         }));
-        this.addButton(new ButtonWidget((this.width/2), (this.height/2)-97, bWidth, bHeight, "RPG", (ButtonWidget) ->
-        {
+        this.addButton(
+            new ButtonWidget(
+                (this.width/2), (this.height/2)-97, bWidth, bHeight, "RPG", (ButtonWidget) ->
+                {
 
         }));
-        super.init();
-    }
 
-    @Override
-    public void render(int int1,int int2, float float1)
-    {
-        this.renderBackground();
-
-        this.drawBackground(float1, int1, int2);
-        this.mouseX = (float)int1;
-        this.mouseY = (float)int2;
-        super.render(int1, int2, float1);
-        this.drawMouseoverTooltip(int1, int2);
-        //for(int )
     }
 
     public static void drawEntity(int int_1, int int_2, int int_3, float float_1, float float_2, LivingEntity livingEntity_1) {
