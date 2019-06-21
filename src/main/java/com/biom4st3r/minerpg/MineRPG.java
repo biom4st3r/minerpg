@@ -5,14 +5,12 @@ import com.biom4st3r.minerpg.util.RPGPlayer;
 
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.container.ContainerProviderRegistry;
-import net.minecraft.client.gui.screen.ingame.FurnaceScreen;
-import net.minecraft.client.gui.screen.ingame.InventoryScreen;
-import net.minecraft.client.gui.screen.ingame.ShulkerBoxScreen;
+import net.minecraft.client.gui.screen.ingame.AbstractInventoryScreen;
 import net.minecraft.container.FurnaceContainer;
-import net.minecraft.container.ShulkerBoxContainer;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.PacketByteBuf;
+
 
 public class MineRPG implements ModInitializer
 {
@@ -29,6 +27,8 @@ public class MineRPG implements ModInitializer
         //MinecraftClient
         //ShulkerBoxContainer
         //ShulkerBoxScreen
+        //AbstractInventoryScreen
+        //FurnaceContainer
     }
 
     public static RPGPlayer toRPG(PlayerEntity pe)

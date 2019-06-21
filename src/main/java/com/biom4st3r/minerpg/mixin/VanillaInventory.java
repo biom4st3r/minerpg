@@ -13,7 +13,6 @@ import net.minecraft.client.gui.screen.recipebook.RecipeBookProvider;
 import net.minecraft.client.gui.widget.AbstractButtonWidget;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.container.PlayerContainer;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.network.chat.Component;
 
@@ -22,6 +21,13 @@ public abstract class VanillaInventory extends AbstractInventoryScreen<PlayerCon
     public VanillaInventory(PlayerContainer container_1, PlayerInventory playerInventory_1, Component component_1) {
         super(container_1, playerInventory_1, component_1);
     }
+
+    // @Inject(at = @At("RETURN"),method = "<init>*")
+    // private void onConst(CallbackInfo ci)
+    // {
+    //     for(int i = 0; i < 10; i++)
+    //         System.out.println("new InventoryuSDcrren");
+    // }
 
     @Inject(at = @At("TAIL"),method = "init",cancellable = false)
     protected void init(CallbackInfo ci)
@@ -34,7 +40,10 @@ public abstract class VanillaInventory extends AbstractInventoryScreen<PlayerCon
         }));
         this.addButton(new ButtonWidget((this.width/2), (this.height/2)-97, bWidth, bHeight, "RPG", (ButtonWidget) ->
         {
-            this.minecraft.openScreen(new RPGMenu((PlayerEntity)this.minecraft.player));
+            //this.minecraft.player.closeContainer();
+            //this.minecraft.player.closeScreen();
+            this.minecraft.player.playerContainer.close(this.minecraft.player);
+            this.minecraft.openScreen(new RPGMenu(this.minecraft.player));
         }));
     }
 

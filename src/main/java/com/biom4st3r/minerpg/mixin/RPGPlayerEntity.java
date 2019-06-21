@@ -14,10 +14,8 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import net.minecraft.block.entity.ShulkerBoxBlockEntity;
-import net.minecraft.container.ShulkerBoxContainer;
+import net.minecraft.container.PlayerContainer;
 import net.minecraft.entity.EntityType;
-import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -26,7 +24,6 @@ import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
-import net.minecraft.util.AbsoluteHand;
 import net.minecraft.util.Identifier;
 import net.minecraft.world.World;
 
@@ -35,16 +32,24 @@ public abstract class RPGPlayerEntity extends LivingEntity implements RPGPlayer 
 
     protected RPGPlayerEntity(EntityType<? extends LivingEntity> entityType_1, World world_1) {
         super(entityType_1, world_1);
+        //PlayerContainer
+    }
+
+    @Inject(at = @At("RETURN"),method = "<init>*")
+    private void onConst(CallbackInfo ci)
+    {
+        this.componentInventory = new ComponentContainer(2834671, ((PlayerEntity) (Object) this).inventory,
+        new BasicInventory(componentInvSize));
     }
 
     int componentInvSize = 3 * 4;
+    
     //ShulkerBoxBlockEntity
 
     // public BasicInventory componentInventory = new
     // BasicInventory(componentInvSize);
 
-    public ComponentContainer componentInventory = new ComponentContainer(0, ((PlayerEntity) (Object) this).inventory,
-            new BasicInventory(componentInvSize));
+    public ComponentContainer componentInventory;
 
     int strength;
     int dexterity;
