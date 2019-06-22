@@ -22,10 +22,21 @@ public class RPGMenu extends AbstractContainerScreen<ComponentContainer> {
     public Identifier BG_Texture = new Identifier(MineRPG.MODID, "textures/gui/rpgmenu.png");
     private float mouseX;
     private float mouseY;
+    //ShulkerBoxScreen
 
-    public RPGMenu(PlayerEntity pe) {
-        super(MineRPG.toRPG(pe).getComponentContainer(), pe.inventory, new TextComponent(""));
+    // public RPGMenu(PlayerEntity pe) {
+    //     super(MineRPG.toRPG(pe).getComponentContainer(), pe.inventory, new TextComponent(""));
+    // }
+
+    public RPGMenu(ComponentContainer cc)
+    {
+        super(cc,cc.playerInv,new TextComponent(""));
     }
+
+    // public RPGMenu()
+    // {
+    //     super(MineRPG.toRPG(this.minecraft.player),this.minecraft.player.inventory, new TextComponent(""));
+    // }
 
     @Override
     public void render(int int1,int int2, float float1)
