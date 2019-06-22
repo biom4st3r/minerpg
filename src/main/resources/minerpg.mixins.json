@@ -3,7 +3,8 @@
   "package": "com.biom4st3r.minerpg.mixin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
-    "RPGPlayerEntity"
+    "RPGPlayerEntity",
+    "SlotMixin"
   ],
   "client": [
     "VanillaInventory"

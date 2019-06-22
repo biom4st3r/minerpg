@@ -15,6 +15,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import net.minecraft.container.PlayerContainer;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -35,11 +36,15 @@ public abstract class RPGPlayerEntity extends LivingEntity implements RPGPlayer 
         //PlayerContainer
     }
 
+
     @Inject(at = @At("RETURN"),method = "<init>*")
     private void onConst(CallbackInfo ci)
     {
+        bag = new BasicInventory(componentInvSize);
         this.componentInventory = new ComponentContainer(2834671, ((PlayerEntity) (Object) this).inventory,
-        new BasicInventory(componentInvSize));
+        bag);
+        
+        //this.componentInventory.updateInv();
     }
 
     int componentInvSize = 3 * 4;
@@ -48,7 +53,7 @@ public abstract class RPGPlayerEntity extends LivingEntity implements RPGPlayer 
 
     // public BasicInventory componentInventory = new
     // BasicInventory(componentInvSize);
-
+    private BasicInventory bag;
     public ComponentContainer componentInventory;
 
     int strength;
@@ -84,6 +89,7 @@ public abstract class RPGPlayerEntity extends LivingEntity implements RPGPlayer 
     public BasicInventory fromTags(ListTag lt, int size) {
         BasicInventory bi = new BasicInventory(size);
 
+
         for (int i = 0; i < size; i++) {
             bi.setInvStack(i, ItemStack.EMPTY);
         }
@@ -97,14 +103,14 @@ public abstract class RPGPlayerEntity extends LivingEntity implements RPGPlayer 
         return bi;
     }
 
-    @Inject(at = @At("TAIL"), method = "readCustomDataFromTag", cancellable = false)
+    @Inject(at = @At("HEAD"), method = "readCustomDataFromTag", cancellable = false)
     public void readCustomDataFromTag(CompoundTag tag, CallbackInfo ci) {
-        componentInventory.bag = fromTags(tag.getList("compInv", 10), componentInvSize);
+        bag = fromTags(tag.getList("compInv", 10), componentInvSize);
     }
 
-    @Inject(at = @At("TAIL"), method = "writeCustomDataToTag", cancellable = false)
+    @Inject(at = @At("HEAD"), method = "writeCustomDataToTag", cancellable = false)
     public void writeCustomDataToTag(CompoundTag tag, CallbackInfo ci) {
-        tag.put("compInv", toTags(componentInventory.bag));
+        tag.put("compInv", toTags(bag));
     }
 
     @Override

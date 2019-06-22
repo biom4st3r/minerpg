@@ -1,66 +1,84 @@
 package com.biom4st3r.minerpg.gui;
 
-import net.minecraft.client.MinecraftClient;
+import com.biom4st3r.minerpg.MineRPG;
+import com.biom4st3r.minerpg.util.RPGPlayer;
+
+import net.minecraft.client.gui.screen.ingame.GrindstoneScreen;
+import net.minecraft.client.gui.screen.ingame.InventoryScreen;
+import net.minecraft.client.network.ClientPlayerInteractionManager;
 import net.minecraft.container.Container;
+import net.minecraft.container.GrindstoneContainer;
 import net.minecraft.container.Slot;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.BasicInventory;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.network.ServerPlayNetworkHandler;
 
 public class ComponentContainer extends Container {
 
-    public BasicInventory bag;
+    public final PlayerInventory playerInv;
+    public final BasicInventory bag;
     //ShulkerBoxContainer
     //MinecraftClient
     //PlayerEntity
-    public ComponentContainer(final int int_1, final PlayerInventory playerInventory_1) {
-        this(int_1, playerInventory_1, new BasicInventory(4*3));
+    //PlayerInventory
+    public ComponentContainer(int syncid, final PlayerInventory playerInventory_1) {
+        this(syncid, playerInventory_1, new BasicInventory(4*3));
     }
 
-    public ComponentContainer(int int1, PlayerInventory playerInv, BasicInventory components) 
+    public ComponentContainer(int syncid, PlayerInventory playerInv, BasicInventory components) 
     {
-        super(null, int1);
+        super(null, syncid);
+        this.playerInv = playerInv;
+        //GrindstoneContainer
+        //GrindstoneScreen
         checkContainerSize(components, 4*3);
         bag = components;
+        this.playerInv.onInvOpen(this.playerInv.player);
         int xPos = 98;
         int yPos = 8;
-
-        for(int i = 0; i < 9; ++i) {
-            System.out.println(i);
-
-            this.addSlot(new Slot(playerInv, i, 8 + i * 18, 142));
-        }
-
-        for(int y = 0; y < 3; ++y) {
-            for(int x = 0; x < 9; ++x) {
-                System.out.println(x + " " + y);
-                this.addSlot(new Slot(playerInv, x + (y + 1) * 9, 8 + x * 18, 84 + y * 18));
-            }
-        }
 
         for(int row = 0; row < 3; row++)
         {
             for(int colum = 0; colum < 4; colum++)
             {
                 int index = 4 * row + colum;
-                System.out.println(index);
+                //System.out.println(index);
                 //                              inv, index, xPos,           yPos
                 this.addSlot(new ComponentSlot(bag, index, xPos+(colum*18), yPos+(row*18)));
             }
         }
-        // for(int x = 0; x < 3; ++x) {
-        //     for(int y = 0; y < 9; ++y) {
-        //        this.addSlot(new Slot(playerInv, y + x * 9 + 9, 8 + y * 18, 84 + x * 18));
-        //     }
-        //  }
-   
-        //  for(int x = 0; x < 9; ++x) {
-        //     this.addSlot(new Slot(playerInv, x, 8 + x * 18, 142));
-        //  }
-   
 
+        for(int y = 0; y < 3; ++y) {
+            for(int x = 0; x < 9; ++x) {
+                //System.out.println(x + " " + y);
+                this.addSlot(new Slot(this.playerInv, x + (y + 1) * 9, 8 + x * 18, 84 + y * 18));
+            }
+        }
+
+        for(int i = 0; i < 9; ++i) {
+            //System.out.println(i);
+            //ClientPlayerInteractionManager
+            //ServerPlayNetworkHandler
+            this.addSlot(new Slot(this.playerInv, i, 8 + i * 18, 142));
+        }
     }
+
+    // public void updateInv()
+    // {
+    //     System.out.println("1");
+    //     RPGPlayer player = MineRPG.toRPG(this.playerInv.player);
+    //     System.out.println("2");
+    //     CompoundTag t = new CompoundTag();
+    //     System.out.println("3");
+    //     this.playerInv.player.readCustomDataFromTag(t);
+    //     System.out.println("4");
+    //     bag = player.fromTags(t.getList("compInv", 10), 4*3);
+    //     System.out.println("hello");
+    // }
 
     @Override
     public boolean canUse(PlayerEntity arg0) {
