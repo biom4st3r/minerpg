@@ -1,43 +1,43 @@
 package com.biom4st3r.minerpg.gui;
 
-import com.biom4st3r.minerpg.MineRPG;
-import com.biom4st3r.minerpg.util.RPGPlayer;
-
-import net.minecraft.client.gui.screen.ingame.GrindstoneScreen;
-import net.minecraft.client.gui.screen.ingame.InventoryScreen;
-import net.minecraft.client.network.ClientPlayerInteractionManager;
+import net.minecraft.client.network.ClientPlayerEntity;
+import net.minecraft.container.AbstractFurnaceContainer;
 import net.minecraft.container.Container;
-import net.minecraft.container.GrindstoneContainer;
+import net.minecraft.container.ContainerType;
+import net.minecraft.container.Generic3x3Container;
+import net.minecraft.container.PlayerContainer;
+import net.minecraft.container.ShulkerBoxContainer;
 import net.minecraft.container.Slot;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.BasicInventory;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.server.network.ServerPlayNetworkHandler;
 
 public class ComponentContainer extends Container {
 
     public final PlayerInventory playerInv;
     public final BasicInventory bag;
+    //Generic3x3Container
     //ShulkerBoxContainer
+    //ContainerType
     //MinecraftClient
     //PlayerEntity
     //PlayerInventory
-    public ComponentContainer(int syncid, final PlayerInventory playerInventory_1) {
-        this(syncid, playerInventory_1, new BasicInventory(4*3));
-    }
+    // public ComponentContainer(int syncid, final PlayerInventory playerInventory_1) {
+    //     this(syncid, playerInventory_1, new BasicInventory(4*3));
+    // }
 
     public ComponentContainer(int syncid, PlayerInventory playerInv, BasicInventory components) 
     {
+        //PlayerContainer
         super(null, syncid);
         this.playerInv = playerInv;
-        //GrindstoneContainer
-        //GrindstoneScreen
         checkContainerSize(components, 4*3);
         bag = components;
-        this.playerInv.onInvOpen(this.playerInv.player);
+        this.bag.onInvOpen(this.playerInv.player);
+        //Entity
+        //ClientPlayerEntity
         int xPos = 98;
         int yPos = 8;
 
@@ -46,39 +46,25 @@ public class ComponentContainer extends Container {
             for(int colum = 0; colum < 4; colum++)
             {
                 int index = 4 * row + colum;
-                //System.out.println(index);
                 //                              inv, index, xPos,           yPos
                 this.addSlot(new ComponentSlot(bag, index, xPos+(colum*18), yPos+(row*18)));
             }
         }
 
-        for(int y = 0; y < 3; ++y) {
-            for(int x = 0; x < 9; ++x) {
-                //System.out.println(x + " " + y);
+        for(int y = 0; y < 3; ++y) 
+        {
+            for(int x = 0; x < 9; ++x) 
+            {
                 this.addSlot(new Slot(this.playerInv, x + (y + 1) * 9, 8 + x * 18, 84 + y * 18));
             }
         }
 
-        for(int i = 0; i < 9; ++i) {
-            //System.out.println(i);
-            //ClientPlayerInteractionManager
-            //ServerPlayNetworkHandler
+        for(int i = 0; i < 9; ++i) 
+        {
             this.addSlot(new Slot(this.playerInv, i, 8 + i * 18, 142));
+            
         }
     }
-
-    // public void updateInv()
-    // {
-    //     System.out.println("1");
-    //     RPGPlayer player = MineRPG.toRPG(this.playerInv.player);
-    //     System.out.println("2");
-    //     CompoundTag t = new CompoundTag();
-    //     System.out.println("3");
-    //     this.playerInv.player.readCustomDataFromTag(t);
-    //     System.out.println("4");
-    //     bag = player.fromTags(t.getList("compInv", 10), 4*3);
-    //     System.out.println("hello");
-    // }
 
     @Override
     public boolean canUse(PlayerEntity arg0) {
@@ -86,28 +72,134 @@ public class ComponentContainer extends Container {
     }
 
     @Override
-    public ItemStack transferSlot(PlayerEntity playerEntity_1, int int_1) {
-        ItemStack itemStack_1 = ItemStack.EMPTY;
-        Slot slot_1 = (Slot)this.slotList.get(int_1);
-        if (slot_1 != null && slot_1.hasStack()) {
-           ItemStack itemStack_2 = slot_1.getStack();
-           itemStack_1 = itemStack_2.copy();
-           if (int_1 < this.bag.getInvSize()) {
-              if (!this.insertItem(itemStack_2, this.bag.getInvSize(), this.slotList.size(), true)) {
-                 return ItemStack.EMPTY;
-              }
-           } else if (!this.insertItem(itemStack_2, 0, this.bag.getInvSize(), false)) {
-              return ItemStack.EMPTY;
-           }
-  
-           if (itemStack_2.isEmpty()) {
-              slot_1.setStack(ItemStack.EMPTY);
-           } else {
-              slot_1.markDirty();
-           }
+    public void close(PlayerEntity playerEntity_1) {
+        super.close(playerEntity_1);
+        this.bag.onInvClose(playerEntity_1);
+    }
+
+    @Override
+    public ItemStack transferSlot(PlayerEntity pe, int slotIndex) {
+        ItemStack temp = ItemStack.EMPTY;
+        Slot clickedSlot = (Slot)this.slotList.get(slotIndex);
+        int lastIndexCBag = 12-1;
+        int lastIndexInv = lastIndexCBag+27;
+        int lastIndexHot = lastIndexInv+9;
+        if (clickedSlot != null && clickedSlot.hasStack()) 
+        {
+            ItemStack stackInSlot = clickedSlot.getStack();
+            temp = stackInSlot.copy();
+            if (slotIndex < lastIndexCBag+1) 
+            { // from component Bag
+                if (!this.insertItem(stackInSlot, lastIndexCBag+1, this.slotList.size(), true)) 
+                {
+                    return ItemStack.EMPTY;
+                }
+            //(ItemStack stack, int startIndex, int endIndex, boolean fromLast)
+            } else if (!this.insertItem(stackInSlot, 0, lastIndexCBag+1, false)) 
+            { // anywhere else
+                return ItemStack.EMPTY;
+            }
+
+            if (stackInSlot.isEmpty()) 
+            {
+                clickedSlot.setStack(ItemStack.EMPTY);
+            } else 
+            {
+                clickedSlot.markDirty();
+            }
         }
-  
-        return itemStack_1;
-     }
+
+        return temp;
+    }
+    
+    // @Override
+    // protected boolean insertItem(ItemStack stack, int startIndex, int endIndex, boolean inReverse) {
+    //     if(startIndex > 11)
+    //     {
+    //         return super.insertItem(stack, startIndex, endIndex, inReverse);
+    //     }
+    //     boolean successful = false;
+    //     int startingIndex = startIndex;
+    //     if (inReverse) {
+    //         startingIndex = endIndex - 1;
+    //     }
+
+    //     Slot currSlot;
+    //     ItemStack currStack;
+    //     if (stack.isStackable() || true) {
+    //         while(!stack.isEmpty()) {
+    //             if (inReverse) {
+    //                 if (startingIndex < startIndex) {
+    //                     break;
+    //                 }
+    //             } else if (startingIndex >= endIndex) {
+    //                 break;
+    //             }
+
+    //             currSlot = (Slot)this.slotList.get(startingIndex);
+    //             currStack = currSlot.getStack();
+    //             if (!currStack.isEmpty() && canStacksCombine(stack, currStack)) {
+    //                 int combineItemCount = currStack.getCount() + stack.getCount();
+    //                 if (combineItemCount <= currSlot.getMaxStackAmount()) {
+    //                     stack.setCount(0);
+    //                     currStack.setCount(combineItemCount);
+    //                     currSlot.markDirty();
+    //                     successful = true;
+    //                 } else if (currStack.getCount() < currSlot.getMaxStackAmount()) {
+    //                     stack.decrement(currSlot.getMaxStackAmount() - currStack.getCount());
+    //                     currStack.setCount(currSlot.getMaxStackAmount());
+    //                     currSlot.markDirty();
+    //                     successful = true;
+    //                 }
+    //             }
+
+    //             if (inReverse) {
+    //                 --startingIndex;
+    //             } else {
+    //                 ++startingIndex;
+    //             }
+    //         }
+    //     }
+
+    //     if (!stack.isEmpty()) {
+    //     if (inReverse) {
+    //         startingIndex = endIndex - 1;
+    //     } else {
+    //         startingIndex = startIndex;
+    //     }
+
+    //     while(true) {
+    //         if (inReverse) {
+    //             if (startingIndex < startIndex) {
+    //                 break;
+    //             }
+    //         } else if (startingIndex >= endIndex) {
+    //             break;
+    //         }
+
+    //         currSlot = (Slot)this.slotList.get(startingIndex);
+    //         currStack = currSlot.getStack();
+    //         if (currStack.isEmpty() && currSlot.canInsert(stack)) {
+    //             if (stack.getCount() > currSlot.getMaxStackAmount()) {
+    //                 currSlot.setStack(stack.split(currSlot.getMaxStackAmount()));
+    //             } else {
+    //                 currSlot.setStack(stack.split(stack.getCount()));
+    //             }
+
+    //             currSlot.markDirty();
+    //             successful = true;
+    //             break;
+    //         }
+
+    //         if (inReverse) {
+    //             --startingIndex;
+    //         } else {
+    //             ++startingIndex;
+    //         }
+    //     }
+    //     }
+
+    //     return successful;
+    // }
     
 }
