@@ -5,10 +5,7 @@ import com.biom4st3r.minerpg.gui.RPGMenu;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.screen.ScreenProviderRegistry;
-import net.fabricmc.fabric.api.network.ClientSidePacketRegistry;
-import net.fabricmc.fabric.api.network.PacketRegistry;
 import net.minecraft.server.network.packet.CustomPayloadC2SPacket;
-import net.minecraft.util.Identifier;
 import net.minecraft.util.PacketByteBuf;
 
 public class ClientInit implements ClientModInitializer

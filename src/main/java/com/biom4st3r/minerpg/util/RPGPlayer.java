@@ -17,9 +17,9 @@ public interface RPGPlayer
 
     public List<Stat> getStats();
 
-    public BasicInventory fromTags(ListTag lt, int size);
+    public BasicInventory deserialize(ListTag lt, int size);
 
-    public ListTag toTags(Inventory bi);
+    public ListTag serialize(Inventory bi);
 
     
 }

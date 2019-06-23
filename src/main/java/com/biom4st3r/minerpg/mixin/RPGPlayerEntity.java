@@ -14,6 +14,8 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import net.minecraft.client.gui.screen.DeathScreen;
+import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.container.PlayerContainer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
@@ -34,6 +36,9 @@ public abstract class RPGPlayerEntity extends LivingEntity implements RPGPlayer 
     protected RPGPlayerEntity(EntityType<? extends LivingEntity> entityType_1, World world_1) {
         super(entityType_1, world_1);
         //PlayerContainer
+        //PlayerEntity
+        //Entity
+        //ServerPlayerEntity
     }
 
 
@@ -53,7 +58,7 @@ public abstract class RPGPlayerEntity extends LivingEntity implements RPGPlayer 
 
     // public BasicInventory componentInventory = new
     // BasicInventory(componentInvSize);
-    private BasicInventory bag;
+    public BasicInventory bag;
     public ComponentContainer componentInventory;
 
     int strength;
@@ -71,12 +76,14 @@ public abstract class RPGPlayerEntity extends LivingEntity implements RPGPlayer 
         return -1;
     }
 
-    public ListTag toTags(Inventory bi) {
+    public ListTag serialize(BasicInventory bi) {
         ListTag lt = new ListTag();
-        // ShulkerBoxContainer
+        System.out.println("write: ");
         for (int i = 0; i < bi.getInvSize(); i++) {
             ItemStack iS = bi.getInvStack(i);
-            if (!iS.isEmpty()) {
+            System.out.println(iS.getItem().getName().getFormattedText());
+            if (!iS.isEmpty()) 
+            {
                 CompoundTag ct = new CompoundTag();
                 ct.putByte("Slot", (byte) i);
                 iS.toTag(ct);
@@ -84,18 +91,18 @@ public abstract class RPGPlayerEntity extends LivingEntity implements RPGPlayer 
             }
         }
         return lt;
+        //ClientPlayerEntity
+        //DeathScreen
     }
 
-    public BasicInventory fromTags(ListTag lt, int size) {
-        BasicInventory bi = new BasicInventory(size);
+    public BasicInventory deserialize(ListTag lt, int size) {
+        BasicInventory bi = bag;
 
-
-        for (int i = 0; i < size; i++) {
-            bi.setInvStack(i, ItemStack.EMPTY);
-        }
+        System.out.println("read: ");
         for (int i = 0; i < lt.size(); i++) {
             CompoundTag ct = lt.getCompoundTag(i);
             int slot = ct.getByte("Slot") & 255;
+            System.out.println(ItemStack.fromTag(ct).getItem().getName().getFormattedText());
             if (slot >= 0 && slot < size) {
                 bi.setInvStack(slot, ItemStack.fromTag(ct));
             }
@@ -103,14 +110,22 @@ public abstract class RPGPlayerEntity extends LivingEntity implements RPGPlayer 
         return bi;
     }
 
+    @Inject(at = @At("HEAD"), method = "jump")
+    public void jump(CallbackInfo ci)
+    {
+        System.out.println(this.bag.getInvStack(0).getItem().getName().getFormattedText());
+    }
+
     @Inject(at = @At("HEAD"), method = "readCustomDataFromTag", cancellable = false)
-    public void readCustomDataFromTag(CompoundTag tag, CallbackInfo ci) {
-        bag = fromTags(tag.getList("compInv", 10), componentInvSize);
+    public void readCustomDataFromTag(CompoundTag tag, CallbackInfo ci) 
+    {
+        bag = deserialize(tag.getList("compInv", 10), componentInvSize);
     }
 
     @Inject(at = @At("HEAD"), method = "writeCustomDataToTag", cancellable = false)
-    public void writeCustomDataToTag(CompoundTag tag, CallbackInfo ci) {
-        tag.put("compInv", toTags(bag));
+    public void writeCustomDataToTag(CompoundTag tag, CallbackInfo ci) 
+    {
+        tag.put("compInv", serialize(this.componentInventory.bag));
     }
 
     @Override
