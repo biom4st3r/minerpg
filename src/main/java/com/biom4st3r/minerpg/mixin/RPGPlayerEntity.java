@@ -7,23 +7,21 @@ import com.biom4st3r.minerpg.api.Ability;
 import com.biom4st3r.minerpg.api.Class;
 import com.biom4st3r.minerpg.api.Stat;
 import com.biom4st3r.minerpg.gui.ComponentContainer;
+import com.biom4st3r.minerpg.util.BasicInventoryHelper;
 import com.biom4st3r.minerpg.util.RPGPlayer;
+import com.biom4st3r.minerpg.util.Util;
 
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import net.minecraft.client.gui.screen.DeathScreen;
-import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.container.PlayerContainer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.BasicInventory;
-import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -31,14 +29,12 @@ import net.minecraft.util.Identifier;
 import net.minecraft.world.World;
 
 @Mixin(PlayerEntity.class)
-public abstract class RPGPlayerEntity extends LivingEntity implements RPGPlayer {
+public abstract class RPGPlayerEntity extends LivingEntity implements RPGPlayer { // Entity
 
     protected RPGPlayerEntity(EntityType<? extends LivingEntity> entityType_1, World world_1) {
         super(entityType_1, world_1);
-        //PlayerContainer
-        //PlayerEntity
-        //Entity
         //ServerPlayerEntity
+        //Entity
     }
 
 
@@ -48,16 +44,10 @@ public abstract class RPGPlayerEntity extends LivingEntity implements RPGPlayer 
         bag = new BasicInventory(componentInvSize);
         this.componentInventory = new ComponentContainer(2834671, ((PlayerEntity) (Object) this).inventory,
         bag);
-        
-        //this.componentInventory.updateInv();
     }
 
     int componentInvSize = 3 * 4;
-    
-    //ShulkerBoxBlockEntity
 
-    // public BasicInventory componentInventory = new
-    // BasicInventory(componentInvSize);
     public BasicInventory bag;
     public ComponentContainer componentInventory;
 
@@ -79,20 +69,19 @@ public abstract class RPGPlayerEntity extends LivingEntity implements RPGPlayer 
     public ListTag serialize(BasicInventory bi) {
         ListTag lt = new ListTag();
         System.out.println("write: ");
+        //new Exception().printStackTrace();
         for (int i = 0; i < bi.getInvSize(); i++) {
             ItemStack iS = bi.getInvStack(i);
-            System.out.println(iS.getItem().getName().getFormattedText());
+            //System.out.println(iS.getItem().getName().getFormattedText());
             if (!iS.isEmpty()) 
             {
                 CompoundTag ct = new CompoundTag();
                 ct.putByte("Slot", (byte) i);
-                iS.toTag(ct);
+                Util.ShortItemStackToTag(iS, ct);// iS.toTag(ct);
                 lt.add(ct);
             }
         }
         return lt;
-        //ClientPlayerEntity
-        //DeathScreen
     }
 
     public BasicInventory deserialize(ListTag lt, int size) {
@@ -102,18 +91,19 @@ public abstract class RPGPlayerEntity extends LivingEntity implements RPGPlayer 
         for (int i = 0; i < lt.size(); i++) {
             CompoundTag ct = lt.getCompoundTag(i);
             int slot = ct.getByte("Slot") & 255;
-            System.out.println(ItemStack.fromTag(ct).getItem().getName().getFormattedText());
+            //System.out.println(ItemStack.fromTag(ct).getItem().getName().getFormattedText());
             if (slot >= 0 && slot < size) {
-                bi.setInvStack(slot, ItemStack.fromTag(ct));
+                ((BasicInventoryHelper) bi)._setInvStack(slot, Util.TagToShortItemStack(ct));// ItemStack.fromTag(ct));
             }
         }
         return bi;
     }
 
-    @Inject(at = @At("HEAD"), method = "jump")
-    public void jump(CallbackInfo ci)
+    @Inject(at = @At("HEAD"), method = "onDeath")
+    public void onDeath(DamageSource damageSource_1,CallbackInfo ci)
     {
         System.out.println(this.bag.getInvStack(0).getItem().getName().getFormattedText());
+        //System.out.println(this.bag.getInvStack(0).getCount() + " " +  this.bag.getInvStack(0).getItem().getName().getFormattedText());
     }
 
     @Inject(at = @At("HEAD"), method = "readCustomDataFromTag", cancellable = false)
