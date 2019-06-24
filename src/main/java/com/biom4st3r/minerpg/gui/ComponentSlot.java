@@ -1,6 +1,7 @@
 package com.biom4st3r.minerpg.gui;
 
-import net.minecraft.container.ShulkerBoxSlot;
+import com.biom4st3r.minerpg.util.BasicInventoryHelper;
+
 import net.minecraft.container.Slot;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
@@ -15,6 +16,13 @@ public class ComponentSlot extends Slot {
         super(inventory_1, invSlot, xPos, yPos);
         this.invSlot = invSlot;
     }
+    
+    @Override
+    public void setStack(ItemStack itemStack_1) {
+        ((BasicInventoryHelper) this.inventory)._setInvStack(this.invSlot, itemStack_1);
+
+        this.markDirty();
+    }
 
     @Override
     public boolean canInsert(ItemStack itemStack_1) {
@@ -27,11 +35,12 @@ public class ComponentSlot extends Slot {
     }
     @Override
     public int getMaxStackAmount() {
-        return 512;
+        return maxStackSize;
     }
     @Override
     public int getMaxStackAmount(ItemStack itemStack_1) {
-        return 512;
+        return maxStackSize;
     }
+    int maxStackSize = 999;
     
 }

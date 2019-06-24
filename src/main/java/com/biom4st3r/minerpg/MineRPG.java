@@ -1,13 +1,10 @@
 package com.biom4st3r.minerpg;
 
-import com.biom4st3r.minerpg.gui.ComponentContainer;
-import com.biom4st3r.minerpg.util.RPGPlayer;
+import com.biom4st3r.minerpg.util.Util;
 
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.container.ContainerProviderRegistry;
 import net.fabricmc.fabric.api.network.ServerSidePacketRegistry;
-import net.minecraft.client.gui.screen.ingame.AbstractInventoryScreen;
-import net.minecraft.container.FurnaceContainer;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.PacketByteBuf;
@@ -25,7 +22,7 @@ public class MineRPG implements ModInitializer
             COMPONENT_BAG_ID,
             (int syncId, Identifier identifier, PlayerEntity player, PacketByteBuf buf) ->
             {
-                return toRPG(player).getComponentContainer();
+                return Util.toRPG(player).getComponentContainer();
             }
         );
         
@@ -36,10 +33,7 @@ public class MineRPG implements ModInitializer
 
     }
 
-    public static RPGPlayer toRPG(PlayerEntity pe)
-    {
-        return (RPGPlayer)(Object)pe;
-    }
+
     
 
     

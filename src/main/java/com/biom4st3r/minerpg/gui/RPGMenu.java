@@ -9,11 +9,9 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.AbstractContainerScreen;
 import net.minecraft.client.gui.screen.ingame.InventoryScreen;
-import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.render.GuiLighting;
 import net.minecraft.client.render.entity.EntityRenderDispatcher;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.util.Identifier;
 
@@ -66,19 +64,18 @@ public class RPGMenu extends AbstractContainerScreen<ComponentContainer> {
     {
         super.init();
         int bWidth = 26;
-        int bHeight = 14;
-        this.addButton(
-            new ButtonWidget(
-                (this.width/2)-bWidth, (this.height/2)-97, bWidth, bHeight, "Main", (ButtonWidget) ->
-                {
-                    this.minecraft.openScreen(new InventoryScreen(this.minecraft.player));
-        }));
-        this.addButton(
-            new ButtonWidget(
-                (this.width/2), (this.height/2)-97, bWidth, bHeight, "RPG", (ButtonWidget) ->
-                {
+        //int bHeight = 14;
 
-        }));
+        this.addButton(new InventoryTab((this.width/2)-(bWidth-1), (this.height/2)-96, bWidth, "Main", button ->
+        {
+            this.minecraft.openScreen(new InventoryScreen(this.minecraft.player));
+        }, false, 0));
+
+        this.addButton(new InventoryTab((this.width/2), (this.height/2)-96, bWidth, "RPG", (ButtonWidget) ->
+        {
+
+
+        },true,0));
 
     }
 
