@@ -11,14 +11,12 @@ import com.biom4st3r.minerpg.gui.ComponentContainer;
 import com.biom4st3r.minerpg.util.BasicInventoryHelper;
 import com.biom4st3r.minerpg.util.RPGPlayer;
 import com.biom4st3r.minerpg.util.Util;
-import com.google.common.collect.Lists;
 
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;

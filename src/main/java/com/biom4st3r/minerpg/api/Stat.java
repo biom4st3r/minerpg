@@ -1,8 +1,7 @@
 package com.biom4st3r.minerpg.api;
 
-import java.util.Arrays;
-import java.util.List;
 import com.biom4st3r.minerpg.MineRPG;
+
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.util.Identifier;
 
