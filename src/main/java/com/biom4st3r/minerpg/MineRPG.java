@@ -1,6 +1,10 @@
 package com.biom4st3r.minerpg;
 
+import java.util.List;
+
+import com.biom4st3r.minerpg.api.Stat;
 import com.biom4st3r.minerpg.util.Util;
+import com.google.common.collect.Lists;
 
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.container.ContainerProviderRegistry;
@@ -18,6 +22,10 @@ public class MineRPG implements ModInitializer
 
     @Override
     public void onInitialize() {
+        // for(String s : new String[] {"strength","dexterity","intelligence","wisdow","constitution","charisma"})
+        // {
+        //     Stat.addStat(MODID ,s);
+        // }
         ContainerProviderRegistry.INSTANCE.registerFactory(
             COMPONENT_BAG_ID,
             (int syncId, Identifier identifier, PlayerEntity player, PacketByteBuf buf) ->
@@ -32,9 +40,4 @@ public class MineRPG implements ModInitializer
         });
 
     }
-
-
-    
-
-    
 }

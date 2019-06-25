@@ -68,8 +68,8 @@ public class ComponentContainer extends Container {
         ItemStack temp = ItemStack.EMPTY;
         Slot clickedSlot = (Slot)this.slotList.get(slotIndex);
         int lastIndexCBag = 12-1;
-        int lastIndexInv = lastIndexCBag+27;
-        int lastIndexHot = lastIndexInv+9;
+        //int lastIndexInv = lastIndexCBag+27;
+        //int lastIndexHot = lastIndexInv+9;
         if (clickedSlot != null && clickedSlot.hasStack()) 
         {
             ItemStack stackInSlot = clickedSlot.getStack();
@@ -81,7 +81,8 @@ public class ComponentContainer extends Container {
                     return ItemStack.EMPTY;
                 }
             //(ItemStack stack, int startIndex, int endIndex, boolean fromLast)
-            } else if (!this.insertItem(stackInSlot, 0, lastIndexCBag+1, false)) 
+            } 
+            else if (!this.insertItem(stackInSlot, 0, lastIndexCBag+1, false)) 
             { // anywhere else
                 return ItemStack.EMPTY;
             }
@@ -99,22 +100,20 @@ public class ComponentContainer extends Container {
     }
     
     @Override
-    protected boolean insertItem(ItemStack stack, int startIndex, int endIndex, boolean inReverse) {
-        System.out.println(String.format("insertItem | %s %s", stack.getCount(), stack.getItem().getName().getFormattedText()));
-        if(startIndex > 11)
-        {
-            return super.insertItem(stack, startIndex, endIndex, inReverse);
-        }
+    protected boolean insertItem(ItemStack sourceStack, int startIndex, int endIndex, boolean inReverse) {
+        System.out.println(String.format("insertItem | %s %s", sourceStack.getCount(), sourceStack.getItem().getName().getFormattedText()));
+
         boolean successful = false;
         int startingIndex = startIndex;
         if (inReverse) {
             startingIndex = endIndex - 1;
         }
-
-        Slot currSlot;
+        
+        Slot currSlot = (Slot)this.slotList.get(startingIndex);
         ItemStack currStack;
-        if (stack.isStackable() || true) {
-            while(!stack.isEmpty()) {
+        if (sourceStack.isStackable() || currSlot instanceof ComponentSlot) 
+        {
+            while(!sourceStack.isEmpty()) {
                 if (inReverse) {
                     if (startingIndex < startIndex) {
                         break;
@@ -125,17 +124,17 @@ public class ComponentContainer extends Container {
 
                 currSlot = (Slot)this.slotList.get(startingIndex);
                 currStack = currSlot.getStack();
-                if (!currStack.isEmpty() && canStacksCombine(stack, currStack)) {
-                    int combineItemCount = currStack.getCount() + stack.getCount();
+                if (!currStack.isEmpty() && canStacksCombine(sourceStack, currStack)) {
+                    int combineItemCount = currStack.getCount() + sourceStack.getCount();
                     if (combineItemCount <= currSlot.getMaxStackAmount()) {
-                        stack.setCount(0);
+                        sourceStack.setCount(0);
                         currStack.setCount(combineItemCount);
                         currSlot.markDirty();
                         successful = true;
                     } 
                     else if (currStack.getCount() < currSlot.getMaxStackAmount()) 
                     {
-                        stack.decrement(currSlot.getMaxStackAmount() - currStack.getCount());
+                        sourceStack.decrement(currSlot.getMaxStackAmount() - currStack.getCount());
                         currStack.setCount(currSlot.getMaxStackAmount());
                         currSlot.markDirty();
                         successful = true;
@@ -150,42 +149,54 @@ public class ComponentContainer extends Container {
             }
         }
 
-        if (!stack.isEmpty()) {
-        if (inReverse) {
-            startingIndex = endIndex - 1;
-        } else {
-            startingIndex = startIndex;
-        }
-
-        while(true) {
+        if (!sourceStack.isEmpty()) 
+        {
             if (inReverse) {
-                if (startingIndex < startIndex) {
+                startingIndex = endIndex - 1;
+            } else {
+                startingIndex = startIndex;
+            }
+
+            while(true) 
+            {
+                if (inReverse) {
+                    if (startingIndex < startIndex) {
+                        break;
+                    }
+                } else if (startingIndex >= endIndex) {
                     break;
                 }
-            } else if (startingIndex >= endIndex) {
-                break;
-            }
 
-            currSlot = (Slot)this.slotList.get(startingIndex);
-            currStack = currSlot.getStack();
-            if (currStack.isEmpty() && currSlot.canInsert(stack)) {
-                if (stack.getCount() > currSlot.getMaxStackAmount()) {
-                    currSlot.setStack(stack.split(currSlot.getMaxStackAmount()));
-                } else {
-                    currSlot.setStack(stack.split(stack.getCount()));
+                currSlot = (Slot)this.slotList.get(startingIndex);
+                currStack = currSlot.getStack();
+                if (currStack.isEmpty() && currSlot.canInsert(sourceStack)) 
+                {
+                    if(sourceStack.isStackable() || currSlot instanceof ComponentSlot)
+                    {
+                        if (sourceStack.getCount() > currSlot.getMaxStackAmount()) 
+                        {
+                            currSlot.setStack(sourceStack.split(currSlot.getMaxStackAmount()));
+                        } else 
+                        {
+                            currSlot.setStack(sourceStack.split(sourceStack.getCount()));
+                        }
+                    }
+                    else
+                    {
+                        currSlot.setStack(sourceStack.split(1));
+                    }
+
+                    currSlot.markDirty();
+                    successful = true;
+                    break;
                 }
 
-                currSlot.markDirty();
-                successful = true;
-                break;
+                if (inReverse) {
+                    --startingIndex;
+                } else {
+                    ++startingIndex;
+                }
             }
-
-            if (inReverse) {
-                --startingIndex;
-            } else {
-                ++startingIndex;
-            }
-        }
         }
 
         return successful;
@@ -238,10 +249,9 @@ public class ComponentContainer extends Container {
                     int_4 = playerInv.getCursorStack().getCount();
                     Iterator<Slot> var23 = this.quickCraftSlots.iterator();
 
-                    int inf_loop_count = 0;
                     label342:
                     while(true) {
-                        System.out.println(inf_loop_count++);
+
                         Slot slot_2;
                         ItemStack itemStack_4;
                         do {
@@ -399,7 +409,12 @@ public class ComponentContainer extends Container {
                 return ItemStack.EMPTY;
             }
 
-            for(currStack = this.transferSlot(pe, slotIndex); !currStack.isEmpty() && ItemStack.areItemsEqualIgnoreDamage(currSlot.getStack(), currStack); currStack = this.transferSlot(pe, slotIndex)) {
+            for(
+                currStack = this.transferSlot(pe, slotIndex); 
+                !currStack.isEmpty() && 
+                ItemStack.areItemsEqualIgnoreDamage(currSlot.getStack(), currStack);
+                 currStack = this.transferSlot(pe, slotIndex)) 
+            {
                 tempStack = currStack.copy();
             }
 
@@ -422,7 +437,7 @@ public class ComponentContainer extends Container {
                 if (currStack.isEmpty()) 
                 {
                     // Slot is Empty
-                    System.out.println("currStack.isEmpty");
+                    //System.out.println("currStack.isEmpty");
                     
                     if (!cursorStack.isEmpty() && currSlot.canInsert(cursorStack)) {
                         //Item in hand and valid slot for item
@@ -436,19 +451,14 @@ public class ComponentContainer extends Container {
                                 1;
                         }
                         int quant = Math.min(cursorStackCount, currSlot.getMaxStackAmount());
-                        //System.out.println(quant);
                         ItemStack newSlotStack = new ItemStack(cursorStack.getItem(),quant);
-                        //System.out.println(newSlotStack.getCount());
                         currSlot.setStack(newSlotStack);
-                        //System.out.println(currSlot.getStack().getCount());
                         cursorStack.decrement(quant);
-                        
-                        //currSlot.setStack(cursorStack.split(cursorStackCount)); Resets to 64 in slot
                     }
                 } 
                 else if (currSlot.canTakeItems(pe)) 
                 {
-                    System.out.println("currSlot.canTakeItems");
+                    //System.out.println("currSlot.canTakeItems");
                     if (cursorStack.isEmpty()) {
                         //curser is empty
                         if (currStack.isEmpty()) {
@@ -468,7 +478,7 @@ public class ComponentContainer extends Container {
                     } 
                     else if (currSlot.canInsert(cursorStack)) 
                     {
-                        System.out.println("currSlot.canInsert");
+                        //System.out.println("currSlot.canInsert");
                         if (canStacksCombine(currStack, cursorStack)) {
                             cursorStackCount = packedBtnId == 0 ? cursorStack.getCount() : 1;
                             if (cursorStackCount > currSlot.getMaxStackAmount(cursorStack) - currStack.getCount()) {
