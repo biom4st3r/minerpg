@@ -6,10 +6,12 @@ import java.util.List;
 import com.biom4st3r.minerpg.api.Ability;
 import com.biom4st3r.minerpg.api.Class;
 import com.biom4st3r.minerpg.api.Stat;
+import com.biom4st3r.minerpg.api.Stat.Stats;
 import com.biom4st3r.minerpg.gui.ComponentContainer;
 import com.biom4st3r.minerpg.util.BasicInventoryHelper;
 import com.biom4st3r.minerpg.util.RPGPlayer;
 import com.biom4st3r.minerpg.util.Util;
+import com.google.common.collect.Lists;
 
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -37,6 +39,10 @@ public abstract class RPGPlayerEntity extends LivingEntity implements RPGPlayer 
         //Entity
     }
 
+    private final String COMPONENT_BAG = "compInv";
+    private final String SLOT  = "Slot";
+    private final String STATS = "rpgstats";
+    private final String SPAREPOINTS = "points";
 
     @Inject(at = @At("RETURN"),method = "<init>*")
     private void onConst(CallbackInfo ci)
@@ -49,18 +55,14 @@ public abstract class RPGPlayerEntity extends LivingEntity implements RPGPlayer 
     int componentInvSize = 3 * 4;
 
     public BasicInventory bag;
-    public ComponentContainer componentInventory;
 
-    int strength;
-    int dexterity;
-    int intelligence;
-    int wisdow;
-    int constitution;
-    int charisma;
+    public ComponentContainer componentInventory;
 
     protected ArrayList<Ability> abilities;
 
     protected ArrayList<Class> classes;
+
+    public int freeStatPoints;
 
     public int getStat(Identifier name) {
         return -1;
@@ -76,7 +78,7 @@ public abstract class RPGPlayerEntity extends LivingEntity implements RPGPlayer 
             if (!iS.isEmpty()) 
             {
                 CompoundTag ct = new CompoundTag();
-                ct.putByte("Slot", (byte) i);
+                ct.putByte(SLOT, (byte) i);
                 Util.ShortItemStackToTag(iS, ct);// iS.toTag(ct);
                 lt.add(ct);
             }
@@ -90,7 +92,7 @@ public abstract class RPGPlayerEntity extends LivingEntity implements RPGPlayer 
         System.out.println("read: ");
         for (int i = 0; i < lt.size(); i++) {
             CompoundTag ct = lt.getCompoundTag(i);
-            int slot = ct.getByte("Slot") & 255;
+            int slot = ct.getByte(SLOT) & 255;
             //System.out.println(ItemStack.fromTag(ct).getItem().getName().getFormattedText());
             if (slot >= 0 && slot < size) {
                 ((BasicInventoryHelper) bi)._setInvStack(slot, Util.TagToShortItemStack(ct));// ItemStack.fromTag(ct));
@@ -103,19 +105,28 @@ public abstract class RPGPlayerEntity extends LivingEntity implements RPGPlayer 
     public void onDeath(DamageSource damageSource_1,CallbackInfo ci)
     {
         System.out.println(this.bag.getInvStack(0).getItem().getName().getFormattedText());
-        //System.out.println(this.bag.getInvStack(0).getCount() + " " +  this.bag.getInvStack(0).getItem().getName().getFormattedText());
     }
 
     @Inject(at = @At("HEAD"), method = "readCustomDataFromTag", cancellable = false)
     public void readCustomDataFromTag(CompoundTag tag, CallbackInfo ci) 
     {
-        bag = deserialize(tag.getList("compInv", 10), componentInvSize);
+        bag = deserialize(tag.getList(COMPONENT_BAG, 10), componentInvSize);
     }
 
     @Inject(at = @At("HEAD"), method = "writeCustomDataToTag", cancellable = false)
     public void writeCustomDataToTag(CompoundTag tag, CallbackInfo ci) 
     {
-        tag.put("compInv", serialize(this.componentInventory.bag));
+        if(!tag.containsKey(STATS))
+        {
+            CompoundTag stats = new CompoundTag();
+            for(Stats i : Stat.Stats.values())
+            {   
+                stats.putByte(i.toString(),(byte)8);
+            }
+            tag.putByte(SPAREPOINTS, (byte)27);
+            tag.put(STATS, stats);
+        }
+        tag.put(COMPONENT_BAG, serialize(this.componentInventory.bag));
     }
 
     @Override

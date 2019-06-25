@@ -10,6 +10,7 @@ import net.minecraft.item.Items;
 public class ComponentSlot extends Slot {
 
     int invSlot;
+    
     //ShulkerBoxSlot
 
     public ComponentSlot(Inventory inventory_1, int invSlot, int xPos, int yPos) {
