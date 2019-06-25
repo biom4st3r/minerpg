@@ -1,10 +1,6 @@
 package com.biom4st3r.minerpg;
 
-import java.util.List;
-
-import com.biom4st3r.minerpg.api.Stat;
 import com.biom4st3r.minerpg.util.Util;
-import com.google.common.collect.Lists;
 
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.container.ContainerProviderRegistry;

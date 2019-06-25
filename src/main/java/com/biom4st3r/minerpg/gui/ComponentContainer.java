@@ -300,42 +300,49 @@ public class ComponentContainer extends Container {
         
         if (slotAction != SlotActionType.PICKUP && slotAction != SlotActionType.QUICK_MOVE || packedBtnId != 0 && packedBtnId != 1) 
         {
-            //Not Pickup|Not Quick Move
-            if (slotAction == SlotActionType.SWAP && packedBtnId >= 0 && packedBtnId < 9) {
+            //SWAP or CLONE
+            if (slotAction == SlotActionType.SWAP && packedBtnId >= 0 && packedBtnId < 9) 
+            { // TODO using buttons to swap items allows 999 items in inventory
                 currSlot = (Slot)this.slotList.get(slotIndex);
                 currStack = playerInv.getInvStack(packedBtnId);
                 cursorStack = currSlot.getStack();
-                if (!currStack.isEmpty() || !cursorStack.isEmpty()) {
-                    if (currStack.isEmpty()) {
-                    if (currSlot.canTakeItems(pe)) {
-                        playerInv.setInvStack(packedBtnId, cursorStack);
-                        //slot_4.onTake(itemStack_8.getCount());
-                        currSlot.setStack(ItemStack.EMPTY);
-                        currSlot.onTakeItem(pe, cursorStack);
-                    }
-                    } else if (cursorStack.isEmpty()) {
-                    if (currSlot.canInsert(currStack)) {
+                if (!currStack.isEmpty() || !cursorStack.isEmpty()) 
+                {
+                    System.out.println("stack not empty or cursor not empty");
+                    if (currStack.isEmpty()) 
+                    {
+                        if (currSlot.canTakeItems(pe)) 
+                        {
+                            playerInv.setInvStack(packedBtnId, cursorStack);
+                            //slot_4.onTake(itemStack_8.getCount());
+                            currSlot.setStack(ItemStack.EMPTY);
+                            currSlot.onTakeItem(pe, cursorStack);
+                        }
+                    } else if (cursorStack.isEmpty()) 
+                    {
+                        if (currSlot.canInsert(currStack)) {
+                            cursorStackCount = currSlot.getMaxStackAmount(currStack);
+                            if (currStack.getCount() > cursorStackCount) {
+                                currSlot.setStack(currStack.split(cursorStackCount));
+                            } else {
+                                currSlot.setStack(currStack);
+                                playerInv.setInvStack(packedBtnId, ItemStack.EMPTY);
+                            }
+                        }
+                    } else if (currSlot.canTakeItems(pe) && currSlot.canInsert(currStack)) 
+                    {
                         cursorStackCount = currSlot.getMaxStackAmount(currStack);
                         if (currStack.getCount() > cursorStackCount) {
                             currSlot.setStack(currStack.split(cursorStackCount));
+                            currSlot.onTakeItem(pe, cursorStack);
+                            if (!playerInv.insertStack(cursorStack)) {
+                                pe.dropItem(cursorStack, true);
+                            }
                         } else {
                             currSlot.setStack(currStack);
-                            playerInv.setInvStack(packedBtnId, ItemStack.EMPTY);
+                            playerInv.setInvStack(packedBtnId, cursorStack);
+                            currSlot.onTakeItem(pe, cursorStack);
                         }
-                    }
-                    } else if (currSlot.canTakeItems(pe) && currSlot.canInsert(currStack)) {
-                    cursorStackCount = currSlot.getMaxStackAmount(currStack);
-                    if (currStack.getCount() > cursorStackCount) {
-                        currSlot.setStack(currStack.split(cursorStackCount));
-                        currSlot.onTakeItem(pe, cursorStack);
-                        if (!playerInv.insertStack(cursorStack)) {
-                            pe.dropItem(cursorStack, true);
-                        }
-                    } else {
-                        currSlot.setStack(currStack);
-                        playerInv.setInvStack(packedBtnId, cursorStack);
-                        currSlot.onTakeItem(pe, cursorStack);
-                    }
                     }
                 }
             } else if (slotAction == SlotActionType.CLONE && pe.abilities.creativeMode && playerInv.getCursorStack().isEmpty() && slotIndex >= 0) {
@@ -347,7 +354,7 @@ public class ComponentContainer extends Container {
                 }
             } else if (slotAction == SlotActionType.THROW && playerInv.getCursorStack().isEmpty() && slotIndex >= 0) {
                 currSlot = (Slot)this.slotList.get(slotIndex);
-                if (currSlot != null && currSlot.hasStack() && currSlot.canTakeItems(pe)) {
+                if (currSlot != null && currSlot.hasStack() && currSlot.canTakeItems(pe) && !(currSlot instanceof ComponentSlot)) {
                     currStack = currSlot.takeStack(packedBtnId == 0 ? 1 : currSlot.getStack().getCount());
                     currSlot.onTakeItem(pe, currStack);
                     pe.dropItem(currStack, true);
