@@ -32,7 +32,7 @@ public class Util
         Item i = Registry.ITEM.get(new Identifier( tag.getString("id")));
         int count = 0;
         count = tag.getShort("Count");
-        System.out.println(count);
+        //System.out.println(count);
         return count > 0 ? new ItemStack(i,count) : ItemStack.EMPTY;
     }
 

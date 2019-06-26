@@ -5,7 +5,9 @@
   "mixins": [
     "RPGPlayerEntity",
     "BasicInventoryMaxSize",
-    "ChangeDimUpdateBag"
+    "ChangeDimUpdateBag",
+    "PlayerManagerRespawn",
+    "ServerPEAddListener"
   ],
   "client": [
     "VanillaInventory"
