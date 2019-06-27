@@ -20,21 +20,12 @@ public class RPGMenu extends AbstractContainerScreen<ComponentContainer> {
     public Identifier BG_Texture = new Identifier(MineRPG.MODID, "textures/gui/rpgmenu.png");
     private float mouseX;
     private float mouseY;
-    //ShulkerBoxScreen
 
-    // public RPGMenu(PlayerEntity pe) {
-    //     super(MineRPG.toRPG(pe).getComponentContainer(), pe.inventory, new TextComponent(""));
-    // }
 
     public RPGMenu(ComponentContainer cc)
     {
         super(cc,cc.playerInv,new TextComponent(""));
     }
-
-    // public RPGMenu()
-    // {
-    //     super(MineRPG.toRPG(this.minecraft.player),this.minecraft.player.inventory, new TextComponent(""));
-    // }
 
     @Override
     public void render(int int1,int int2, float float1)
@@ -45,7 +36,26 @@ public class RPGMenu extends AbstractContainerScreen<ComponentContainer> {
         this.mouseY = (float)int2;
         super.render(int1, int2, float1);
         this.drawMouseoverTooltip(int1, int2);
-        //for(int )
+        this.drawString(this.font, "STR", (this.width/2)-30, (this.height/2)-75, 0x99eeee);
+        this.drawString(this.font, "DEX", (this.width/2)-30, (this.height/2)-65, 0x99eeee);
+        this.drawString(this.font, "CON", (this.width/2)-30, (this.height/2)-55, 0x99eeee);
+        this.drawString(this.font, "WIS", (this.width/2)-30, (this.height/2)-45, 0x99eeee);
+        this.drawString(this.font, "INT", (this.width/2)-30, (this.height/2)-35, 0x99eeee);
+        this.drawString(this.font, "CHA", (this.width/2)-30, (this.height/2)-25, 0x99eeee);
+
+        this.drawString(this.font, "20", (this.width/2)-6, (this.height/2)-75, 0x99eeee);
+        this.drawString(this.font, "12", (this.width/2)-6, (this.height/2)-65, 0x99eeee);
+        this.drawString(this.font, "10", (this.width/2)-6, (this.height/2)-55, 0x99eeee);
+        this.drawString(this.font, "8", (this.width/2)-6, (this.height/2)-45, 0x99eeee);
+        this.drawString(this.font, "17", (this.width/2)-6, (this.height/2)-35, 0x99eeee);
+        this.drawString(this.font, "8", (this.width/2)-6, (this.height/2)-25, 0x99eeee);
+
+        this.drawString(this.font, ":", (this.width/2)-10, (this.height/2)-75, 0x99eeee);
+        this.drawString(this.font, ":", (this.width/2)-10, (this.height/2)-65, 0x99eeee);
+        this.drawString(this.font, ":", (this.width/2)-10, (this.height/2)-55, 0x99eeee);
+        this.drawString(this.font, ":", (this.width/2)-10, (this.height/2)-45, 0x99eeee);
+        this.drawString(this.font, ":", (this.width/2)-10, (this.height/2)-35, 0x99eeee);
+        this.drawString(this.font, ":", (this.width/2)-10, (this.height/2)-25, 0x99eeee);
     }
 
     @Override

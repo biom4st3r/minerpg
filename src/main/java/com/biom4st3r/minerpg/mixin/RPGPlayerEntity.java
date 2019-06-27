@@ -20,6 +20,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import net.minecraft.block.EnderChestBlock;
 import net.minecraft.block.entity.EnderChestBlockEntity;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
@@ -27,9 +29,11 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.BasicInventory;
 import net.minecraft.inventory.EnderChestInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.network.packet.ClickWindowC2SPacket;
 import net.minecraft.world.World;
 
 @Mixin(PlayerEntity.class)
@@ -86,19 +90,32 @@ public abstract class RPGPlayerEntity extends LivingEntity implements RPGPlayer 
     @Override
     public void respawn(ServerPlayerEntity spe)
     {
+        //MinecraftClient.getInstance().getNetworkHandler()
         //ServerPlayerInteractionManager
+        //ClientPlayNetworkHandler
         RPGPlayer pe = (RPGPlayer)spe;
+
         this.bag = new BasicInventory(componentInvSize);
+        
+        
         BasicInventory originalBag = pe.getComponentContainer().bag;
+        //ClickWindowC2SPacket
+        
+        if(this.bag == null)
+        {
+            this.bag = new BasicInventory(componentInvSize);
+        }
         for(int i = 0; i < originalBag.getInvSize(); i++)
         {
-            ((BasicInventoryHelper)this.bag)._setInvStack(i, originalBag.getInvStack(i));
+            ((BasicInventoryHelper)this.bag)._setInvStack(i, originalBag.getInvStack(i).copy());
         }
+        this.componentInventory = new ComponentContainer(2834671, ((PlayerEntity) (Object) this).inventory, bag);
         for(Stat.Stats s : Stat.Stats.values())
         {
             this.stats.put(s, pe.getStats().get(s));
         }
         this.freeStatPoints = pe.getStatPoints();
+        
     }
 
     public int getStatPoints()
@@ -157,15 +174,20 @@ public abstract class RPGPlayerEntity extends LivingEntity implements RPGPlayer 
         return bi;
     }
 
-    @Inject(at = @At("HEAD"), method = "onDeath")
-    public void onDeath(DamageSource damageSource_1,CallbackInfo ci)
-    {
-        System.out.println(this.bag.getInvStack(0).getItem().getName().getFormattedText());
-    }
+    // @Inject(at = @At("HEAD"), method = "onDeath")
+    // public void onDeath(DamageSource damageSource_1,CallbackInfo ci)
+    // {
+        
+    //     System.out.println(this.bag.getInvStack(0).getItem().getName().getFormattedText());
+    // }
 
     @Inject(at = @At("HEAD"), method = "jump")
     public void jump(CallbackInfo ci)
     {
+        // if(this.world.isClient)
+        // {
+        //     this.bag.add(new ItemStack(Items.IRON_AXE,1));
+        // }
         System.out.println(this.bag.getInvStack(0).getItem().getName().getFormattedText());
         //ServerWorld
         //ClientWorld
