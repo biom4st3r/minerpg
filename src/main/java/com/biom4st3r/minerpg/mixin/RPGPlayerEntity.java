@@ -18,22 +18,14 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import net.minecraft.block.EnderChestBlock;
-import net.minecraft.block.entity.EnderChestBlockEntity;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.BasicInventory;
-import net.minecraft.inventory.EnderChestInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.network.packet.ClickWindowC2SPacket;
 import net.minecraft.world.World;
 
 @Mixin(PlayerEntity.class)
@@ -41,14 +33,6 @@ public abstract class RPGPlayerEntity extends LivingEntity implements RPGPlayer 
 
     protected RPGPlayerEntity(EntityType<? extends LivingEntity> entityType_1, World world_1) {
         super(entityType_1, world_1);
-        // ServerPlayerEntity
-        // Entity
-        //ClientPlayerEntity
-        //ServerPlayNetworkHandler
-        //EnderChestInventory
-        //EnderChestBlockEntity
-        //EnderChestBlock
-        //ContainerProvider
     }
 
     private final String COMPONENT_BAG = "compInv";
@@ -65,30 +49,12 @@ public abstract class RPGPlayerEntity extends LivingEntity implements RPGPlayer 
         }
         this.componentInventory = new ComponentContainer(2834671, ((PlayerEntity) (Object) this).inventory, bag);
         stats = Maps.newHashMap();
-        // new Thread(() -> {
-        //     while (true) {
-        //         try {
-        //             RPGPlayer pp = (RPGPlayer) MinecraftClient.getInstance().getServer().getPlayerManager()
-        //                     .getPlayer(MinecraftClient.getInstance().player.getName().getFormattedText());
-        //             System.out
-        //                     .println(pp.getComponentContainer().bag.getInvStack(0).getItem().getName().getFormattedText());
-                    
-        //             Thread.sleep(500);
-        //         } catch (InterruptedException e) {
-        //             // TODO Auto-generated catch block
-        //             e.printStackTrace();
-        //         } catch(NullPointerException e)
-        //         {
-        //             e.printStackTrace();
-        //         }
-                
-        //     }
-        // }).start();
+
 
     }
 
     @Override
-    public void respawn(ServerPlayerEntity spe)
+    public void respawn(PlayerEntity spe)
     {
         //MinecraftClient.getInstance().getNetworkHandler()
         //ServerPlayerInteractionManager
@@ -115,7 +81,17 @@ public abstract class RPGPlayerEntity extends LivingEntity implements RPGPlayer 
             this.stats.put(s, pe.getStats().get(s));
         }
         this.freeStatPoints = pe.getStatPoints();
-        
+    }
+
+    @Override
+    public void updateStats(PlayerEntity pe)
+    {
+        RPGPlayer rpgpe = (RPGPlayer)pe;
+        for(Stat.Stats s : Stat.Stats.values())
+        {
+            this.stats.put(s, rpgpe.getStats().get(s));
+        }
+        this.freeStatPoints = rpgpe.getStatPoints();
     }
 
     public int getStatPoints()
@@ -137,8 +113,10 @@ public abstract class RPGPlayerEntity extends LivingEntity implements RPGPlayer 
 
     public int freeStatPoints;
 
+    @Override
     public int getStat(Stat.Stats name) {
-        return -1;
+        
+        return this.stats.get(name) != null ? this.stats.get(name) : -1;
     }
 
     public ListTag serialize(BasicInventory bi) {
@@ -184,29 +162,35 @@ public abstract class RPGPlayerEntity extends LivingEntity implements RPGPlayer 
     @Inject(at = @At("HEAD"), method = "jump")
     public void jump(CallbackInfo ci)
     {
-        // if(this.world.isClient)
-        // {
-        //     this.bag.add(new ItemStack(Items.IRON_AXE,1));
-        // }
-        System.out.println(this.bag.getInvStack(0).getItem().getName().getFormattedText());
-        //ServerWorld
-        //ClientWorld
-        //World
+        if(this.world.isClient)
+        {
+            System.out.println(stats.size());
+            //this.bag.add(new ItemStack(Items.IRON_AXE,1));
+        }
+        if(!this.world.isClient)
+        {
+            System.out.println(stats.size());
+            //this.bag.add(new ItemStack(Items.IRON_AXE,1));
+        }
+        //System.out.println(this.bag.getInvStack(0).getItem().getName().getFormattedText());
     }
 
     @Inject(at = @At("HEAD"), method = "readCustomDataFromTag", cancellable = false)
     public void readCustomDataFromTag(CompoundTag tag, CallbackInfo ci) 
     {
+        System.out.println(this.world.isClient);
         if(tag.containsKey(STATS))
         {
             CompoundTag statsTag = tag.getCompound(STATS);
             for(Stats i : Stat.Stats.values())
             {
-                this.stats.put(i, (int)statsTag.getByte(i.toString()));
+                this.stats.put(i, (int)statsTag.getByte(i.text));
             }
             this.freeStatPoints = tag.getByte(SPAREPOINTS);
         }
+        System.out.println(this.stats.get(Stats.DEXTERITY));
         bag = deserialize(tag.getList(COMPONENT_BAG, 10), componentInvSize);
+        //((ServerPlayerEntity)(PlayerEntity)(Object)this).networkHandler.sendPacket(updateStats());
     }
 
     @Inject(at = @At("HEAD"), method = "writeCustomDataToTag", cancellable = false)
@@ -217,7 +201,7 @@ public abstract class RPGPlayerEntity extends LivingEntity implements RPGPlayer 
         {
             for(Stats i : Stat.Stats.values())
             {   
-                statTag.putByte(i.toString(),(byte)8);
+                statTag.putByte(i.text,(byte)8);
             }
             tag.putByte(SPAREPOINTS, (byte)27);
         }
@@ -225,7 +209,7 @@ public abstract class RPGPlayerEntity extends LivingEntity implements RPGPlayer 
         {
             for(Stat.Stats s : Stats.values())
             {
-                statTag.putByte(s.toString(), (byte)(int)this.stats.get(s));
+                statTag.putByte(s.text, (byte)(int)this.stats.get(s));
             }
         }
         tag.put(STATS, statTag);

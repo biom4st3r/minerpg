@@ -1,13 +1,22 @@
 package com.biom4st3r.minerpg.gui;
 
+import java.util.Random;
+
 import com.biom4st3r.minerpg.MineRPG;
+import com.biom4st3r.minerpg.api.Stat;
+import com.biom4st3r.minerpg.api.Stat.Stats;
+import com.biom4st3r.minerpg.util.RPGPlayer;
 import com.mojang.blaze3d.platform.GLX;
 import com.mojang.blaze3d.platform.GlStateManager;
+
+import org.lwjgl.opengl.GL;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.screen.ingame.AbstractContainerScreen;
+import net.minecraft.client.gui.screen.ingame.EnchantingScreen;
 import net.minecraft.client.gui.screen.ingame.InventoryScreen;
 import net.minecraft.client.render.GuiLighting;
 import net.minecraft.client.render.entity.EntityRenderDispatcher;
@@ -20,12 +29,72 @@ public class RPGMenu extends AbstractContainerScreen<ComponentContainer> {
     public Identifier BG_Texture = new Identifier(MineRPG.MODID, "textures/gui/rpgmenu.png");
     private float mouseX;
     private float mouseY;
-
+    private StatButton[] statButtons;
+    private RPGPlayer player;
 
     public RPGMenu(ComponentContainer cc)
     {
         super(cc,cc.playerInv,new TextComponent(""));
+        this.modY = new int[] {yMid()-75,yMid()-65,yMid()-55,yMid()-45,yMid()-35,yMid()-25};
     }
+    private int xMid()
+    {
+        return this.width/2;
+    }
+    private int yMid()
+    {
+        return this.height/2;
+    }
+
+
+    public void drawString(String string_1, int xPos, int yPos, int color) {
+        this.font.drawStringBounded(string_1, xPos, yPos, 160,color);
+        // textRenderer.drawWithShadow(string_1, (float)(int_1 -
+        // textRenderer_1.getStringWidth(string_1) / 2), (float)int_2, int_3);
+    }
+
+    public void drawCenteredString(String string_1, int xCenter, int yPos, int color) {
+        this.font.drawStringBounded(string_1, (xCenter - this.font.getStringWidth(string_1) / 2), yPos, 160,
+                color);
+        // textRenderer.drawWithShadow(string_1, (float)(int_1 -
+        // textRenderer_1.getStringWidth(string_1) / 2), (float)int_2, int_3);
+    }
+
+    @Override
+    protected void init()
+    {
+        this.player = (RPGPlayer)this.minecraft.player;
+        statButtons =  new StatButton[12];
+        super.init();
+        int bWidth = 26;
+        //int bHeight = 14;
+        this.modY = new int[] {yMid()-75,yMid()-65,yMid()-55,yMid()-45,yMid()-35,yMid()-25};
+
+    
+        
+        this.addButton(new InventoryTab((this.width/2)-(bWidth-1), (this.height/2)-96, bWidth, "Main", button ->
+        {
+            this.minecraft.openScreen(new InventoryScreen(this.minecraft.player));
+        }, false, 0));
+
+        this.addButton(new InventoryTab((this.width/2), (this.height/2)-96, bWidth, "RPG", (ButtonWidget) ->
+        {
+
+
+        },true,0));
+        for(int i = 0, j = 0; i < 6; i++, j+=2)
+        {
+            //System.out.println(j + " " + i);
+            //System.out.println(j+1 + " " + i);
+            statButtons[j] = this.addButton(new StatButton(xMid()-11,modY[i], null, true));
+            statButtons[j+1] = this.addButton(new StatButton(xMid()+3, modY[i], null, false));
+        }
+
+        
+
+    }
+    int modY[] = new int[] {yMid()-75,yMid()-65,yMid()-55,yMid()-45,yMid()-35,yMid()-25};
+        
 
     @Override
     public void render(int int1,int int2, float float1)
@@ -36,26 +105,34 @@ public class RPGMenu extends AbstractContainerScreen<ComponentContainer> {
         this.mouseY = (float)int2;
         super.render(int1, int2, float1);
         this.drawMouseoverTooltip(int1, int2);
-        this.drawString(this.font, "STR", (this.width/2)-30, (this.height/2)-75, 0x99eeee);
-        this.drawString(this.font, "DEX", (this.width/2)-30, (this.height/2)-65, 0x99eeee);
-        this.drawString(this.font, "CON", (this.width/2)-30, (this.height/2)-55, 0x99eeee);
-        this.drawString(this.font, "WIS", (this.width/2)-30, (this.height/2)-45, 0x99eeee);
-        this.drawString(this.font, "INT", (this.width/2)-30, (this.height/2)-35, 0x99eeee);
-        this.drawString(this.font, "CHA", (this.width/2)-30, (this.height/2)-25, 0x99eeee);
+        //EnchantingScreen
+        float scale = 0.70f;
 
-        this.drawString(this.font, "20", (this.width/2)-6, (this.height/2)-75, 0x99eeee);
-        this.drawString(this.font, "12", (this.width/2)-6, (this.height/2)-65, 0x99eeee);
-        this.drawString(this.font, "10", (this.width/2)-6, (this.height/2)-55, 0x99eeee);
-        this.drawString(this.font, "8", (this.width/2)-6, (this.height/2)-45, 0x99eeee);
-        this.drawString(this.font, "17", (this.width/2)-6, (this.height/2)-35, 0x99eeee);
-        this.drawString(this.font, "8", (this.width/2)-6, (this.height/2)-25, 0x99eeee);
+        int modX = 28;
+        //int modY[] = new int[] {yMid()-75,yMid()-65,yMid()-55,yMid()-45,yMid()-35,yMid()-25};
+        //this.addButton(new StatButton(10, 10, null, true));
+        GlStateManager.scalef(scale,scale,scale);
+        for(int i = 0; i < 6; i++)
+        {
+            int xPos = (int)((xMid()-modX)/scale);
+            int yPos = (int)(modY[i]/scale);
+            Stats stat = Stats.values()[i];
 
-        this.drawString(this.font, ":", (this.width/2)-10, (this.height/2)-75, 0x99eeee);
-        this.drawString(this.font, ":", (this.width/2)-10, (this.height/2)-65, 0x99eeee);
-        this.drawString(this.font, ":", (this.width/2)-10, (this.height/2)-55, 0x99eeee);
-        this.drawString(this.font, ":", (this.width/2)-10, (this.height/2)-45, 0x99eeee);
-        this.drawString(this.font, ":", (this.width/2)-10, (this.height/2)-35, 0x99eeee);
-        this.drawString(this.font, ":", (this.width/2)-10, (this.height/2)-25, 0x99eeee);
+            //System.out.println(player == null);
+            //System.out.println(player.getStats() == null);
+            //System.out.println(player.getStat(stat));
+            modX = 28;
+            xPos = (int)((xMid()-modX)/scale);
+            this.drawString(stat.toString().substring(0, 3), xPos, yPos, 0x000000);
+            modX = 15;
+            xPos = (int)((xMid()-modX)/scale);
+            this.drawString(":", xPos, yPos, 0x000000);
+            modX = 1;
+            xPos = (int)((xMid()-modX)/scale);
+            this.drawCenteredString("" + this.player.getStat(stat), xPos, yPos, 0x000000);
+            
+        }
+        GlStateManager.scalef(1,1,1);
     }
 
     @Override
@@ -67,26 +144,6 @@ public class RPGMenu extends AbstractContainerScreen<ComponentContainer> {
         int int_4 = this.top;
         this.blit(int_3, int_4, 0, 0, this.containerWidth, this.containerHeight);
         drawEntity(int_3 + 51-18, int_4 + 75, 30, (float)(int_3 + 51) - this.mouseX, (float)(int_4 + 75 - 50) - this.mouseY, this.minecraft.player);
-    }
-
-    @Override
-    protected void init()
-    {
-        super.init();
-        int bWidth = 26;
-        //int bHeight = 14;
-
-        this.addButton(new InventoryTab((this.width/2)-(bWidth-1), (this.height/2)-96, bWidth, "Main", button ->
-        {
-            this.minecraft.openScreen(new InventoryScreen(this.minecraft.player));
-        }, false, 0));
-
-        this.addButton(new InventoryTab((this.width/2), (this.height/2)-96, bWidth, "RPG", (ButtonWidget) ->
-        {
-
-
-        },true,0));
-
     }
 
     public static void drawEntity(int int_1, int int_2, int int_3, float float_1, float float_2, LivingEntity livingEntity_1) {

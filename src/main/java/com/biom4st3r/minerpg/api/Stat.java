@@ -26,15 +26,15 @@ public class Stat
         CONSTITUTION(modid + ":constitution"),
         CHARISMA(modid + ":charisma");
 
-        private final String text;
+        public final String text;
         Stats(final String text)
         {
             this.text = text;
         }
-        @Override
-        public String toString() {
-            return text;
-        }
+        // @Override
+        // public String toString() {
+        //     return text;
+        // }
     }
 
     // public Stat(Identifier name, int defaultValue)
