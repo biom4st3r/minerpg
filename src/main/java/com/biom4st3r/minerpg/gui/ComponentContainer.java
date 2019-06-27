@@ -24,7 +24,7 @@ public class ComponentContainer extends Container {
         //PlayerContainer
         //CottonScreenController
         super(null, syncid);
-        this.addListener(((ServerPlayerEntity)playerInv.player));
+        //this.addListener(((ServerPlayerEntity)playerInv.player));
         this.playerInv = playerInv;
         checkContainerSize(components, 4*3);
         bag = components;
@@ -221,6 +221,8 @@ public class ComponentContainer extends Container {
     @Override
     public ItemStack onSlotClick(int slotIndex, int packedBtnId, SlotActionType slotAction, PlayerEntity pe) {
         System.out.println(String.format("onSlotClick | slot: %s | action: %s", slotIndex,slotAction.name()));
+        //new Exception().printStackTrace();
+        //ClientPlayerInteractionManager
         ItemStack tempStack = ItemStack.EMPTY;
         PlayerInventory playerInv = pe.inventory;
         ItemStack currStack;

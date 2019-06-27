@@ -26,6 +26,7 @@ public class MineRPG implements ModInitializer
             COMPONENT_BAG_ID,
             (int syncId, Identifier identifier, PlayerEntity player, PacketByteBuf buf) ->
             {
+                buf.writeBlockPos(player.getBlockPos());
                 return Util.toRPG(player).getComponentContainer();
             }
         );
