@@ -2,10 +2,10 @@ package com.biom4st3r.minerpg.api;
 
 import net.minecraft.util.Identifier;
 
-public abstract class Class
+public abstract class RPGClass
 {
 
-    public Class(Identifier name)
+    public RPGClass(Identifier name)
     {
         this.name = name;
     }

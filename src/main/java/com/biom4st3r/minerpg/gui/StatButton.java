@@ -1,6 +1,7 @@
 package com.biom4st3r.minerpg.gui;
 
 import com.biom4st3r.minerpg.MineRPG;
+import com.biom4st3r.minerpg.api.Stat.Stats;
 import com.mojang.blaze3d.platform.GlStateManager;
 
 import net.minecraft.client.MinecraftClient;
@@ -14,11 +15,14 @@ public class StatButton extends ButtonWidget
 
     public Identifier BG_Texture = new Identifier(MineRPG.MODID, "textures/gui/rpgmenu.png");
 
+    Stats stat;
+
     boolean add;
 
-    public StatButton(int xPos, int yPos, PressAction action, boolean add) {
-        super(xPos, yPos, 7, 7, "", action);
+    public StatButton(int xPos, int yPos, PressAction action, boolean add, Stats stat) {
+        super(xPos, yPos, 5, 5, "", action);
         this.add = add;
+        this.stat = stat;
 
     }
 
