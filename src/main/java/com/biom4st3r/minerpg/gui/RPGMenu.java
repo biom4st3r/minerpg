@@ -2,9 +2,11 @@ package com.biom4st3r.minerpg.gui;
 
 import java.util.Random;
 
+import com.biom4st3r.minerpg.ClientInit;
 import com.biom4st3r.minerpg.MineRPG;
 import com.biom4st3r.minerpg.api.Stat;
 import com.biom4st3r.minerpg.api.Stat.Stats;
+import com.biom4st3r.minerpg.util.RPGComponent;
 import com.biom4st3r.minerpg.util.RPGPlayer;
 import com.mojang.blaze3d.platform.GLX;
 import com.mojang.blaze3d.platform.GlStateManager;
@@ -30,12 +32,13 @@ public class RPGMenu extends AbstractContainerScreen<ComponentContainer> {
     private float mouseX;
     private float mouseY;
     private StatButton[] statButtons;
-    private RPGPlayer player;
+    private RPGComponent rpgComponent;
+    private RPGComponent backupComponent;
 
     public RPGMenu(ComponentContainer cc)
     {
         super(cc,cc.playerInv,new TextComponent(""));
-        this.modY = new int[] {yMid()-75,yMid()-65,yMid()-55,yMid()-45,yMid()-35,yMid()-25};
+        //this.modY = new int[] {yMid()-60,yMid()-50,yMid()-40,yMid()-30,yMid()-20,yMid()-10};
     }
     private int xMid()
     {
@@ -44,6 +47,29 @@ public class RPGMenu extends AbstractContainerScreen<ComponentContainer> {
     private int yMid()
     {
         return this.height/2;
+    }
+
+    @Override
+    public void tick() {
+        super.tick();
+        if(this.rpgComponent.remainingPoints > 0 && !this.statButtons[0].visible)
+        {
+            for(StatButton button : statButtons)
+            {
+                button.visible = true;
+            }
+        }
+        else if(this.rpgComponent.remainingPoints <= 0 && this.statButtons[0].visible)
+        {
+            for(StatButton button : statButtons)
+            {
+                button.visible = false;
+            }
+            MinecraftClient.getInstance()
+            .getNetworkHandler()
+            .sendPacket(ClientInit.statChange(rpgComponent));
+            System.out.println("Checking rpgComponent 1");
+        }
     }
 
 
@@ -63,12 +89,24 @@ public class RPGMenu extends AbstractContainerScreen<ComponentContainer> {
     @Override
     protected void init()
     {
-        this.player = (RPGPlayer)this.minecraft.player;
+        this.rpgComponent = ((RPGPlayer)this.minecraft.player).getRPGComponent();
+        this.backupComponent = this.rpgComponent.copy();
+        System.out.println("test");
         statButtons =  new StatButton[12];
         super.init();
         int bWidth = 26;
         //int bHeight = 14;
-        this.modY = new int[] {yMid()-75,yMid()-65,yMid()-55,yMid()-45,yMid()-35,yMid()-25};
+        
+        this.modY = new int[6];
+        {
+            int ySpacing = 8;
+            modY[0] = yMid()-57;
+            modY[1] = modY[0]+ySpacing;
+            modY[2] = modY[1]+ySpacing;
+            modY[3] = modY[2]+ySpacing;
+            modY[4] = modY[3]+ySpacing;
+            modY[5] = modY[4]+ySpacing;
+        }
 
     
         
@@ -86,19 +124,41 @@ public class RPGMenu extends AbstractContainerScreen<ComponentContainer> {
         {
             //System.out.println(j + " " + i);
             //System.out.println(j+1 + " " + i);
-            statButtons[j] = this.addButton(new StatButton(xMid()-11,modY[i], null, true));
-            statButtons[j+1] = this.addButton(new StatButton(xMid()+3, modY[i], null, false));
+            statButtons[j] = this.addButton(new StatButton(xMid()-11, modY[i], (button) ->
+            { // minus
+                Stats s = ((StatButton)button).stat;
+                System.out.println(this.rpgComponent.getStat(s));
+                System.out.println(this.backupComponent.getStat(s));
+                System.out.println(this.rpgComponent.getStat(s) > this.backupComponent.getStat(s));
+                if(this.rpgComponent.getStat(s) > this.backupComponent.getStat(s))
+                {
+                    this.rpgComponent.decreaseStatUnProtected(s);
+                }
+            }, false,Stats.values()[i]));
+            statButtons[j+1] = this.addButton(new StatButton(xMid()+3 , modY[i], (button) ->
+            { //plus
+                this.rpgComponent.increaseStatProtected(((StatButton)button).stat);
+            }, true,Stats.values()[i]));
         }
 
         
 
     }
-    int modY[] = new int[] {yMid()-75,yMid()-65,yMid()-55,yMid()-45,yMid()-35,yMid()-25};
+    int modY[];// = new int[] {yMid()-60,modY[0]+10,yMid()-40,yMid()-30,yMid()-20,yMid()-10};
         
 
     @Override
     public void render(int int1,int int2, float float1)
     {
+        {
+            int ySpacing = 8;
+            modY[0] = yMid()-57;
+            modY[1] = modY[0]+ySpacing;
+            modY[2] = modY[1]+ySpacing;
+            modY[3] = modY[2]+ySpacing;
+            modY[4] = modY[3]+ySpacing;
+            modY[5] = modY[4]+ySpacing;
+        }
         this.renderBackground();
         this.drawBackground(float1, int1, int2);
         this.mouseX = (float)int1;
@@ -106,11 +166,21 @@ public class RPGMenu extends AbstractContainerScreen<ComponentContainer> {
         super.render(int1, int2, float1);
         this.drawMouseoverTooltip(int1, int2);
         //EnchantingScreen
-        float scale = 0.70f;
+        float scale = 0.91f;
 
         int modX = 28;
         //int modY[] = new int[] {yMid()-75,yMid()-65,yMid()-55,yMid()-45,yMid()-35,yMid()-25};
         //this.addButton(new StatButton(10, 10, null, true));
+
+
+        GlStateManager.pushMatrix();
+        GlStateManager.scalef(scale,scale,scale);
+        this.drawString("Component Bag", (int)((xMid()+12)/scale), (int)((yMid()-68)/scale)+1, 0x000000);
+        this.drawString("Stats", (int)((xMid()-22)/scale), (int)((yMid()-68)/scale)+1, 0x000000);
+        GlStateManager.scalef(1f,1f,1f);
+        GlStateManager.popMatrix();
+        scale = 0.68f;
+        GlStateManager.pushMatrix();
         GlStateManager.scalef(scale,scale,scale);
         for(int i = 0; i < 6; i++)
         {
@@ -121,6 +191,7 @@ public class RPGMenu extends AbstractContainerScreen<ComponentContainer> {
             //System.out.println(player == null);
             //System.out.println(player.getStats() == null);
             //System.out.println(player.getStat(stat));
+            
             modX = 28;
             xPos = (int)((xMid()-modX)/scale);
             this.drawString(stat.toString().substring(0, 3), xPos, yPos, 0x000000);
@@ -129,10 +200,16 @@ public class RPGMenu extends AbstractContainerScreen<ComponentContainer> {
             this.drawString(":", xPos, yPos, 0x000000);
             modX = 1;
             xPos = (int)((xMid()-modX)/scale);
-            this.drawCenteredString("" + this.player.getStat(stat), xPos, yPos, 0x000000);
+            this.drawCenteredString("" + rpgComponent.getStat(stat), xPos, yPos, 0x000000);
+
             
         }
-        GlStateManager.scalef(1,1,1);
+        this.drawString("Points: ", (int)((xMid()-28)/scale), (int)(yMid()/scale)-11, 0x000000);
+        this.drawCenteredString("" + rpgComponent.remainingPoints, (int)((xMid()-1)/scale), (int)(yMid()/scale)-11, 0x000000);
+        GlStateManager.scalef(0,0,0);
+        GlStateManager.popMatrix();
+        fill(xMid()-29, yMid()-11, xMid()+2, yMid()-10, 0xff000000);
+        //this.drawString("___________", xMid(), yMid(), 0x000000);
     }
 
     @Override

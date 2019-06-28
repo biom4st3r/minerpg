@@ -2,18 +2,16 @@ package com.biom4st3r.minerpg.gui;
 
 import java.util.Iterator;
 import java.util.Set;
+
 import com.google.common.collect.Sets;
 
-import io.github.cottonmc.cotton.gui.CottonScreenController;
 import net.minecraft.container.Container;
-import net.minecraft.container.PlayerContainer;
 import net.minecraft.container.Slot;
 import net.minecraft.container.SlotActionType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.BasicInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.server.network.ServerPlayerEntity;
 
 public class ComponentContainer extends Container {
 
@@ -30,7 +28,7 @@ public class ComponentContainer extends Container {
         bag = components;
         this.bag.onInvOpen(this.playerInv.player);
         int xPos = 98;
-        int yPos = 8;
+        int yPos = 26;
 
         for(int row = 0; row < 3; row++)
         {

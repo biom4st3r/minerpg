@@ -4,15 +4,16 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import com.biom4st3r.minerpg.api.Ability;
-import com.biom4st3r.minerpg.api.Class;
 import com.biom4st3r.minerpg.api.Stat;
 import com.biom4st3r.minerpg.api.Stat.Stats;
 import com.biom4st3r.minerpg.gui.ComponentContainer;
 import com.biom4st3r.minerpg.util.BasicInventoryHelper;
+import com.biom4st3r.minerpg.util.RPGComponent;
 import com.biom4st3r.minerpg.util.RPGPlayer;
 import com.biom4st3r.minerpg.util.Util;
 import com.google.common.collect.Maps;
 
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -25,7 +26,6 @@ import net.minecraft.inventory.BasicInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
-import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.world.World;
 
 @Mixin(PlayerEntity.class)
@@ -33,14 +33,19 @@ public abstract class RPGPlayerEntity extends LivingEntity implements RPGPlayer 
 
     protected RPGPlayerEntity(EntityType<? extends LivingEntity> entityType_1, World world_1) {
         super(entityType_1, world_1);
+        //this.RPGContainer = new RPGComponent();
     }
 
     private final String COMPONENT_BAG = "compInv";
     private final String SLOT = "Slot";
-    private final String STATS = "rpgstats";
-    private final String SPAREPOINTS = "points";
 
+    private RPGComponent RPGContainer;
 
+    @Override
+    public RPGComponent getRPGComponent() 
+    {
+        return RPGContainer;
+    }
 
     @Inject(at = @At("RETURN"), method = "<init>*")
     private void onConst(CallbackInfo ci) {
@@ -48,9 +53,7 @@ public abstract class RPGPlayerEntity extends LivingEntity implements RPGPlayer 
             bag = new BasicInventory(componentInvSize);
         }
         this.componentInventory = new ComponentContainer(2834671, ((PlayerEntity) (Object) this).inventory, bag);
-        stats = Maps.newHashMap();
-
-
+        this.RPGContainer = new RPGComponent();
     }
 
     @Override
@@ -76,30 +79,15 @@ public abstract class RPGPlayerEntity extends LivingEntity implements RPGPlayer 
             ((BasicInventoryHelper)this.bag)._setInvStack(i, originalBag.getInvStack(i).copy());
         }
         this.componentInventory = new ComponentContainer(2834671, ((PlayerEntity) (Object) this).inventory, bag);
-        for(Stat.Stats s : Stat.Stats.values())
-        {
-            this.stats.put(s, pe.getStats().get(s));
-        }
-        this.freeStatPoints = pe.getStatPoints();
+        // for(Stat.Stats s : Stat.Stats.values())
+        // {
+        //     this.stats.put(s, pe.getStats().get(s));
+        // }
+        // this.freeStatPoints = pe.getStatPoints();
+        this.RPGContainer.updatStats(spe);
     }
 
-    @Override
-    public void updateStats(PlayerEntity pe)
-    {
-        RPGPlayer rpgpe = (RPGPlayer)pe;
-        for(Stat.Stats s : Stat.Stats.values())
-        {
-            this.stats.put(s, rpgpe.getStats().get(s));
-        }
-        this.freeStatPoints = rpgpe.getStatPoints();
-    }
-
-    public int getStatPoints()
-    {
-        return this.freeStatPoints;
-    }
-
-    HashMap<Stats,Integer> stats;
+    //HashMap<Stats,Integer> stats;if(!tag.containsKey(STATS, 10))
 
     int componentInvSize = 3 * 4;
 
@@ -107,17 +95,7 @@ public abstract class RPGPlayerEntity extends LivingEntity implements RPGPlayer 
 
     public ComponentContainer componentInventory;
 
-    protected ArrayList<Ability> abilities;
-
-    protected ArrayList<Class> classes;
-
-    public int freeStatPoints;
-
-    @Override
-    public int getStat(Stat.Stats name) {
-        
-        return this.stats.get(name) != null ? this.stats.get(name) : -1;
-    }
+    //public int freeStatPoints;
 
     public ListTag serialize(BasicInventory bi) {
         ListTag lt = new ListTag();
@@ -164,56 +142,25 @@ public abstract class RPGPlayerEntity extends LivingEntity implements RPGPlayer 
     {
         if(this.world.isClient)
         {
-            System.out.println(stats.size());
-            //this.bag.add(new ItemStack(Items.IRON_AXE,1));
+            System.out.println(RPGContainer.remainingPoints);
         }
-        if(!this.world.isClient)
+        else
         {
-            System.out.println(stats.size());
-            //this.bag.add(new ItemStack(Items.IRON_AXE,1));
+            System.out.println(RPGContainer.remainingPoints);
         }
-        //System.out.println(this.bag.getInvStack(0).getItem().getName().getFormattedText());
     }
 
     @Inject(at = @At("HEAD"), method = "readCustomDataFromTag", cancellable = false)
     public void readCustomDataFromTag(CompoundTag tag, CallbackInfo ci) 
     {
-        System.out.println(this.world.isClient);
-        if(tag.containsKey(STATS))
-        {
-            CompoundTag statsTag = tag.getCompound(STATS);
-            for(Stats i : Stat.Stats.values())
-            {
-                this.stats.put(i, (int)statsTag.getByte(i.text));
-            }
-            this.freeStatPoints = tag.getByte(SPAREPOINTS);
-        }
-        System.out.println(this.stats.get(Stats.DEXTERITY));
+        this.RPGContainer.deserialize(tag);
         bag = deserialize(tag.getList(COMPONENT_BAG, 10), componentInvSize);
-        //((ServerPlayerEntity)(PlayerEntity)(Object)this).networkHandler.sendPacket(updateStats());
     }
 
     @Inject(at = @At("HEAD"), method = "writeCustomDataToTag", cancellable = false)
     public void writeCustomDataToTag(CompoundTag tag, CallbackInfo ci) 
     {
-        CompoundTag statTag = new CompoundTag();
-        if(!tag.containsKey(STATS))
-        {
-            for(Stats i : Stat.Stats.values())
-            {   
-                statTag.putByte(i.text,(byte)8);
-            }
-            tag.putByte(SPAREPOINTS, (byte)27);
-        }
-        else
-        {
-            for(Stat.Stats s : Stats.values())
-            {
-                statTag.putByte(s.text, (byte)(int)this.stats.get(s));
-            }
-        }
-        tag.put(STATS, statTag);
-        tag.putByte(SPAREPOINTS, (byte)freeStatPoints);
+        this.RPGContainer.serialize(tag);
         tag.put(COMPONENT_BAG, serialize(this.componentInventory.bag));
     }
 
@@ -222,10 +169,6 @@ public abstract class RPGPlayerEntity extends LivingEntity implements RPGPlayer 
         return this.componentInventory;
     }
 
-    @Override
-    public HashMap<Stat.Stats,Integer> getStats() {
-        return this.stats;
-    }
 
     @Override
     public void setComponentContainer(ComponentContainer cc) {
