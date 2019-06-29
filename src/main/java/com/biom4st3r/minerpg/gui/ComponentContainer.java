@@ -105,7 +105,7 @@ public class ComponentContainer extends Container {
     
     @Override
     protected boolean insertItem(ItemStack sourceStack, int startIndex, int endIndex, boolean inReverse) {
-        System.out.println(String.format("insertItem | %s %s", sourceStack.getCount(), sourceStack.getItem().getName().getFormattedText()));
+        System.out.println(String.format("insertItem | %s %s", sourceStack.getCount(), sourceStack.getItem().getName().getString()));
 
         boolean successful = false;
         int startingIndex = startIndex;

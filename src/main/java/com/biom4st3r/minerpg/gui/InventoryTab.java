@@ -13,15 +13,15 @@ public class InventoryTab extends ButtonWidget
     TextRenderer textRenderer = MinecraftClient.getInstance().getFontManager().getTextRenderer(MinecraftClient.DEFAULT_TEXT_RENDERER_ID);
     private String text;
     private static final Identifier INVENTORY = new Identifier(MineRPG.MODID,"textures/gui/rpgmenu.png");
-    private boolean pressed;
+    private boolean activeTab;
     private int pallet;
 
 
     public InventoryTab(int xPos, int yPos, int width, String text,
-            PressAction action,boolean pressed,int pallet) {
+            PressAction action,boolean enabled,int pallet) {
         super(xPos, yPos, Math.max(13, width), 16, "", action);
         this.text = text;
-        this.pressed = pressed;
+        this.activeTab = enabled;
         this.pallet = pallet;
     }
 
@@ -29,12 +29,22 @@ public class InventoryTab extends ButtonWidget
     int v = 0;
     int sideWidth = 6;
 
+
+    @Override
+    public void onClick(double double_1, double double_2) 
+    {
+        if(!activeTab)
+        {
+            super.onClick(double_1, double_2);
+        }
+    }
+
     @Override
     public void renderButton(int int_1, int int_2, float float_1) {
         GlStateManager.color4f(1.0f, 1.0f, 1.0f, 1.0f);
         MinecraftClient.getInstance().getTextureManager().bindTexture(INVENTORY);
         v = pallet*(height*2);
-        v += pressed ? height : 0;
+        v += activeTab ? height : 0;
 
         this.blit(this.x,this.y,u,v,sideWidth,height);//left side
         //blit(this.x+6,this.y,u,v,2,16,this.width-12,16); 

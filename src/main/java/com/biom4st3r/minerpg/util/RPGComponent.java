@@ -8,9 +8,9 @@ import com.biom4st3r.minerpg.api.RPGClass;
 import com.biom4st3r.minerpg.api.Stat.Stats;
 import com.google.common.collect.Maps;
 
-import io.netty.buffer.Unpooled;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
 import net.minecraft.util.PacketByteBuf;
 
 public class RPGComponent
@@ -29,8 +29,13 @@ public class RPGComponent
     public RPGComponent()
     {
         stats = Maps.newHashMap();
+        // for(Stats stat : Stats.values())
+        // {
+        //     this.stats.put(stat,0);
+        // }
         //remainingPoints = 0;
     }
+
 
     public void increaseStatProtected(Stats s)
     {
@@ -60,7 +65,7 @@ public class RPGComponent
         return rpgc;
     }
 
-    public boolean compareAndUpdate(RPGComponent client)
+    public boolean clientRequestChanges(RPGComponent client)
     {
         int delta = 0;
 
@@ -100,36 +105,42 @@ public class RPGComponent
 
     public void serialize(CompoundTag tag)
     {
-        
+        // ListTag lt = tag.getList("Attributes", 10);
+        // CompoundTag ct = lt.getCompoundTag(0);
+        // ct.putDouble("generic.maxHealth", 22d);
+        // System.out.print(ct.getDouble("generic.maxHealth"));
         CompoundTag statTag = new CompoundTag();
-        System.out.println("hello0");
-        System.out.println(!tag.containsKey(STATS, 10));
-        if(!tag.containsKey(STATS, 10))
-        {
-            System.out.println("hello1");
-            for(Stats i : Stats.values())
-            {   
-                System.out.println("hello2");
-                statTag.putByte(i.text,(byte)8);
-                this.stats.put(i,8);
-            }
-            this.setRemainingPoints(27);
-            statTag.putByte(SPAREPOINTS, (byte)27);
-        }
-        else
+        // System.out.println("hello0");
+        // System.out.println(tag.containsKey(STATS));
+        // if(tag.getCompound(STATS).isEmpty())
+        // {
+        //     System.out.println("hello1");
+        //     for(Stats i : Stats.values())
+        //     {   
+        //         System.out.println("hello2");
+        //         statTag.putByte(i.text,(byte)8);
+        //         this.stats.put(i,8);
+        //     }
+        //     this.setRemainingPoints(27);
+        //     statTag.putByte(SPAREPOINTS, (byte)27);
+        // }
+        // else
+        // {
+        if(this.stats.size() == 6)
         {
             for(Stats s : Stats.values())
             {
                 statTag.putByte(s.text, (byte)(int)this.stats.get(s));
             }
+        //}
+            statTag.putByte(SPAREPOINTS, (byte)remainingPoints);
+            tag.put(STATS, statTag);
         }
-        statTag.putByte(SPAREPOINTS, (byte)remainingPoints);
-        tag.put(STATS, statTag);
     }
 
     public void deserialize(CompoundTag tag)
     {
-        if(!tag.containsKey(STATS, 10))
+        if(tag.getCompound(STATS).isEmpty())
         {
             System.out.println("first init");
             //this.serialize(tag);
@@ -168,9 +179,24 @@ public class RPGComponent
         this.setRemainingPoints(i);
     }
 
+    public void initStats()
+    {
+        System.out.println("Init Stats");
+        for(Stats stat : Stats.values())
+        {
+            this.stats.put(stat, 8);
+        }
+        this.remainingPoints = 27;
+    }
+
     public void toBuffer(PacketByteBuf pbb)
     {
         //PacketByteBuf pbb = new PacketByteBuf(Unpooled.buffer());
+
+        if(this.stats.size() != 6)
+        {
+            initStats();
+        }
         for(Stats s :Stats.values())
         {
             //System.out.println(this.stats.get(s) == null);
@@ -206,5 +232,12 @@ public class RPGComponent
     public HashMap<Stats, Integer> getStats()
     {
         return this.stats;
+    }
+
+    public static void doRandomDebugShit(RPGPlayer pe)
+    {
+        //((PlayerEntity)pe);
+        //((PlayerEntity)pe).abilities.allowFlying = true;
+        //((PlayerEntity)pe).abilities.invulnerable = true;
     }
 }

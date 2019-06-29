@@ -1,7 +1,7 @@
 package com.biom4st3r.minerpg;
 
 import com.biom4st3r.minerpg.api.Stat.Stats;
-import com.biom4st3r.minerpg.gui.RPGMenu;
+import com.biom4st3r.minerpg.gui.ComponentMenu;
 import com.biom4st3r.minerpg.util.RPGComponent;
 import com.biom4st3r.minerpg.util.RPGPlayer;
 import io.netty.buffer.Unpooled;
@@ -14,13 +14,11 @@ import net.minecraft.util.PacketByteBuf;
 
 public class ClientInit implements ClientModInitializer
 {
-
-
     @Override
     public void onInitializeClient() {
         ScreenProviderRegistry.INSTANCE.registerFactory(
             MineRPG.COMPONENT_BAG_ID, 
-            RPGMenu::new);
+            ComponentMenu::new);
 
         ClientSidePacketRegistry.INSTANCE.register(MineRPG.SEND_STAT_UPDATE, (context,buffer) ->
         {

@@ -42,6 +42,6 @@ public class ComponentSlot extends Slot {
     public int getMaxStackAmount(ItemStack itemStack_1) {
         return maxStackSize;
     }
-    int maxStackSize = 999;
+    int maxStackSize = 512;
     
 }

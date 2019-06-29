@@ -1,19 +1,11 @@
 package com.biom4st3r.minerpg.mixin;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-
-import com.biom4st3r.minerpg.api.Ability;
-import com.biom4st3r.minerpg.api.Stat;
-import com.biom4st3r.minerpg.api.Stat.Stats;
 import com.biom4st3r.minerpg.gui.ComponentContainer;
 import com.biom4st3r.minerpg.util.BasicInventoryHelper;
 import com.biom4st3r.minerpg.util.RPGComponent;
 import com.biom4st3r.minerpg.util.RPGPlayer;
 import com.biom4st3r.minerpg.util.Util;
-import com.google.common.collect.Maps;
 
-import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -59,16 +51,12 @@ public abstract class RPGPlayerEntity extends LivingEntity implements RPGPlayer 
     @Override
     public void respawn(PlayerEntity spe)
     {
-        //MinecraftClient.getInstance().getNetworkHandler()
-        //ServerPlayerInteractionManager
-        //ClientPlayNetworkHandler
         RPGPlayer pe = (RPGPlayer)spe;
 
         this.bag = new BasicInventory(componentInvSize);
         
         
         BasicInventory originalBag = pe.getComponentContainer().bag;
-        //ClickWindowC2SPacket
         
         if(this.bag == null)
         {
@@ -79,23 +67,15 @@ public abstract class RPGPlayerEntity extends LivingEntity implements RPGPlayer 
             ((BasicInventoryHelper)this.bag)._setInvStack(i, originalBag.getInvStack(i).copy());
         }
         this.componentInventory = new ComponentContainer(2834671, ((PlayerEntity) (Object) this).inventory, bag);
-        // for(Stat.Stats s : Stat.Stats.values())
-        // {
-        //     this.stats.put(s, pe.getStats().get(s));
-        // }
-        // this.freeStatPoints = pe.getStatPoints();
+
         this.RPGContainer.updatStats(spe);
     }
-
-    //HashMap<Stats,Integer> stats;if(!tag.containsKey(STATS, 10))
 
     int componentInvSize = 3 * 4;
 
     public BasicInventory bag;
 
     public ComponentContainer componentInventory;
-
-    //public int freeStatPoints;
 
     public ListTag serialize(BasicInventory bi) {
         ListTag lt = new ListTag();
@@ -140,14 +120,15 @@ public abstract class RPGPlayerEntity extends LivingEntity implements RPGPlayer 
     @Inject(at = @At("HEAD"), method = "jump")
     public void jump(CallbackInfo ci)
     {
-        if(this.world.isClient)
-        {
-            System.out.println(RPGContainer.remainingPoints);
-        }
-        else
-        {
-            System.out.println(RPGContainer.remainingPoints);
-        }
+        // if(this.world.isClient)
+        // {
+        //     System.out.println(RPGContainer.remainingPoints);
+        // }
+        // else
+        // {
+        //     System.out.println(RPGContainer.remainingPoints);
+        // }
+        RPGComponent.doRandomDebugShit((RPGPlayer)this);
     }
 
     @Inject(at = @At("HEAD"), method = "readCustomDataFromTag", cancellable = false)
