@@ -1,9 +1,12 @@
 package com.biom4st3r.minerpg.api;
 
+import java.util.HashMap;
+
 import net.minecraft.util.Identifier;
 
 public abstract class RPGClass
 {
+    protected HashMap<Integer,Ability[]> abilities;
 
     public RPGClass(Identifier name)
     {

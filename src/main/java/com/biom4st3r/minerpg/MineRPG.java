@@ -1,15 +1,16 @@
 package com.biom4st3r.minerpg;
 
-import com.biom4st3r.minerpg.api.Stat.Stats;
+import java.util.List;
+
+import com.biom4st3r.minerpg.gui.InventoryTab;
 import com.biom4st3r.minerpg.util.RPGComponent;
 import com.biom4st3r.minerpg.util.RPGPlayer;
 import com.biom4st3r.minerpg.util.Util;
-
+import com.google.common.collect.Lists;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.container.ContainerProviderRegistry;
 import net.fabricmc.fabric.api.network.ServerSidePacketRegistry;
-import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.network.packet.CustomPayloadS2CPacket;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -24,14 +25,12 @@ public class MineRPG implements ModInitializer
     public static final Identifier COMPONENT_BAG_ID = new Identifier(MODID, COMPONENT_BAG);
     public static final Identifier SEND_STAT_UPDATE = new Identifier("updaterpgstats");
     public static final Identifier CHANGE_STAT = new Identifier("changestat");
-
+    public static final List<InventoryTab> inventoryTabs = Lists.newArrayList();
 
     @Override
-    public void onInitialize() {
-        // for(String s : new String[] {"strength","dexterity","intelligence","wisdow","constitution","charisma"})
-        // {
-        //     Stat.addStat(MODID ,s);
-        // }
+    public void onInitialize() 
+    {
+
         ContainerProviderRegistry.INSTANCE.registerFactory(
             COMPONENT_BAG_ID,
             (int syncId, Identifier identifier, PlayerEntity player, PacketByteBuf buf) ->
@@ -44,9 +43,6 @@ public class MineRPG implements ModInitializer
                 return Util.toRPG(player).getComponentContainer();
             }
         );
-
-
-        
         ServerSidePacketRegistry.INSTANCE.register(COMPONENT_BAG_ID, (context,buffer) ->
         {
             ContainerProviderRegistry.INSTANCE.openContainer(COMPONENT_BAG_ID, context.getPlayer(), (blockpos)->{});
@@ -56,18 +52,17 @@ public class MineRPG implements ModInitializer
             //System.out.println(context.getPlayer() instanceof ClientPlayerEntity);
             RPGComponent rpgClientc = new RPGComponent();
             rpgClientc.fromBuffer(buffer);
-            ((RPGPlayer)context.getPlayer()).getRPGComponent().compareAndUpdate(rpgClientc);
+            ((RPGPlayer)context.getPlayer()).getRPGComponent().clientRequestChanges(rpgClientc);
 
         });
-
     }
     
 
     public static CustomPayloadS2CPacket updateStats(RPGPlayer player)
     {
         PacketByteBuf pbb = new PacketByteBuf(Unpooled.buffer());
-        System.out.println(player.getComponentContainer() == null);
-        System.out.println(player instanceof ServerPlayerEntity);
+        //System.out.println(player.getComponentContainer() == null);
+        //System.out.println(player instanceof ServerPlayerEntity);
         player.getRPGComponent().toBuffer(pbb);
     
         return new CustomPayloadS2CPacket(SEND_STAT_UPDATE,pbb);

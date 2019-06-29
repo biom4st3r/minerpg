@@ -2,6 +2,7 @@ package com.biom4st3r.minerpg.gui;
 
 import com.biom4st3r.minerpg.MineRPG;
 import com.biom4st3r.minerpg.api.Stat.Stats;
+import com.mojang.blaze3d.platform.GLX;
 import com.mojang.blaze3d.platform.GlStateManager;
 
 import net.minecraft.client.MinecraftClient;
@@ -42,7 +43,7 @@ public class StatButton extends ButtonWidget
         {
             u+=9;
         }
-        blit(this.x,this.y,5,5,(float)(u),(float)(v),9,9,256,256);
+        blit(this.x,this.y,9,9,(float)(u),(float)(v),9,9,256,256);
         //this.blit((int)(this.x),(int)(this.y),u,v,this.width,this.height);
 
     }

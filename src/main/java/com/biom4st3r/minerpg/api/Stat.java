@@ -2,44 +2,38 @@ package com.biom4st3r.minerpg.api;
 
 import com.biom4st3r.minerpg.MineRPG;
 
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
 
-public class Stat
-{
+public class Stat {
     private static String modid = MineRPG.MODID;
     // private static final List<Identifier> stats = Arrays.asList(
-    //     stat(modid,"strength"),
-    //     stat(modid,"dexterity"),
-    //     stat(modid,"intelligence"),
-    //     stat(modid,"wisdow"),
-    //     stat(modid,"constitution"),
-    //     stat(modid,"charisma")
+    // stat(modid,"strength"),
+    // stat(modid,"dexterity"),
+    // stat(modid,"intelligence"),
+    // stat(modid,"wisdow"),
+    // stat(modid,"constitution"),
+    // stat(modid,"charisma")
     // );
 
-    public enum Stats
-    {
-        STRENGTH(modid + ":strength"),
-        DEXTERITY(modid + ":dexterity"),
-        INTELLIGENCE(modid + ":intelligence"),
-        WISDOW(modid + ":wisdow"),
-        CONSTITUTION(modid + ":constitution"),
-        CHARISMA(modid + ":charisma");
+    public enum Stats {
+        STRENGTH(modid + ":strength"), DEXTERITY(modid + ":dexterity"), INTELLIGENCE(modid + ":intelligence"),
+        WISDOW(modid + ":wisdow"), CONSTITUTION(modid + ":constitution"), CHARISMA(modid + ":charisma");
 
         public final String text;
-        Stats(final String text)
-        {
+
+        Stats(final String text) {
             this.text = text;
         }
         // @Override
         // public String toString() {
-        //     return text;
+        // return text;
         // }
     }
 
     // public Stat(Identifier name, int defaultValue)
     // {
-    //     this.name = name;
+    // this.name = name;
     // }
 
     // protected int value;
@@ -48,39 +42,39 @@ public class Stat
 
     // public static boolean addStat(Stat s)
     // {
-    //     if(!stats.contains(s.name))
-    //     {
-    //         stats.add(s.name);
-    //         System.out.println(String.format("%s: %s stat registed!", MineRPG.MODID,s.name));
-    //         return true;
-    //     }
-    //     System.out.println(String.format("%s as already been registered", s.name));
-    //     return false;
+    // if(!stats.contains(s.name))
+    // {
+    // stats.add(s.name);
+    // System.out.println(String.format("%s: %s stat registed!",
+    // MineRPG.MODID,s.name));
+    // return true;
+    // }
+    // System.out.println(String.format("%s as already been registered", s.name));
+    // return false;
     // }
 
     // public static boolean addStat(Identifier i)
     // {
-    //     return addStat(new Stat(i,0));
+    // return addStat(new Stat(i,0));
     // }
 
     // public static boolean addStat(String modid, String name)
     // {
-    //     return addStat(new Identifier(modid,name));
+    // return addStat(new Identifier(modid,name));
     // }
 
-    private static Identifier stat(String modid, String name)
-    {
+    private static Identifier stat(String modid, String name) {
         return new Identifier(modid, name);
     }
 
-    public static TranslatableComponent getComponent(Identifier i)
+    public static TranslatableText getComponent(Identifier i)
     {
-        return new TranslatableComponent("stat" + i.toString().replace(":", "."), new Object[0]);
+        return new TranslatableText("stat" + i.toString().replace(":", "."), new Object[0]);
     }
 
     public static String getDisplayName(Identifier i)
     {
-        return getComponent(i).getFormattedText();
+        return getComponent(i).asFormattedString();
     }
 
     // public static List<Identifier> getStats()
