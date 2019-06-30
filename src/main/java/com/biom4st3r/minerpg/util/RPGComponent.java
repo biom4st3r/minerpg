@@ -10,7 +10,6 @@ import com.google.common.collect.Maps;
 
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
 import net.minecraft.util.PacketByteBuf;
 
 public class RPGComponent
@@ -75,7 +74,7 @@ public class RPGComponent
             int clientStat = client.stats.get(stat);
             if(clientStat < serverStat)
             {
-                System.out.println("wtf: Client stat lower than Server");
+                System.out.println("wtf: Client stat lower than Server.");
                 return false;
             }
             delta+= clientStat-serverStat;
@@ -93,7 +92,7 @@ public class RPGComponent
             for(Stats stat : Stats.values())
             {
                 this.stats.put(stat, client.stats.get(stat));
-                System.out.println(stat);
+                System.out.println(stat + " " + client.getStat(stat));
             }
             System.out.println(this.remainingPoints);
             System.out.println("Success");
@@ -105,27 +104,7 @@ public class RPGComponent
 
     public void serialize(CompoundTag tag)
     {
-        // ListTag lt = tag.getList("Attributes", 10);
-        // CompoundTag ct = lt.getCompoundTag(0);
-        // ct.putDouble("generic.maxHealth", 22d);
-        // System.out.print(ct.getDouble("generic.maxHealth"));
         CompoundTag statTag = new CompoundTag();
-        // System.out.println("hello0");
-        // System.out.println(tag.containsKey(STATS));
-        // if(tag.getCompound(STATS).isEmpty())
-        // {
-        //     System.out.println("hello1");
-        //     for(Stats i : Stats.values())
-        //     {   
-        //         System.out.println("hello2");
-        //         statTag.putByte(i.text,(byte)8);
-        //         this.stats.put(i,8);
-        //     }
-        //     this.setRemainingPoints(27);
-        //     statTag.putByte(SPAREPOINTS, (byte)27);
-        // }
-        // else
-        // {
         if(this.stats.size() == 6)
         {
             for(Stats s : Stats.values())
@@ -140,7 +119,7 @@ public class RPGComponent
 
     public void deserialize(CompoundTag tag)
     {
-        if(tag.getCompound(STATS).isEmpty())
+        if(tag.getCompound(STATS).isEmpty() )//|| true)
         {
             System.out.println("first init");
             //this.serialize(tag);

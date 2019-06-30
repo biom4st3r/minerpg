@@ -9,6 +9,7 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.AbstractContainerScreen;
 import net.minecraft.client.gui.screen.ingame.InventoryScreen;
+import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.render.GuiLighting;
 import net.minecraft.client.render.entity.EntityRenderDispatcher;
 import net.minecraft.entity.LivingEntity;
@@ -43,24 +44,18 @@ public class ComponentMenu extends AbstractContainerScreen<ComponentContainer> {
 
     public void drawString(String string_1, int xPos, int yPos, int color) {
         this.font.drawStringBounded(string_1, xPos, yPos, 160,color);
-        // textRenderer.drawWithShadow(string_1, (float)(int_1 -
-        // textRenderer_1.getStringWidth(string_1) / 2), (float)int_2, int_3);
     }
 
     public void drawCenteredString(String string_1, int xCenter, int yPos, int color) {
         this.font.drawStringBounded(string_1, (xCenter - this.font.getStringWidth(string_1) / 2), yPos, 160,
                 color);
-        // textRenderer.drawWithShadow(string_1, (float)(int_1 -
-        // textRenderer_1.getStringWidth(string_1) / 2), (float)int_2, int_3);
     }
 
     @Override
     protected void init()
     {
-
         super.init();
-        int buttonWidth = 26+5;
-        //int bHeight = 14;
+        //int buttonWidth = 26+5;
         
         this.modY = new int[6];
         {
@@ -73,29 +68,12 @@ public class ComponentMenu extends AbstractContainerScreen<ComponentContainer> {
             modY[5] = modY[4]+ySpacing;
         }
         int yPos = this.yMid()-96;
-        this.addButton(new InventoryTab(this.xMid()-(buttonWidth-1), yPos, buttonWidth, "Main", button ->
+        for(ButtonWidget button : GUIhelper.drawTabs(this.xMid()-70, yPos, this.minecraft, false,true,false))
         {
-            this.minecraft.openScreen(new InventoryScreen(this.minecraft.player));
-        }, false, 0));
-
-        this.addButton(new InventoryTab(this.xMid(), yPos, buttonWidth, "Bag", (ButtonWidget) ->
-        {
-
-
-        }, true, 1));
-        this.addButton(new InventoryTab(this.xMid()+(buttonWidth-1), yPos, buttonWidth, "Stats", b ->
-        {
-            this.minecraft.openScreen(new StatMenu());
-
-        }, false, 2));
-    
-
-
-
-        
-
+            this.addButton(button);
+        }
     }
-    int modY[];// = new int[] {yMid()-60,modY[0]+10,yMid()-40,yMid()-30,yMid()-20,yMid()-10};
+    int modY[];
         
 
     @Override
@@ -120,14 +98,11 @@ public class ComponentMenu extends AbstractContainerScreen<ComponentContainer> {
         float scale = 0.91f;
 
         int modX = 28;
-        //int modY[] = new int[] {yMid()-75,yMid()-65,yMid()-55,yMid()-45,yMid()-35,yMid()-25};
-        //this.addButton(new StatButton(10, 10, null, true));
 
 
         GlStateManager.pushMatrix();
         GlStateManager.scalef(scale,scale,scale);
         this.drawString("Component Bag", (int)((xMid()+12)/scale), (int)((yMid()-68)/scale)+1, 0x000000);
-        //this.drawString("Stats", (int)((xMid()-22)/scale), (int)((yMid()-68)/scale)+1, 0x000000);
         GlStateManager.scalef(1f,1f,1f);
         GlStateManager.popMatrix();
         scale = 0.68f;

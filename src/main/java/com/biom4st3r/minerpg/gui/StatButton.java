@@ -12,7 +12,7 @@ import net.minecraft.util.Identifier;
 public class StatButton extends ButtonWidget
 {
 
-    private static final long serialVersionUID = 682316677533249302L;
+    //private static final long serialVersionUID = 682316677533249302L;
 
     public Identifier BG_Texture = new Identifier(MineRPG.MODID, "textures/gui/rpgmenu.png");
 
@@ -21,7 +21,7 @@ public class StatButton extends ButtonWidget
     boolean add;
 
     public StatButton(int xPos, int yPos, PressAction action, boolean add, Stats stat) {
-        super(xPos, yPos, 5, 5, "", action);
+        super(xPos, yPos, 9, 9, "", action);
         this.add = add;
         this.stat = stat;
 
@@ -43,7 +43,7 @@ public class StatButton extends ButtonWidget
         {
             u+=9;
         }
-        blit(this.x,this.y,9,9,(float)(u),(float)(v),9,9,256,256);
+        blit(this.x,this.y,this.width,this.height,(float)(u),(float)(v),9,9,256,256);
         //this.blit((int)(this.x),(int)(this.y),u,v,this.width,this.height);
 
     }
