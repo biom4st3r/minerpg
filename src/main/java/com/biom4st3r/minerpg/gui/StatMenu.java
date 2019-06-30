@@ -1,5 +1,7 @@
 package com.biom4st3r.minerpg.gui;
 
+import java.util.Random;
+
 import com.biom4st3r.minerpg.ClientInit;
 import com.biom4st3r.minerpg.MineRPG;
 import com.biom4st3r.minerpg.api.Stat.Stats;
@@ -10,6 +12,7 @@ import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ingame.InventoryScreen;
+import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.render.GuiLighting;
 import net.minecraft.client.render.entity.EntityRenderDispatcher;
 import net.minecraft.entity.LivingEntity;
@@ -21,7 +24,8 @@ public class StatMenu extends Screen {
 
     public Identifier BG_Texture = new Identifier(MineRPG.MODID, "textures/gui/statsmenu.png");
     private StatButton[] statButtons;
-    private int modY[];
+    ButtonWidget confirmButton;
+    //private int modY[];
 
     private RPGComponent rpgComponent;
     private RPGComponent backupComponent;
@@ -47,15 +51,19 @@ public class StatMenu extends Screen {
         }
         else if(this.rpgComponent.remainingPoints <= 0 && this.statButtons[0].visible)
         {
-            for(StatButton button : statButtons)
-            {
-                button.visible = false;
-            }
-            MinecraftClient.getInstance()
-            .getNetworkHandler()
-            .sendPacket(ClientInit.statChange(rpgComponent));
-            System.out.println("Checking rpgComponent 1");
+
         }
+    }
+
+    public int yGrid(int i)
+    {
+        int ySpacing = 9;
+        return (yMid()-76) + (i * ySpacing);
+    }
+
+    @Override
+    public boolean isPauseScreen() {
+        return false;
     }
 
     @Override
@@ -68,31 +76,23 @@ public class StatMenu extends Screen {
         //System.out.println("test");
         statButtons =  new StatButton[12];
 
-        this.modY = new int[6];
-        {
-            int ySpacing = 8;
-            modY[0] = yMid()-57;
-            modY[1] = modY[0]+ySpacing;
-            modY[2] = modY[1]+ySpacing;
-            modY[3] = modY[2]+ySpacing;
-            modY[4] = modY[3]+ySpacing;
-            modY[5] = modY[4]+ySpacing;
-        }
-
         for(int i = 0, j = 0; i < 6; i++, j+=2)
         {
-            //System.out.println(j + " " + i);
-            //System.out.println(j+1 + " " + i);
-            statButtons[j] = this.addButton(new StatButton(xMid()-11, modY[i], (button) ->
+            int xMod = xMid()-7;
+            statButtons[j] = this.addButton(new StatButton(xMod, yGrid(i+1)-1, (button) ->
             { // minus
                 Stats s = ((StatButton)button).stat;
                 if(this.rpgComponent.getStat(s) > this.backupComponent.getStat(s))
                 {
+                    this.confirmButton.visible = true;
                     this.rpgComponent.decreaseStatUnProtected(s);
                 }
             }, false,Stats.values()[i]));
-            statButtons[j+1] = this.addButton(new StatButton(xMid()+3 , modY[i], (button) ->
+
+
+            statButtons[j+1] = this.addButton(new StatButton(xMod+25 , yGrid(i+1)-1, (button) ->
             { //plus
+                this.confirmButton.visible = true;
                 this.rpgComponent.increaseStatProtected(((StatButton)button).stat);
             }, true,Stats.values()[i]));
 
@@ -101,21 +101,24 @@ public class StatMenu extends Screen {
         }
         int buttonWidth = 26+5;
         int yPos = this.yMid()-96;
-        this.addButton(new InventoryTab(this.xMid()-(buttonWidth-1), yPos, buttonWidth, "Main", button ->
+        for(ButtonWidget button : GUIhelper.drawTabs(this.xMid()-70, yPos, this.minecraft, false,false,true))
         {
-            this.minecraft.openScreen(new InventoryScreen(this.minecraft.player));
-        }, false, 0));
+            this.addButton(button);
+        }
+        confirmButton = this.addButton(new ButtonWidget(xMid()+31, yMid()-50, 50, 20, "Confirm", button -> {
+            for(StatButton statbuttons : statButtons)
+            {
+                statbuttons.visible = false;
+            }
+            backupComponent = this.rpgComponent.copy();
+            MinecraftClient.getInstance()
+            .getNetworkHandler()
+            .sendPacket(ClientInit.statChange(rpgComponent));
+            System.out.println("Checking rpgComponent 1");
+            button.visible = false;
+        }));
+        this.confirmButton.visible = false;
 
-        this.addButton(new InventoryTab(this.xMid(), yPos, buttonWidth, "Bag", (ButtonWidget) ->
-        {
-            this.minecraft.getNetworkHandler().sendPacket(ClientInit.openRpgMenu());
-
-        }, false, 1));
-        this.addButton(new InventoryTab(this.xMid()+(buttonWidth-1), yPos, buttonWidth, "Stats", b ->
-        {
-            this.minecraft.openScreen(new StatMenu());
-
-        }, true, 2));
     }
 
     @Override
@@ -129,56 +132,41 @@ public class StatMenu extends Screen {
         super.render(mouseX, mouseY, float_1);
         InventoryScreen.drawEntity(int_3 + 51-18, int_4 + 75, 30, (float)(int_3 + 51) - mouseX, (float)(int_4 + 75 - 50) - mouseY, this.minecraft.player);
 
-        float scale = 0.91f;
-        int modX = 28;
+        //float scale = 0.91f;
+        renderStats();
         
-        GUIhelper.drawString(this.font, "Stats", xMid()-22, yMid()-68, 0x000000);
+    }
 
-        //GlStateManager.popMatrix();
-        scale = 1f;
-        GlStateManager.pushMatrix();
-        GlStateManager.scalef(scale,scale,scale);
+    public void renderStats()
+    {
+        int modX = 28;
+        GUIhelper.drawString(this.font, "Stats", xMid()-22, yGrid(0), 0x000000);
 
         for(int i = 0; i < 6; i++)
         {
-            int xPos = (int)((xMid()-modX)/scale);
-            int yPos = (int)(modY[i]/scale);
+
             Stats stat = Stats.values()[i];
 
-            //System.out.println(player == null);
-            //System.out.println(player.getStats() == null);
-            //System.out.println(player.getStat(stat));
             
-            modX = 28;
-            xPos = (int)((xMid()-modX)/scale);
-            GUIhelper.drawString(this.font, stat.toString().substring(0, 3), xPos, yPos, 0x000000);
-            modX = 15;
-            xPos = (int)((xMid()-modX)/scale);
-            GUIhelper.drawString(this.font, ":", xPos, yPos, 0x000000);
-            modX = 1;
-            xPos = (int)((xMid()-modX)/scale);
-            GUIhelper.drawCenteredString(this.font, "" + this.rpgComponent.getStat(stat), xPos, yPos, 0x000000);
+            modX = -28;
 
+            GUIhelper.drawString(this.font, stat.toString().substring(0, 3), xMid()+modX, yGrid(i+1), 0x000000);
+            modX = -10;
+
+            GUIhelper.drawString(this.font, ":", xMid()+modX, yGrid(i+1), 0x000000);
+            modX = 10;
+
+            GUIhelper.drawCenteredString(this.font, "" + this.rpgComponent.getStat(stat), xMid()+modX, yGrid(i+1), 0x000000);
             
         }
-        if(this.rpgComponent.remainingPoints != 0)
-        {
-            GUIhelper.drawString(this.font, "Points: ", (int)((xMid()-28)/scale), (int)(yMid()/scale)-11, 0x000000);
-            GUIhelper.drawCenteredString(this.font, "" + this.rpgComponent.remainingPoints, (int)((xMid()-1)/scale), (int)(yMid()/scale)-11, 0x000000);
-        }
 
-        GlStateManager.scalef(1,1,1);
-        GlStateManager.popMatrix();
-        //GlStateManager.pushMatrix();
         if(this.rpgComponent.remainingPoints != 0)
         {
-            Screen.fill(xMid()-29, yMid()-11, xMid()+2, yMid()-10, 0xff000000);
+            GUIhelper.drawString(this.font, "Points: ", xMid()-28, yGrid(7), 0x000000);
+            GUIhelper.drawCenteredString(this.font, "" + this.rpgComponent.remainingPoints, xMid()+12, yGrid(7), 0x000000);
         }
-        //GlStateManager.popMatrix();
-        
-        
-        
     }
+
     private int xMid()
     {
         return this.width/2;
