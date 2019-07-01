@@ -1,22 +1,16 @@
 package com.biom4st3r.minerpg.gui;
 
-import java.util.Random;
-
 import com.biom4st3r.minerpg.ClientInit;
 import com.biom4st3r.minerpg.MineRPG;
 import com.biom4st3r.minerpg.api.Stat.Stats;
-import com.biom4st3r.minerpg.util.RPGComponent;
+import com.biom4st3r.minerpg.components.StatsComponents;
 import com.biom4st3r.minerpg.util.RPGPlayer;
-import com.mojang.blaze3d.platform.GLX;
 import com.mojang.blaze3d.platform.GlStateManager;
+
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ingame.InventoryScreen;
 import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.client.render.GuiLighting;
-import net.minecraft.client.render.entity.EntityRenderDispatcher;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
 
@@ -27,8 +21,8 @@ public class StatMenu extends Screen {
     ButtonWidget confirmButton;
     //private int modY[];
 
-    private RPGComponent rpgComponent;
-    private RPGComponent backupComponent;
+    private StatsComponents rpgComponent;
+    private StatsComponents backupComponent;
 
     protected int containerWidth = 176;
     protected int containerHeight = 166;
@@ -72,7 +66,7 @@ public class StatMenu extends Screen {
         this.left = (this.width - this.containerWidth) / 2;
         this.top = (this.height - this.containerHeight) / 2;
         this.rpgComponent = ((RPGPlayer)this.minecraft.player).getRPGComponent();
-        this.backupComponent = this.rpgComponent.copy();
+        this.backupComponent = this.rpgComponent.copyOfStats();
         //System.out.println("test");
         statButtons =  new StatButton[12];
 
@@ -99,9 +93,9 @@ public class StatMenu extends Screen {
             statButtons[j].visible = false;
             statButtons[j+1].visible = false;
         }
-        int buttonWidth = 26+5;
+        //int buttonWidth = 26+5;
         int yPos = this.yMid()-96;
-        for(ButtonWidget button : GUIhelper.drawTabs(this.xMid()-70, yPos, this.minecraft, false,false,true))
+        for(ButtonWidget button : GUIhelper.drawTabs(this.xMid()-70, yPos, this.minecraft, false,false,true,false))
         {
             this.addButton(button);
         }
@@ -110,7 +104,7 @@ public class StatMenu extends Screen {
             {
                 statbuttons.visible = false;
             }
-            backupComponent = this.rpgComponent.copy();
+            backupComponent = this.rpgComponent.copyOfStats();
             MinecraftClient.getInstance()
             .getNetworkHandler()
             .sendPacket(ClientInit.statChange(rpgComponent));

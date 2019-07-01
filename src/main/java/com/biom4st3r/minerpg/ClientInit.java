@@ -1,9 +1,9 @@
 package com.biom4st3r.minerpg;
 
-import com.biom4st3r.minerpg.api.Stat.Stats;
+import com.biom4st3r.minerpg.components.StatsComponents;
 import com.biom4st3r.minerpg.gui.ComponentMenu;
-import com.biom4st3r.minerpg.util.RPGComponent;
 import com.biom4st3r.minerpg.util.RPGPlayer;
+
 import io.netty.buffer.Unpooled;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.screen.ScreenProviderRegistry;
@@ -33,7 +33,7 @@ public class ClientInit implements ClientModInitializer
         return new CustomPayloadC2SPacket(MineRPG.COMPONENT_BAG_ID,new PacketByteBuf(Unpooled.buffer()));
     }
 
-    public static CustomPayloadC2SPacket statChange(RPGComponent rpgc)
+    public static CustomPayloadC2SPacket statChange(StatsComponents rpgc)
     {
         PacketByteBuf pbb = new PacketByteBuf(Unpooled.buffer());
         rpgc.toBuffer(pbb);
