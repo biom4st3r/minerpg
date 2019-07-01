@@ -28,7 +28,7 @@ public class GUIhelper
     public static ButtonWidget[] drawTabs(int xPos, int yPos, MinecraftClient mc,Boolean... bools)
     {        
         int buttonWidth = 26+5;
-        ButtonWidget[] buttons = new ButtonWidget[3];
+        ButtonWidget[] buttons = new ButtonWidget[4];
 
         buttons[0] = new InventoryTab(xPos, yPos, buttonWidth, "Main", button ->
         {
@@ -45,6 +45,10 @@ public class GUIhelper
             mc.openScreen(new StatMenu());
 
         }, bools[2], 2);
+        buttons[3] = new InventoryTab(xPos+(buttonWidth*3)-3, yPos, buttonWidth, "Class", b->
+        {
+            mc.openScreen(new ClassMenu());
+        }, bools[3], 3);
         return buttons;
     }
 }

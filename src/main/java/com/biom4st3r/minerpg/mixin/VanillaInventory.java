@@ -1,10 +1,6 @@
 package com.biom4st3r.minerpg.mixin;
 
-import com.biom4st3r.minerpg.ClientInit;
 import com.biom4st3r.minerpg.gui.GUIhelper;
-import com.biom4st3r.minerpg.gui.InventoryTab;
-import com.biom4st3r.minerpg.gui.StatMenu;
-import com.biom4st3r.minerpg.util.RPGPlayer;
 
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -17,9 +13,7 @@ import net.minecraft.client.gui.screen.recipebook.RecipeBookProvider;
 import net.minecraft.client.gui.widget.AbstractButtonWidget;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.container.PlayerContainer;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.item.ItemStack;
 import net.minecraft.text.TranslatableText;
 
 @Mixin(InventoryScreen.class)
@@ -40,10 +34,10 @@ public abstract class VanillaInventory extends AbstractInventoryScreen<PlayerCon
     @Inject(at = @At("TAIL"),method = "init",cancellable = false)
     protected void init(CallbackInfo ci)
     {//                                 xpos,  ypos , width, height, 
-        int bWidth = 26+5;
+        //int bWidth = 26+5;
         //int bHeight = 13;
         int yPos = this.yMid()-96;
-        for(ButtonWidget button : GUIhelper.drawTabs(this.xMid()-70, yPos, this.minecraft, true,false,false))
+        for(ButtonWidget button : GUIhelper.drawTabs(this.xMid()-70, yPos, this.minecraft, true,false,false,false))
         {
             this.addButton(button);
         }

@@ -1,18 +1,13 @@
 package com.biom4st3r.minerpg.gui;
 
 import com.biom4st3r.minerpg.MineRPG;
-import com.mojang.blaze3d.platform.GLX;
 import com.mojang.blaze3d.platform.GlStateManager;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.AbstractContainerScreen;
 import net.minecraft.client.gui.screen.ingame.InventoryScreen;
 import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.client.render.GuiLighting;
-import net.minecraft.client.render.entity.EntityRenderDispatcher;
-import net.minecraft.entity.LivingEntity;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
 
@@ -68,7 +63,7 @@ public class ComponentMenu extends AbstractContainerScreen<ComponentContainer> {
             modY[5] = modY[4]+ySpacing;
         }
         int yPos = this.yMid()-96;
-        for(ButtonWidget button : GUIhelper.drawTabs(this.xMid()-70, yPos, this.minecraft, false,true,false))
+        for(ButtonWidget button : GUIhelper.drawTabs(this.xMid()-70, yPos, this.minecraft, false,true,false,false))
         {
             this.addButton(button);
         }
@@ -97,7 +92,7 @@ public class ComponentMenu extends AbstractContainerScreen<ComponentContainer> {
         //EnchantingScreen
         float scale = 0.91f;
 
-        int modX = 28;
+        //int modX = 28;
 
 
         GlStateManager.pushMatrix();

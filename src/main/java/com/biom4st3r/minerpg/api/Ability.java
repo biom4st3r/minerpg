@@ -6,7 +6,7 @@ import net.minecraft.util.Identifier;
 
 public abstract class Ability
 {
-    public Ability(Identifier name)
+    protected Ability(Identifier name)
     {
         this.name = name;
     }
@@ -15,8 +15,9 @@ public abstract class Ability
 
     public abstract void doAbility();
 
-    public abstract void applyCost(RPGPlayer player);
+    public abstract boolean applyCost(RPGPlayer player);
 
     public float cooldown;
+    public abstract boolean checkRequirements(RPGPlayer player);
 
 }

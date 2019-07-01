@@ -63,9 +63,9 @@ public class Stat {
     // return addStat(new Identifier(modid,name));
     // }
 
-    private static Identifier stat(String modid, String name) {
-        return new Identifier(modid, name);
-    }
+    // private static Identifier stat(String modid, String name) {
+    //     return new Identifier(modid, name);
+    // }
 
     public static TranslatableText getComponent(Identifier i)
     {

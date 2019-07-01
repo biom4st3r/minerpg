@@ -1,31 +1,25 @@
-package com.biom4st3r.minerpg.util;
+package com.biom4st3r.minerpg.components;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
-import com.biom4st3r.minerpg.api.Ability;
-import com.biom4st3r.minerpg.api.RPGClass;
 import com.biom4st3r.minerpg.api.Stat.Stats;
+import com.biom4st3r.minerpg.util.RPGPlayer;
 import com.google.common.collect.Maps;
 
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.PacketByteBuf;
 
-public class RPGComponent
+public class StatsComponents
 {
     HashMap<Stats, Integer> stats;
 
     private final String STATS = "rpgstats";
     private final String SPAREPOINTS = "points";
 
-    protected ArrayList<Ability> abilities;
-
-    protected ArrayList<RPGClass> classes;
-
     public int remainingPoints;
 
-    public RPGComponent()
+    public StatsComponents()
     {
         stats = Maps.newHashMap();
         // for(Stats stat : Stats.values())
@@ -53,9 +47,9 @@ public class RPGComponent
         this.remainingPoints++;
     }
 
-    public RPGComponent copy()
+    public StatsComponents copyOfStats()
     {
-        RPGComponent rpgc = new RPGComponent();
+        StatsComponents rpgc = new StatsComponents();
         for(Stats stat : Stats.values())
         {
             rpgc.stats.put(stat, this.getStat(stat));
@@ -64,7 +58,7 @@ public class RPGComponent
         return rpgc;
     }
 
-    public boolean clientRequestChanges(RPGComponent client)
+    public boolean clientRequestChanges(StatsComponents client)
     {
         int delta = 0;
 
