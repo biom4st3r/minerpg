@@ -43,10 +43,10 @@ public class StatMenu extends Screen {
                 button.visible = true;
             }
         }
-        else if(this.rpgComponent.remainingPoints <= 0 && this.statButtons[0].visible)
-        {
+        // else if(this.rpgComponent.remainingPoints <= 0 && this.statButtons[0].visible)
+        // {
 
-        }
+        // }
     }
 
     public int yGrid(int i)
@@ -78,7 +78,7 @@ public class StatMenu extends Screen {
                 Stats s = ((StatButton)button).stat;
                 if(this.rpgComponent.getStat(s) > this.backupComponent.getStat(s))
                 {
-                    this.confirmButton.visible = true;
+                    this.confirmButton.active = true;
                     this.rpgComponent.decreaseStatUnProtected(s);
                 }
             }, false,Stats.values()[i]));
@@ -86,7 +86,7 @@ public class StatMenu extends Screen {
 
             statButtons[j+1] = this.addButton(new StatButton(xMod+25 , yGrid(i+1)-1, (button) ->
             { //plus
-                this.confirmButton.visible = true;
+                this.confirmButton.active = true;
                 this.rpgComponent.increaseStatProtected(((StatButton)button).stat);
             }, true,Stats.values()[i]));
 
@@ -111,7 +111,7 @@ public class StatMenu extends Screen {
             System.out.println("Checking rpgComponent 1");
             button.visible = false;
         }));
-        this.confirmButton.visible = false;
+        this.confirmButton.active = false;
 
     }
 

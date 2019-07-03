@@ -1,8 +1,5 @@
 package com.biom4st3r.minerpg.api;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 
 import net.minecraft.util.Identifier;
 
@@ -22,7 +19,7 @@ public abstract class RPGClass
     public int maxLvl;
 
     
-    public abstract Ability[] abilitysAvalibleAtLevel(int Lvl);
+    public abstract RPGAbility[] abilitysAvalibleAtLevel(int Lvl);
 
     @Override
     public int hashCode() {

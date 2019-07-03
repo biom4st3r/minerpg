@@ -6,8 +6,9 @@ import java.util.List;
 import java.util.Map;
 
 import com.biom4st3r.minerpg.MineRPG;
-import com.biom4st3r.minerpg.api.Ability;
+import com.biom4st3r.minerpg.api.RPGAbility;
 import com.biom4st3r.minerpg.api.RPGClass;
+import com.biom4st3r.minerpg.impl.abilities.barbarian.RageAbility;
 import com.google.common.collect.Maps;
 
 import net.minecraft.util.Identifier;
@@ -20,12 +21,12 @@ public class BarbarianClass extends RPGClass {
     // }};
     
     public BarbarianClass(Identifier name) {
-        super(new Identifier(MineRPG.MODID, "barbarian"));
+        super(name);
     }
 
     @Override
-    public Ability[] abilitysAvalibleAtLevel(int Lvl) {
-        List<Ability> abilities = new ArrayList<Ability>(20);
+    public RPGAbility[] abilitysAvalibleAtLevel(int Lvl) {
+        List<RPGAbility> abilities = new ArrayList<RPGAbility>(20);
         switch(Lvl)
         {
             case 20:
@@ -48,10 +49,11 @@ public class BarbarianClass extends RPGClass {
             case 3:
             case 2:
             case 1:
+            abilities.add(null);
             default:
             break;
         }
-        return (Ability[])abilities.toArray();
+        return (RPGAbility[])abilities.toArray();
     }
 
     
