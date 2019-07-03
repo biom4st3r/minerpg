@@ -51,7 +51,7 @@ public class InventoryTab extends ButtonWidget
         blit(this.x+sideWidth,this.y,width-(sideWidth*2),height,u+sideWidth,v,2,height,256,256);// middle
         this.blit(this.x+(width-sideWidth*2)+sideWidth,this.y,u+sideWidth+2,v,sideWidth,height); // right side
 
-        this.drawCenteredString(textRenderer, this.text, this.x+(width/2)+1, this.y+(height/2)-2, 0x694069);
+        this.drawCenteredString(textRenderer, this.text, this.x+(width/2)+1, this.y+(height/2)-3, 0x694069);
     }
 
     public void drawCenteredString(TextRenderer textRenderer_1, String string_1, int xCenter, int y, int color) {

@@ -4,9 +4,9 @@ import com.biom4st3r.minerpg.util.RPGPlayer;
 
 import net.minecraft.util.Identifier;
 
-public abstract class Ability
+public abstract class RPGAbility
 {
-    protected Ability(Identifier name)
+    protected RPGAbility(Identifier name)
     {
         this.name = name;
     }
