@@ -4,6 +4,7 @@ import com.biom4st3r.minerpg.ClientInit;
 import com.biom4st3r.minerpg.MineRPG;
 import com.biom4st3r.minerpg.api.Stat.Stats;
 import com.biom4st3r.minerpg.components.StatsComponents;
+import com.biom4st3r.minerpg.networking.Packets;
 import com.biom4st3r.minerpg.util.RPGPlayer;
 import com.mojang.blaze3d.platform.GlStateManager;
 
@@ -65,7 +66,7 @@ public class StatMenu extends Screen {
         super.init();
         this.left = (this.width - this.containerWidth) / 2;
         this.top = (this.height - this.containerHeight) / 2;
-        this.rpgComponent = ((RPGPlayer)this.minecraft.player).getRPGComponent();
+        this.rpgComponent = ((RPGPlayer)this.minecraft.player).getStatsComponent();
         this.backupComponent = this.rpgComponent.copyOfStats();
         //System.out.println("test");
         statButtons =  new StatButton[12];
@@ -105,9 +106,10 @@ public class StatMenu extends Screen {
                 statbuttons.visible = false;
             }
             backupComponent = this.rpgComponent.copyOfStats();
-            MinecraftClient.getInstance()
-            .getNetworkHandler()
-            .sendPacket(ClientInit.statChange(rpgComponent));
+            MinecraftClient
+                .getInstance()
+                .getNetworkHandler()
+                .sendPacket(Packets.CLIENT.statChange(rpgComponent));
             System.out.println("Checking rpgComponent 1");
             button.visible = false;
         }));

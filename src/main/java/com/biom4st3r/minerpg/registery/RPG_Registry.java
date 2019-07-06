@@ -1,9 +1,7 @@
 package com.biom4st3r.minerpg.registery;
 
-import com.biom4st3r.minerpg.MineRPG;
 import com.biom4st3r.minerpg.api.RPGAbility;
 import com.biom4st3r.minerpg.api.RPGClass;
-import com.biom4st3r.minerpg.impl.rpgclass.BarbarianClass;
 import com.google.common.base.Supplier;
 
 import net.minecraft.util.Identifier;

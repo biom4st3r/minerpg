@@ -1,6 +1,8 @@
 package com.biom4st3r.minerpg.gui;
 
 import com.biom4st3r.minerpg.ClientInit;
+import com.biom4st3r.minerpg.networking.Packets;
+import com.biom4st3r.minerpg.util.RPGPlayer;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -37,17 +39,22 @@ public class GUIhelper
 
         buttons[1] = new InventoryTab(xPos+buttonWidth-1, yPos, buttonWidth, "Bag", (ButtonWidget) ->
         {
-            mc.getNetworkHandler().sendPacket(ClientInit.openRpgMenu());
+            mc.getNetworkHandler().sendPacket(Packets.CLIENT.openComponentBag());
 
         }, bools[1], 1);
         buttons[2] = new InventoryTab(xPos+(buttonWidth*2)-2, yPos, buttonWidth, "Stats", b ->
         {
+            mc.player.networkHandler.sendPacket(Packets.CLIENT.requestStatComp());
             mc.openScreen(new StatMenu());
 
         }, bools[2], 2);
         buttons[3] = new InventoryTab(xPos+(buttonWidth*3)-3, yPos, buttonWidth, "Class", b->
         {
-            mc.openScreen(new ClassMenu());
+            mc.player.networkHandler.sendPacket(Packets.CLIENT.requestRpgComponent());
+            if(!((RPGPlayer)mc.player).getRPGComponent().hasRpgClass())
+            {
+                mc.openScreen(new ClassMenu());
+            }
         }, bools[3], 3);
         return buttons;
     }

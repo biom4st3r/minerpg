@@ -1,6 +1,8 @@
 package com.biom4st3r.minerpg.api;
 
 
+import java.util.List;
+
 import net.minecraft.util.Identifier;
 
 public abstract class RPGClass
@@ -25,6 +27,9 @@ public abstract class RPGClass
     public int hashCode() {
         return name.hashCode();
     }
+
+    public abstract List<String> getToolTips();
+
 
 
 
