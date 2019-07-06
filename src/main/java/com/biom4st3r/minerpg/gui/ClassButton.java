@@ -12,14 +12,19 @@ public class ClassButton extends ButtonWidget {
     public RPGClass rpgClass;
     private Identifier ICON;
     private Identifier BG_Texture = new Identifier(MineRPG.MODID, "textures/gui/classmenu.png");
+    public final int index;
+    @Override
+    public boolean changeFocus(boolean boolean_1) {
+        return super.changeFocus(boolean_1);
+    }
     
 
     public ClassButton(int xPos, int yPos, RPGClass rpgclass,
-            PressAction buttonWidget$PressAction_1) {
+            PressAction buttonWidget$PressAction_1, int index) {
         super(xPos, yPos, 22, 22, "", buttonWidget$PressAction_1);
         this.rpgClass = rpgclass;
         this.ICON = getPath(rpgClass.name);
-        // TODO Auto-generated constructor stub
+        this.index = index;
     }
 
     private Identifier getPath(Identifier name)
@@ -27,7 +32,7 @@ public class ClassButton extends ButtonWidget {
         return new Identifier(name.getNamespace(),"textures/classes/" + name.getPath() + ".png");
     }
     int frameU = 256-22;
-    int frameV = 0+(16*3);
+    int frameV = 0+(16*3); 
     int bg_lightU = 256-16;
     int bg_lightV = 0+(16*1);
 
@@ -35,7 +40,7 @@ public class ClassButton extends ButtonWidget {
     public void renderButton(int int_1, int int_2, float float_1) {
         MinecraftClient.getInstance().getTextureManager().bindTexture(BG_Texture);
         blit(this.x,this.y,frameU,frameV,width,height);
-        if(!this.isHovered)
+        if(!this.isHovered && !this.isFocused())
         {
             blit(this.x+3,this.y+3,bg_lightU,bg_lightV,16,16);
         }
@@ -51,7 +56,10 @@ public class ClassButton extends ButtonWidget {
 
         //super.renderButton(int_1, int_2, float_1);
     }
-
+    @Override
+    public void setFocused(boolean boolean_1) {
+        super.setFocused(boolean_1);
+    }
 
     
 }

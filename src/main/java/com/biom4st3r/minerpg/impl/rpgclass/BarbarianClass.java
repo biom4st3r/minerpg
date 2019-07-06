@@ -56,5 +56,10 @@ public class BarbarianClass extends RPGClass {
         return (RPGAbility[])abilities.toArray();
     }
 
-    
+    @Override
+    public List<String> getToolTips() {
+        List<String> tips = new ArrayList<>(3);
+        tips.add(this.name.getPath().toUpperCase());
+        return tips;
+    }
 }

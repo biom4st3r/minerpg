@@ -6,7 +6,6 @@ import com.biom4st3r.minerpg.impl.abilities.barbarian.RageAbility;
 
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.MutableRegistry;
-import net.minecraft.util.registry.Registry;
 
 public class RpgAbilities
 {

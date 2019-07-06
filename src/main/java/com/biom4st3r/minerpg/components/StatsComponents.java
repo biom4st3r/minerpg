@@ -187,9 +187,9 @@ public class StatsComponents
         RPGPlayer rpgpe = (RPGPlayer)pe;
         for(Stats s : Stats.values())
         {
-            this.stats.put(s, rpgpe.getRPGComponent().getStats().get(s));
+            this.stats.put(s, rpgpe.getStatsComponent().getStats().get(s));
         }
-        this.remainingPoints = rpgpe.getRPGComponent().getStatPoints();
+        this.remainingPoints = rpgpe.getStatsComponent().getStatPoints();
     }
 
     public int getStat(Stats name)

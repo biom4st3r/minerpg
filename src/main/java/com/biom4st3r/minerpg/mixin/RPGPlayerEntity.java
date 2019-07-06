@@ -1,5 +1,8 @@
 package com.biom4st3r.minerpg.mixin;
 
+import java.util.Enumeration;
+
+import com.biom4st3r.minerpg.api.RPGClass;
 import com.biom4st3r.minerpg.components.RPGComponent;
 import com.biom4st3r.minerpg.components.StatsComponents;
 import com.biom4st3r.minerpg.gui.ComponentContainer;
@@ -32,13 +35,18 @@ public abstract class RPGPlayerEntity extends LivingEntity implements RPGPlayer 
     private final String COMPONENT_BAG = "compInv";
     private final String SLOT = "Slot";
 
-    private StatsComponents StatContainer;
+    private StatsComponents statsComponent;
     private RPGComponent rpgComponent;
 
     @Override
-    public StatsComponents getRPGComponent() 
+    public StatsComponents getStatsComponent() 
     {
-        return StatContainer;
+        return statsComponent;
+    }
+
+    @Override
+    public RPGComponent getRPGComponent() {
+        return rpgComponent;
     }
 
     @Inject(at = @At("RETURN"), method = "<init>*")
@@ -47,7 +55,7 @@ public abstract class RPGPlayerEntity extends LivingEntity implements RPGPlayer 
             bag = new BasicInventory(componentInvSize);
         }
         this.componentInventory = new ComponentContainer(2834671, ((PlayerEntity) (Object) this).inventory, bag);
-        this.StatContainer = new StatsComponents();
+        this.statsComponent = new StatsComponents();
         this.rpgComponent = new RPGComponent();
     }
 
@@ -71,7 +79,7 @@ public abstract class RPGPlayerEntity extends LivingEntity implements RPGPlayer 
         }
         this.componentInventory = new ComponentContainer(2834671, ((PlayerEntity) (Object) this).inventory, bag);
 
-        this.StatContainer.updatStats(spe);
+        this.statsComponent.updatStats(spe);
     }
 
     int componentInvSize = 3 * 4;
@@ -123,29 +131,28 @@ public abstract class RPGPlayerEntity extends LivingEntity implements RPGPlayer 
     @Inject(at = @At("HEAD"), method = "jump")
     public void jump(CallbackInfo ci)
     {
-        // if(this.world.isClient)
-        // {
-        //     System.out.println(RPGContainer.remainingPoints);
-        // }
-        // else
-        // {
-        //     System.out.println(RPGContainer.remainingPoints);
-        // }
-        //StatsComponents.doRandomDebugShit((RPGPlayer)this);
+        Enumeration<RPGClass> rpgclasses = this.rpgComponent.rpgClasses.keys();
+        while(rpgclasses.hasMoreElements())
+        {
+            System.out.println(rpgclasses.nextElement().name.getPath());
+        }
+        
     }
 
     @Inject(at = @At("HEAD"), method = "readCustomDataFromTag", cancellable = false)
     public void readCustomDataFromTag(CompoundTag tag, CallbackInfo ci) 
     {
-        this.StatContainer.deserialize(tag);
+        this.statsComponent.deserialize(tag);
         bag = deserialize(tag.getList(COMPONENT_BAG, 10), componentInvSize);
+        rpgComponent = RPGComponent.readNbt(tag);
     }
 
     @Inject(at = @At("HEAD"), method = "writeCustomDataToTag", cancellable = false)
     public void writeCustomDataToTag(CompoundTag tag, CallbackInfo ci) 
     {
-        this.StatContainer.serialize(tag);
+        this.statsComponent.serialize(tag);
         tag.put(COMPONENT_BAG, serialize(this.componentInventory.bag));
+        this.rpgComponent.writeNbt(tag);
     }
 
     @Override
