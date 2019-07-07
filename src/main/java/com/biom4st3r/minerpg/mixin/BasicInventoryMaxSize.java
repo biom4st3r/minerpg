@@ -19,6 +19,7 @@ public abstract class BasicInventoryMaxSize implements BasicInventoryHelper {
     @Shadow
     @Final
     private DefaultedList<ItemStack> stackList;
+    
     @Shadow
     private List<InventoryListener> listeners;
 

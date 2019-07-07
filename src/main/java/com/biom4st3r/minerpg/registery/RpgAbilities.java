@@ -13,7 +13,7 @@ public class RpgAbilities
 
     public static RPGAbility register(RPGAbility rpgability)
     {
-        return (RPGAbility)((MutableRegistry)RPG_Registry.ABILITY_REGISTRY).add(rpgability.name, rpgability);
+        return (RPGAbility)((MutableRegistry<RPGAbility>)RPG_Registry.ABILITY_REGISTRY).add(rpgability.name, rpgability);
     }
 
     public static void init()

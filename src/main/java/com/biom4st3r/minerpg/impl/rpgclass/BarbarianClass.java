@@ -1,15 +1,10 @@
 package com.biom4st3r.minerpg.impl.rpgclass;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import com.biom4st3r.minerpg.MineRPG;
 import com.biom4st3r.minerpg.api.RPGAbility;
 import com.biom4st3r.minerpg.api.RPGClass;
-import com.biom4st3r.minerpg.impl.abilities.barbarian.RageAbility;
-import com.google.common.collect.Maps;
 
 import net.minecraft.util.Identifier;
 

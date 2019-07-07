@@ -10,7 +10,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.PacketByteBuf;
 
-public class StatsComponents
+public class StatsComponent
 {
     HashMap<Stats, Integer> stats;
 
@@ -19,7 +19,7 @@ public class StatsComponents
 
     public int remainingPoints;
 
-    public StatsComponents()
+    public StatsComponent()
     {
         stats = Maps.newHashMap();
         // for(Stats stat : Stats.values())
@@ -47,9 +47,9 @@ public class StatsComponents
         this.remainingPoints++;
     }
 
-    public StatsComponents copyOfStats()
+    public StatsComponent copyOfStats()
     {
-        StatsComponents rpgc = new StatsComponents();
+        StatsComponent rpgc = new StatsComponent();
         for(Stats stat : Stats.values())
         {
             rpgc.stats.put(stat, this.getStat(stat));
@@ -58,7 +58,7 @@ public class StatsComponents
         return rpgc;
     }
 
-    public boolean clientRequestChanges(StatsComponents client)
+    public boolean clientRequestChanges(StatsComponent client)
     {
         int delta = 0;
 

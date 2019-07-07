@@ -33,15 +33,12 @@ public abstract class VanillaInventory extends AbstractInventoryScreen<PlayerCon
 
     @Inject(at = @At("TAIL"),method = "init",cancellable = false)
     protected void init(CallbackInfo ci)
-    {//                                 xpos,  ypos , width, height, 
-        //int bWidth = 26+5;
-        //int bHeight = 13;
+    {
         int yPos = this.yMid()-96;
         for(ButtonWidget button : GUIhelper.drawTabs(this.xMid()-70, yPos, this.minecraft, true,false,false,false))
         {
             this.addButton(button);
         }
-
     }
 
     protected <T extends AbstractButtonWidget> T addButton(T abw)

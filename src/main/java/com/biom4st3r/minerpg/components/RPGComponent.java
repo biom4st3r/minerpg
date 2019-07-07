@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.List;
-import java.util.Set;
 
 import com.biom4st3r.minerpg.api.RPGAbility;
 import com.biom4st3r.minerpg.api.RPGClass;
@@ -34,6 +33,22 @@ public class RPGComponent
         rpgClasses = new Hashtable<RPGClass,Integer>(1);
         //rpgclasses = new ArrayList<RPGClass>(1);
         abilities = new ArrayList<RPGAbility>(20);
+        abilities.isEmpty(); //TODO: Remove me
+    }
+
+    public RPGClass getRpgClass(int index)
+    {
+        if(hasRpgClass())
+        {
+            Object[] t = rpgClasses.keySet().toArray();
+            return (RPGClass)t[index];
+        }
+        return null;
+    }
+
+    public int getRpgClassLvl(RPGClass rpgclass)
+    {
+        return rpgClasses.get(rpgclass);
     }
 
     public boolean hasRpgClass()

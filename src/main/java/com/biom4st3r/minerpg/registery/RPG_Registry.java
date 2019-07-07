@@ -18,14 +18,14 @@ public abstract class RPG_Registry
 
     public static Registry<RPGAbility> ABILITY_REGISTRY = create("rpgabilities", ()->
     {
-        return RpgAbilities.RAGE_ABILITY; //TO DO FIX ME
+        return RpgAbilities.RAGE_ABILITY;
     });
 
     //public static final RPGClass barbarianClass = new BarbarianClass(new Identifier(MineRPG.MODID, "barbarian"));
 
     public static <T> Registry<T> create(String string_1, Supplier<T> supplier_1) 
     {
-        return putDefaultEntry(string_1, new SimpleRegistry(), supplier_1);
+        return putDefaultEntry(string_1, new SimpleRegistry<T>(), supplier_1);
     }
 
     private static <T, R extends MutableRegistry<T>> R putDefaultEntry(String string_1, R mutableRegistry_1, Supplier<T> supplier_1) 

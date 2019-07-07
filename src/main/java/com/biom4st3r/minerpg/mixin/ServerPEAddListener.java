@@ -13,7 +13,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
 public abstract class ServerPEAddListener
 {
     @Inject(at = @At("TAIL"),method = "method_14235")
-    public void method_14235(CallbackInfo ci)
+    public void addListenerToInventory(CallbackInfo ci)
     {
         ((RPGPlayer)(Object)this).getComponentContainer().addListener((ServerPlayerEntity)(Object)this);
         

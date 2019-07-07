@@ -28,6 +28,6 @@ public abstract class PlayerManagerRespawn
     @Inject(at = @At("HEAD"),method = "method_14594")
     public void method_14594(ServerPlayerEntity spe,CallbackInfo ci)
     {
-        spe.openContainer(((RPGPlayer)spe).getComponentContainer());
+        //spe.openContainer(((RPGPlayer)spe).getComponentContainer());
     }
 }
