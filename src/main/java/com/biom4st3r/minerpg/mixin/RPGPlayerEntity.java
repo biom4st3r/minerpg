@@ -4,7 +4,7 @@ import java.util.Enumeration;
 
 import com.biom4st3r.minerpg.api.RPGClass;
 import com.biom4st3r.minerpg.components.RPGComponent;
-import com.biom4st3r.minerpg.components.StatsComponents;
+import com.biom4st3r.minerpg.components.StatsComponent;
 import com.biom4st3r.minerpg.gui.ComponentContainer;
 import com.biom4st3r.minerpg.util.BasicInventoryHelper;
 import com.biom4st3r.minerpg.util.RPGPlayer;
@@ -35,11 +35,11 @@ public abstract class RPGPlayerEntity extends LivingEntity implements RPGPlayer 
     private final String COMPONENT_BAG = "compInv";
     private final String SLOT = "Slot";
 
-    private StatsComponents statsComponent;
+    private StatsComponent statsComponent;
     private RPGComponent rpgComponent;
 
     @Override
-    public StatsComponents getStatsComponent() 
+    public StatsComponent getStatsComponent() 
     {
         return statsComponent;
     }
@@ -55,7 +55,7 @@ public abstract class RPGPlayerEntity extends LivingEntity implements RPGPlayer 
             bag = new BasicInventory(componentInvSize);
         }
         this.componentInventory = new ComponentContainer(2834671, ((PlayerEntity) (Object) this).inventory, bag);
-        this.statsComponent = new StatsComponents();
+        this.statsComponent = new StatsComponent();
         this.rpgComponent = new RPGComponent();
     }
 

@@ -25,6 +25,7 @@ public class ClassButton extends ButtonWidget {
         this.rpgClass = rpgclass;
         this.ICON = getPath(rpgClass.name);
         this.index = index;
+        this.ICON.getNamespace(); // TODO: Remove me
     }
 
     private Identifier getPath(Identifier name)
@@ -40,11 +41,11 @@ public class ClassButton extends ButtonWidget {
     public void renderButton(int int_1, int int_2, float float_1) {
         MinecraftClient.getInstance().getTextureManager().bindTexture(BG_Texture);
         blit(this.x,this.y,frameU,frameV,width,height);
-        if(!this.isHovered && !this.isFocused())
+        if((!this.isHovered && !this.isFocused() )|| !this.active)
         {
             blit(this.x+3,this.y+3,bg_lightU,bg_lightV,16,16);
         }
-        else if(this.isHovered || this.isFocused())
+        else if((this.isHovered || this.isFocused()) && this.active)
         {
             blit(this.x+3,this.y+3,bg_lightU,bg_lightV+16,16,16);
         }

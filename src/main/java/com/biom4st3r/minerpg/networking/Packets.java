@@ -2,7 +2,7 @@ package com.biom4st3r.minerpg.networking;
 
 import com.biom4st3r.minerpg.MineRPG;
 import com.biom4st3r.minerpg.api.RPGClass;
-import com.biom4st3r.minerpg.components.StatsComponents;
+import com.biom4st3r.minerpg.components.StatsComponent;
 import com.biom4st3r.minerpg.registery.RPG_Registry;
 import com.biom4st3r.minerpg.util.RPGPlayer;
 
@@ -62,7 +62,7 @@ public class Packets
         ServerSidePacketRegistry.INSTANCE.register(REQ_CHANGE_STAT, (context,buffer) ->
         {
             //System.out.println(context.getPlayer() instanceof ClientPlayerEntity);
-            StatsComponents rpgClientc = new StatsComponents();
+            StatsComponent rpgClientc = new StatsComponent();
             rpgClientc.fromBuffer(buffer);
             ((RPGPlayer)context.getPlayer()).getStatsComponent().clientRequestChanges(rpgClientc);
 
@@ -93,7 +93,7 @@ public class Packets
             return new CustomPayloadC2SPacket(REQ_RPG_COMPONENT,new PacketByteBuf(Unpooled.buffer()));
         }
     
-        public static CustomPayloadC2SPacket statChange(StatsComponents statC)
+        public static CustomPayloadC2SPacket statChange(StatsComponent statC)
         {
             PacketByteBuf pbb = new PacketByteBuf(Unpooled.buffer());
             statC.toBuffer(pbb);

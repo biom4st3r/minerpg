@@ -1,6 +1,5 @@
 package com.biom4st3r.minerpg.gui;
 
-import com.biom4st3r.minerpg.ClientInit;
 import com.biom4st3r.minerpg.networking.Packets;
 import com.biom4st3r.minerpg.util.RPGPlayer;
 
@@ -52,6 +51,10 @@ public class GUIhelper
         {
             mc.player.networkHandler.sendPacket(Packets.CLIENT.requestRpgComponent());
             if(!((RPGPlayer)mc.player).getRPGComponent().hasRpgClass())
+            {
+                mc.openScreen(new InitClassMenu());
+            }
+            else
             {
                 mc.openScreen(new ClassMenu());
             }

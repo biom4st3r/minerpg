@@ -1,9 +1,8 @@
 package com.biom4st3r.minerpg.gui;
 
-import com.biom4st3r.minerpg.ClientInit;
 import com.biom4st3r.minerpg.MineRPG;
 import com.biom4st3r.minerpg.api.Stat.Stats;
-import com.biom4st3r.minerpg.components.StatsComponents;
+import com.biom4st3r.minerpg.components.StatsComponent;
 import com.biom4st3r.minerpg.networking.Packets;
 import com.biom4st3r.minerpg.util.RPGPlayer;
 import com.mojang.blaze3d.platform.GlStateManager;
@@ -22,8 +21,8 @@ public class StatMenu extends Screen {
     ButtonWidget confirmButton;
     //private int modY[];
 
-    private StatsComponents rpgComponent;
-    private StatsComponents backupComponent;
+    private StatsComponent rpgComponent;
+    private StatsComponent backupComponent;
 
     protected int containerWidth = 176;
     protected int containerHeight = 166;
