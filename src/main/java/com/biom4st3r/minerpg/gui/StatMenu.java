@@ -5,6 +5,7 @@ import com.biom4st3r.minerpg.api.Stat.Stats;
 import com.biom4st3r.minerpg.components.StatsComponent;
 import com.biom4st3r.minerpg.networking.Packets;
 import com.biom4st3r.minerpg.util.RPGPlayer;
+import com.biom4st3r.minerpg.util.Util;
 import com.mojang.blaze3d.platform.GlStateManager;
 
 import net.minecraft.client.MinecraftClient;
@@ -43,6 +44,10 @@ public class StatMenu extends Screen {
                 button.visible = true;
             }
         }
+        if(backupComponent.getStat(Stats.CONSTITUTION) == -1)
+        {
+            this.backupComponent = this.rpgComponent.copyOfStats();
+        }
         // else if(this.rpgComponent.remainingPoints <= 0 && this.statButtons[0].visible)
         // {
 
@@ -67,7 +72,6 @@ public class StatMenu extends Screen {
         this.top = (this.height - this.containerHeight) / 2;
         this.rpgComponent = ((RPGPlayer)this.minecraft.player).getStatsComponent();
         this.backupComponent = this.rpgComponent.copyOfStats();
-        //System.out.println("test");
         statButtons =  new StatButton[12];
 
         for(int i = 0, j = 0; i < 6; i++, j+=2)
@@ -76,6 +80,7 @@ public class StatMenu extends Screen {
             statButtons[j] = this.addButton(new StatButton(xMod, yGrid(i+1)-1, (button) ->
             { // minus
                 Stats s = ((StatButton)button).stat;
+                Util.debug(s + " " + this.backupComponent.getStat(s));
                 if(this.rpgComponent.getStat(s) > this.backupComponent.getStat(s))
                 {
                     this.confirmButton.active = true;
@@ -109,7 +114,7 @@ public class StatMenu extends Screen {
                 .getInstance()
                 .getNetworkHandler()
                 .sendPacket(Packets.CLIENT.statChange(rpgComponent));
-            System.out.println("Checking rpgComponent 1");
+            Util.debug("Checking rpgComponent 1");
             button.visible = false;
         }));
         this.confirmButton.active = false;

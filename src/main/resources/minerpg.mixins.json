@@ -10,7 +10,8 @@
     "ServerPEAddListener"
   ],
   "client": [
-    "VanillaInventory"
+    "VanillaInventory",
+    "MinecraftClientMixin"
   ],
   "injectors": {
     "defaultRequire": 1

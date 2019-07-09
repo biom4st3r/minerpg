@@ -47,7 +47,6 @@ public class Packets
 
     }
 
-    //@Environment(EnvType.SERVER)
     public static void serverPacketReg()
     {
         ServerSidePacketRegistry.INSTANCE.register(REQ_RPG_COMPONENT, (context,buffer) ->
@@ -61,7 +60,6 @@ public class Packets
         });
         ServerSidePacketRegistry.INSTANCE.register(REQ_CHANGE_STAT, (context,buffer) ->
         {
-            //System.out.println(context.getPlayer() instanceof ClientPlayerEntity);
             StatsComponent rpgClientc = new StatsComponent();
             rpgClientc.fromBuffer(buffer);
             ((RPGPlayer)context.getPlayer()).getStatsComponent().clientRequestChanges(rpgClientc);

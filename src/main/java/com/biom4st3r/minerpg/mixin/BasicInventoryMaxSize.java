@@ -35,4 +35,12 @@ public abstract class BasicInventoryMaxSize implements BasicInventoryHelper {
   
         this.markDirty();
     }
+
+    @Override
+    public void copy(BasicInventory original) {
+        for(int i = 0; i < original.getInvSize(); i++)
+        {
+            this._setInvStack(i, original.getInvStack(i).copy());
+        }
+    }
 }

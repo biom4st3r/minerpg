@@ -3,8 +3,8 @@ package com.biom4st3r.minerpg.gui;
 import java.util.Iterator;
 import java.util.Set;
 
+import com.biom4st3r.minerpg.util.Util;
 import com.google.common.collect.Sets;
-
 import net.minecraft.container.Container;
 import net.minecraft.container.Slot;
 import net.minecraft.container.SlotActionType;
@@ -17,12 +17,10 @@ public class ComponentContainer extends Container {
 
     public final PlayerInventory playerInv;
     public final BasicInventory bag;
+
     public ComponentContainer(int syncid, PlayerInventory playerInv, BasicInventory components) 
     {
-        //PlayerContainer
-        //CottonScreenController
         super(null, syncid);
-        //this.addListener(((ServerPlayerEntity)playerInv.player));
         this.playerInv = playerInv;
         checkContainerSize(components, 4*3);
         bag = components;
@@ -68,12 +66,10 @@ public class ComponentContainer extends Container {
 
     @Override
     public ItemStack transferSlot(PlayerEntity pe, int slotIndex) {
-        System.out.println("transferSlot");
+        Util.debug("transferSlot");
         ItemStack temp = ItemStack.EMPTY;
         Slot clickedSlot = (Slot)this.slotList.get(slotIndex);
         int lastIndexCBag = 12-1;
-        //int lastIndexInv = lastIndexCBag+27;
-        //int lastIndexHot = lastIndexInv+9;
         if (clickedSlot != null && clickedSlot.hasStack()) 
         {
             ItemStack stackInSlot = clickedSlot.getStack();
@@ -105,7 +101,7 @@ public class ComponentContainer extends Container {
     
     @Override
     protected boolean insertItem(ItemStack sourceStack, int startIndex, int endIndex, boolean inReverse) {
-        System.out.println(String.format("insertItem | %s %s", sourceStack.getCount(), sourceStack.getItem().getName().getString()));
+        Util.debug(String.format("insertItem | %s %s", sourceStack.getCount(), sourceStack.getItem().getName().getString()));
 
         boolean successful = false;
         int startingIndex = startIndex;
@@ -218,7 +214,7 @@ public class ComponentContainer extends Container {
 
     @Override
     public ItemStack onSlotClick(int slotIndex, int packedBtnId, SlotActionType slotAction, PlayerEntity pe) {
-        System.out.println(String.format("onSlotClick | slot: %s | action: %s", slotIndex,slotAction.name()));
+        Util.debug(String.format("onSlotClick | slot: %s | action: %s", slotIndex,slotAction.name()));
         //new Exception().printStackTrace();
         //ClientPlayerInteractionManager
         ItemStack tempStack = ItemStack.EMPTY;
@@ -308,13 +304,13 @@ public class ComponentContainer extends Container {
         {
             //SWAP or CLONE
             if (slotAction == SlotActionType.SWAP && packedBtnId >= 0 && packedBtnId < 9) 
-            { // TODO using buttons to swap items allows 999 items in inventory
+            { // TODO: using buttons to swap items allows 999 items in inventory
                 currSlot = (Slot)this.slotList.get(slotIndex);
                 currStack = playerInv.getInvStack(packedBtnId);
                 cursorStack = currSlot.getStack();
                 if (!currStack.isEmpty() || !cursorStack.isEmpty()) 
                 {
-                    System.out.println("stack not empty or cursor not empty");
+                    Util.debug("stack not empty or cursor not empty");
                     if (currStack.isEmpty()) 
                     {
                         if (currSlot.canTakeItems(pe)) 
@@ -382,16 +378,14 @@ public class ComponentContainer extends Container {
                                     ItemStack itemStack_15 = slot_9.takeStack(int_6);
                                     currStack.increment(int_6);
                                     if (itemStack_15.isEmpty()) {
-                                    slot_9.setStack(ItemStack.EMPTY);
+                                        slot_9.setStack(ItemStack.EMPTY);
                                     }
-
                                     slot_9.onTakeItem(pe, itemStack_15);
                                 }
                             }
                         }
                     }
                 }
-
                 this.sendContentUpdates();
             }
         } 
@@ -450,14 +444,13 @@ public class ComponentContainer extends Container {
                 if (currStack.isEmpty()) 
                 {
                     // Slot is Empty
-                    //System.out.println("currStack.isEmpty");
                     
                     if (!cursorStack.isEmpty() && currSlot.canInsert(cursorStack)) {
                         //Item in hand and valid slot for item
                         cursorStackCount = packedBtnId == 0 ? cursorStack.getCount() : 1;
                         if (cursorStackCount > currSlot.getMaxStackAmount(cursorStack) || !cursorStack.isStackable()) {
                             // Items in hand more than slot can hold
-                            System.out.println("Items in hand more than slot can hold");
+                            Util.debug("Items in hand more than slot can hold");
                             cursorStackCount = 
                             cursorStack.isStackable() || currSlot instanceof ComponentSlot ? 
                                 Math.min(currSlot.getMaxStackAmount(cursorStack), cursorStack.getCount()): 
@@ -471,7 +464,6 @@ public class ComponentContainer extends Container {
                 } 
                 else if (currSlot.canTakeItems(pe)) 
                 {
-                    //System.out.println("currSlot.canTakeItems");
                     if (cursorStack.isEmpty()) {
                         //curser is empty
                         if (currStack.isEmpty()) {
@@ -491,7 +483,6 @@ public class ComponentContainer extends Container {
                     } 
                     else if (currSlot.canInsert(cursorStack)) 
                     {
-                        //System.out.println("currSlot.canInsert");
                         if (canStacksCombine(currStack, cursorStack)) {
                             cursorStackCount = packedBtnId == 0 ? cursorStack.getCount() : 1;
                             if (cursorStackCount > currSlot.getMaxStackAmount(cursorStack) - currStack.getCount()) {
@@ -512,7 +503,7 @@ public class ComponentContainer extends Container {
                     } 
                     else if (cursorStack.getMaxCount() > 1 && canStacksCombine(currStack, cursorStack) && !currStack.isEmpty()) 
                     {
-                        System.out.println("cursorStack.getMaxCount() > 1 && canStacksCombine(currStack, cursorStack) && !currStack.isEmpty()");
+                        Util.debug("cursorStack.getMaxCount() > 1 && canStacksCombine(currStack, cursorStack) && !currStack.isEmpty()");
                         cursorStackCount = currStack.getCount();
                         if (cursorStackCount + cursorStack.getCount() <= cursorStack.getMaxCount()) {
                             cursorStack.increment(cursorStackCount);

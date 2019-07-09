@@ -1,6 +1,8 @@
 package com.biom4st3r.minerpg.util;
 
 
+import com.biom4st3r.minerpg.MineRPG;
+
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -32,8 +34,31 @@ public class Util
         Item i = Registry.ITEM.get(new Identifier( tag.getString("id")));
         int count = 0;
         count = tag.getShort("Count");
-        //System.out.println(count);
         return count > 0 ? new ItemStack(i,count) : ItemStack.EMPTY;
     }
+    static boolean  isTestBuild = true;
+    public static void debug(Object o)
+    {
+        if(isTestBuild)
+        {
+            System.out.println(o.toString());
+        }
+    }
+    public static void debugV(Object o, int depth)
+    {
+        if(isTestBuild)
+        {
+            StackTraceElement[] ste = new Exception().getStackTrace();
+            for(int i = 1; i <= depth; i++)
+            {
+                debug(ste[i].getClassName() + "." + ste[i].getMethodName());
+            }
+            debug(o);
+        }
+    }
 
+    public static void errorMSG(Object o)
+    {
+        System.out.println(MineRPG.MODID + ": " + o.toString());
+    }
 }

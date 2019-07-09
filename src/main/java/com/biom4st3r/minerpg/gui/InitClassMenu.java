@@ -5,6 +5,7 @@ import com.biom4st3r.minerpg.api.RPGClass;
 import com.biom4st3r.minerpg.networking.Packets;
 import com.biom4st3r.minerpg.registery.RPG_Registry;
 import com.biom4st3r.minerpg.util.RPGPlayer;
+import com.biom4st3r.minerpg.util.Util;
 import com.mojang.blaze3d.platform.GlStateManager;
 
 import net.minecraft.client.MinecraftClient;
@@ -109,7 +110,7 @@ public class InitClassMenu extends Screen
                         focusedButton = cb.index;
                     }
                     cb.setFocused(true);
-                    System.out.println(cb.rpgClass.name);
+                    Util.debug(cb.rpgClass.name);
                 },index));
                 classButtons[index].visible = false;
             }
@@ -138,8 +139,6 @@ public class InitClassMenu extends Screen
 
         GUIhelper.drawString(this.font, "Classes", this.xMid()+7, yGrid(0), 0x000000);
         super.render(mouseX, mouseY, float_1);
-        
-
 
         for(int i = 0; i < 8; i++)
         {
@@ -152,7 +151,6 @@ public class InitClassMenu extends Screen
             }
             else
             {
-                //System.out.println(i);
                 break;
             }
             if(i == 7)
