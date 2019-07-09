@@ -20,4 +20,12 @@ public abstract class RPGAbility
     public float cooldown;
     public abstract boolean checkRequirements(RPGPlayer player);
 
+    public abstract Type getType();
+
+    public enum Type{
+        PASSIVE,
+        REACTIVE,
+        ACTIVED
+    }
+
 }

@@ -17,6 +17,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.BasicInventory;
 import net.minecraft.item.ItemStack;
@@ -60,26 +61,15 @@ public abstract class RPGPlayerEntity extends LivingEntity implements RPGPlayer 
     }
 
     @Override
-    public void respawn(PlayerEntity spe)
+    public void respawn(PlayerEntity originalPlayerEntity)
     {
-        RPGPlayer pe = (RPGPlayer)spe;
-
+        RPGPlayer pe = (RPGPlayer)originalPlayerEntity;
         this.bag = new BasicInventory(componentInvSize);
-        
-        
         BasicInventory originalBag = pe.getComponentContainer().bag;
-        
-        if(this.bag == null)
-        {
-            this.bag = new BasicInventory(componentInvSize);
-        }
-        for(int i = 0; i < originalBag.getInvSize(); i++)
-        {
-            ((BasicInventoryHelper)this.bag)._setInvStack(i, originalBag.getInvStack(i).copy());
-        }
-        this.componentInventory = new ComponentContainer(2834671, ((PlayerEntity) (Object) this).inventory, bag);
 
-        this.statsComponent.updatStats(spe);
+        ((BasicInventoryHelper) this.bag).copy(originalBag);
+        this.componentInventory = new ComponentContainer(2834671, ((PlayerEntity) (Object) this).inventory, bag);
+        this.statsComponent.copy(originalPlayerEntity);
     }
 
     int componentInvSize = 3 * 4;
@@ -90,16 +80,16 @@ public abstract class RPGPlayerEntity extends LivingEntity implements RPGPlayer 
 
     public ListTag serialize(BasicInventory bi) {
         ListTag lt = new ListTag();
-        System.out.println("write: ");
-        //new Exception().printStackTrace();
+        Util.debug("write: ");
+
         for (int i = 0; i < bi.getInvSize(); i++) {
             ItemStack iS = bi.getInvStack(i);
-            //System.out.println(iS.getItem().getName().getFormattedText());
+
             if (!iS.isEmpty()) 
             {
                 CompoundTag ct = new CompoundTag();
                 ct.putByte(SLOT, (byte) i);
-                Util.ShortItemStackToTag(iS, ct);// iS.toTag(ct);
+                Util.ShortItemStackToTag(iS, ct);
                 lt.add(ct);
             }
         }
@@ -109,11 +99,10 @@ public abstract class RPGPlayerEntity extends LivingEntity implements RPGPlayer 
     public BasicInventory deserialize(ListTag lt, int size) {
         BasicInventory bi = bag;
 
-        System.out.println("read: ");
+        Util.debug("read: ");
         for (int i = 0; i < lt.size(); i++) {
             CompoundTag ct = lt.getCompoundTag(i);
             int slot = ct.getByte(SLOT) & 255;
-            //System.out.println(ItemStack.fromTag(ct).getItem().getName().getFormattedText());
             if (slot >= 0 && slot < size) {
                 ((BasicInventoryHelper) bi)._setInvStack(slot, Util.TagToShortItemStack(ct));// ItemStack.fromTag(ct));
             }
@@ -121,21 +110,21 @@ public abstract class RPGPlayerEntity extends LivingEntity implements RPGPlayer 
         return bi;
     }
 
-    // @Inject(at = @At("HEAD"), method = "onDeath")
-    // public void onDeath(DamageSource damageSource_1,CallbackInfo ci)
-    // {
+    @Inject(at = @At("HEAD"), method = "onDeath")
+    public void onDeath(DamageSource damageSource_1,CallbackInfo ci)
+    {
         
-    //     System.out.println(this.bag.getInvStack(0).getItem().getName().getFormattedText());
-    // }
+    }
 
     @Inject(at = @At("HEAD"), method = "jump")
     public void jump(CallbackInfo ci)
     {
-        Enumeration<RPGClass> rpgclasses = this.rpgComponent.rpgClasses.keys();
-        while(rpgclasses.hasMoreElements())
-        {
-            System.out.println(rpgclasses.nextElement().name.getPath());
-        }
+        //Util.debugV("Hello",3);
+        // Enumeration<RPGClass> rpgclasses = this.rpgComponent.rpgClasses.keys();
+        // while(rpgclasses.hasMoreElements())
+        // {
+        //     Util.debug(rpgclasses.nextElement().name.getPath());
+        // }
         
     }
 

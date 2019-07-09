@@ -8,6 +8,7 @@ import java.util.List;
 import com.biom4st3r.minerpg.api.RPGAbility;
 import com.biom4st3r.minerpg.api.RPGClass;
 import com.biom4st3r.minerpg.registery.RPG_Registry;
+import com.biom4st3r.minerpg.util.Util;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -60,7 +61,7 @@ public class RPGComponent
     {
         if(rpgClasses.size() >= maxClasses)
         {
-            System.out.println("class list already max size");
+            Util.errorMSG("class list already max size");
             return;
         }
         rpgClasses.put(rpgClass, 1);
@@ -115,11 +116,10 @@ public class RPGComponent
     public static RPGComponent readNbt(CompoundTag ct)
     {
         RPGComponent rpgC = new RPGComponent();
-        System.out.println(rpgC.rpgClasses == null);
         ListTag lt = ct.getList(RPG_COMPONENT, 10);
         RPGClass rpgclass;
         int lvl;
-        System.out.println(lt.toString());
+
         for(int i = 0; i < lt.size(); i++)
         {
             rpgclass = RPG_Registry.CLASS_REGISTRY.get(new Identifier(lt.getCompoundTag(i).getString(CLASS_ID)));
@@ -127,7 +127,6 @@ public class RPGComponent
             {
                 continue;
             }
-            System.out.println(lt.getCompoundTag(i).getString(CLASS_ID) + " here i am");
             lvl = lt.getCompoundTag(i).getInt(LEVEL);
             rpgC.rpgClasses.put(rpgclass, lvl);
             //rpgClasses.put(lt.getCompoundTag(i)., value)

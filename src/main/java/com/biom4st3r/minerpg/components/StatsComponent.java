@@ -4,6 +4,7 @@ import java.util.HashMap;
 
 import com.biom4st3r.minerpg.api.Stat.Stats;
 import com.biom4st3r.minerpg.util.RPGPlayer;
+import com.biom4st3r.minerpg.util.Util;
 import com.google.common.collect.Maps;
 
 import net.minecraft.entity.player.PlayerEntity;
@@ -68,31 +69,31 @@ public class StatsComponent
             int clientStat = client.stats.get(stat);
             if(clientStat < serverStat)
             {
-                System.out.println("wtf: Client stat lower than Server.");
+                Util.errorMSG("Client stat lower than Server.");
                 return false;
             }
             delta+= clientStat-serverStat;
         }
         if(delta > this.remainingPoints)
         {
-            System.out.println("wtf: Client delta from server > remainingPoints");
+            Util.errorMSG("Client delta from server > remainingPoints");
             return false;
         }
         if(delta <= this.remainingPoints)
         {
-            System.out.println(this.remainingPoints);
-            System.out.println(delta);
+            Util.debug(this.remainingPoints);
+            Util.debug(delta);
             this.remainingPoints -= delta;
             for(Stats stat : Stats.values())
             {
                 this.stats.put(stat, client.stats.get(stat));
-                System.out.println(stat + " " + client.getStat(stat));
+                Util.debug(stat + " " + client.getStat(stat));
             }
-            System.out.println(this.remainingPoints);
-            System.out.println("Success");
+            Util.debug(this.remainingPoints);
+            Util.debug("Success");
             return true;
         }
-        System.out.println("WTF: no clue");
+        Util.errorMSG("unknown issue in stat compare");
         return false;
     }
 
@@ -115,7 +116,6 @@ public class StatsComponent
     {
         if(tag.getCompound(STATS).isEmpty() )//|| true)
         {
-            System.out.println("first init");
             //this.serialize(tag);
             this.remainingPoints = 27;
             for(Stats i : Stats.values())
@@ -129,11 +129,7 @@ public class StatsComponent
         {
             this.stats.put(i, (int)statsTag.getByte(i.text));
         }
-        //System.out.println(statsTag.getByte(SPAREPOINTS));
         this.remainingPoints = ((int)statsTag.getByte(SPAREPOINTS));
-        //System.out.println(remainingPoints);
-        //System.out.println(statsTag.getByte(SPAREPOINTS));
-        
     }
 
     public int getStatPoints()
@@ -148,13 +144,12 @@ public class StatsComponent
             this.stats.put(s, (int)pbb.readByte());
         }
         int i = (int)pbb.readByte();
-        //System.out.println(i); 
         this.setRemainingPoints(i);
     }
 
     public void initStats()
     {
-        System.out.println("Init Stats");
+        Util.debug("Init Stats");
         for(Stats stat : Stats.values())
         {
             this.stats.put(stat, 8);
@@ -164,7 +159,6 @@ public class StatsComponent
 
     public void toBuffer(PacketByteBuf pbb)
     {
-        //PacketByteBuf pbb = new PacketByteBuf(Unpooled.buffer());
 
         if(this.stats.size() != 6)
         {
@@ -172,24 +166,25 @@ public class StatsComponent
         }
         for(Stats s :Stats.values())
         {
-            //System.out.println(this.stats.get(s) == null);
             pbb.writeByte(this.stats.get(s));
         }
         pbb.writeByte(this.getStatPoints());
     }
 
-    public void updatStats(PlayerEntity pe)
+    public void copy(PlayerEntity pe)
     {
+        Util.debug("");
         if(pe.world.isClient)
         {
+            Util.errorMSG("Attempted StatComponent.copy on client. That's not bad, just unnessisary");
             return;
         }
-        RPGPlayer rpgpe = (RPGPlayer)pe;
+        StatsComponent original = ((RPGPlayer)pe).getStatsComponent();
         for(Stats s : Stats.values())
         {
-            this.stats.put(s, rpgpe.getStatsComponent().getStats().get(s));
+            this.stats.put(s, original.getStats().get(s).intValue());
         }
-        this.remainingPoints = rpgpe.getStatsComponent().getStatPoints();
+        this.remainingPoints = original.getStatPoints();
     }
 
     public int getStat(Stats name)
