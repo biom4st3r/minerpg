@@ -3,8 +3,6 @@ package com.biom4st3r.minerpg.impl.abilities.barbarian;
 import com.biom4st3r.minerpg.api.RPGAbility;
 import com.biom4st3r.minerpg.util.RPGPlayer;
 
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.network.ClientPlayerInteractionManager;
 import net.minecraft.util.Identifier;
 
 public class RageAbility extends RPGAbility 
