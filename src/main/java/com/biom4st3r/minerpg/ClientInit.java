@@ -26,10 +26,6 @@ public class ClientInit implements ClientModInitializer
         KeyBindingRegistry.INSTANCE.addCategory(MineRPG.MODID);
         swapHotBar = FabricKeyBinding.Builder.create(new Identifier(MineRPG.MODID,"swaphotbars"), InputUtil.Type.KEYSYM, 41/*`*/ , MineRPG.MODID).build();
         KeyBindingRegistry.INSTANCE.register((FabricKeyBinding)swapHotBar);
-        //MinecraftClient
-        //MinecraftClientGame
-        //ClientPlayerInteractionManager
-    
     }
 
     

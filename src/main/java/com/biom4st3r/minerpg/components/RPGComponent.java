@@ -29,12 +29,15 @@ public class RPGComponent
     public static final String CLASS_ID = "id";
     public static final String LEVEL = "lvl";
 
+    public RPGAbility[] abilityBar;
+
     public RPGComponent()
     {
         rpgClasses = new Hashtable<RPGClass,Integer>(1);
         //rpgclasses = new ArrayList<RPGClass>(1);
         abilities = new ArrayList<RPGAbility>(20);
         abilities.isEmpty(); //TODO: Remove me
+        abilityBar = new RPGAbility[9];
     }
 
     public RPGClass getRpgClass(int index)
