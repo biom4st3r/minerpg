@@ -1,8 +1,9 @@
 package com.biom4st3r.minerpg.mixin;
 
 import com.biom4st3r.minerpg.MineRPG;
+import com.biom4st3r.minerpg.components.RPGAbilityComponent;
 import com.biom4st3r.minerpg.util.InGameHudHelper;
-import com.biom4st3r.minerpg.util.Util;
+import com.biom4st3r.minerpg.util.RPGPlayer;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.platform.GlStateManager.DestFactor;
 import com.mojang.blaze3d.platform.GlStateManager.SourceFactor;
@@ -35,16 +36,19 @@ public abstract class InGameHudMixin extends DrawableHelper implements InGameHud
     private MinecraftClient client;
 
     @Shadow
-    private PlayerEntity getCameraPlayer() {
+    private PlayerEntity getCameraPlayer() 
+    {
         return null;
     }
+
     @Shadow
     private int scaledWidth;
     @Shadow
     private int scaledHeight;
 
     @Override
-    public void toggleRenderAbilityBar() {
+    public void toggleRenderAbilityBar() 
+    {
         abilityBar = !abilityBar;
     }
 
@@ -82,31 +86,36 @@ public abstract class InGameHudMixin extends DrawableHelper implements InGameHud
             GlStateManager.blendFuncSeparate(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA, SourceFactor.ONE, DestFactor.ZERO);
             GuiLighting.enableForItems();
 
-            int i;
-            int int_9;
-            int int_10;
-            for(i = 0; i < 9; ++i) 
+            //int i;
+            int xPos;
+            int yPos;
+            for(int i = 0; i < 9; ++i) 
             {
-                int_9 = width - 90 + i * 20 + 2;
-                int_10 = this.scaledHeight - 16 - 3;
-                //this.renderHotbarItem(int_9, int_10, float_1, playerEntity_1, (ItemStack)playerEntity_1.inventory.main.get(i));
+                xPos = width - 90 + i * 20 + 2;
+                yPos = this.scaledHeight - 16 - 3;
+                this.renderAbilitySlot(xPos, yPos, ((RPGPlayer)player).getRPGAbilityComponent());
             }
 
-            if (!offHandStack.isEmpty()) 
-            {
-                i = this.scaledHeight - 16 - 3;
-                if (nonMainHand == Arm.LEFT) {
-                    //this.renderHotbarItem(width - 91 - 26, i, float_1, playerEntity_1, offHandStack);
-                } else {
-                    //this.renderHotbarItem(width + 91 + 10, i, float_1, playerEntity_1, offHandStack);
-                }
-            }
+            // if (!offHandStack.isEmpty()) 
+            // {
+            //     i = this.scaledHeight - 16 - 3;
+            //     if (nonMainHand == Arm.LEFT) {
+            //         //this.renderHotbarItem(width - 91 - 26, i, float_1, playerEntity_1, offHandStack);
+            //     } else {
+            //         //this.renderHotbarItem(width + 91 + 10, i, float_1, playerEntity_1, offHandStack);
+            //     }
+            // }
             GuiLighting.disable();
             GlStateManager.disableRescaleNormal();
             GlStateManager.disableBlend();
             ci.cancel();
 
         }
+    }
+
+    protected void renderAbilitySlot(int xPos, int yPos, RPGAbilityComponent rpgAC)
+    {
+
     }
 
     // @Inject(at = @At("HEAD"), method="renderHotBar",cancellable = true)

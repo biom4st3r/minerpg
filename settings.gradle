@@ -11,7 +11,7 @@ pluginManagement {
         }
         maven { 
             name = "Jitpack"
-            url = "https://jitpack.io/com/github/Chocohead/fabric-loom/"
+            url = "https://jitpack.io"
         }
         gradlePluginPortal()
     }

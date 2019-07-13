@@ -4,13 +4,11 @@ import com.biom4st3r.minerpg.networking.Packets;
 import com.biom4st3r.minerpg.registery.RpgAbilities;
 import com.biom4st3r.minerpg.registery.RpgClasses;
 import com.biom4st3r.minerpg.util.Util;
-
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.container.ContainerProviderRegistry;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.PacketByteBuf;
-
 
 public class MineRPG implements ModInitializer
 {
@@ -23,6 +21,7 @@ public class MineRPG implements ModInitializer
     @Override
     public void onInitialize() 
     {
+        //EnderChestBlock
         //Registry.register(RPG_Registry.CLASS_REGISTRY, "barbarian", BarbarianClass);
         RpgAbilities.init();
         RpgClasses.init();

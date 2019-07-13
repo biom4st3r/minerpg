@@ -1,10 +1,13 @@
+
+
 package com.biom4st3r.minerpg.impl.rpgclass;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import com.biom4st3r.minerpg.api.RPGAbility;
 import com.biom4st3r.minerpg.api.RPGClass;
+import com.biom4st3r.minerpg.registery.RpgAbilities;
+import com.biom4st3r.minerpg.util.Util;
 
 import net.minecraft.util.Identifier;
 
@@ -44,11 +47,11 @@ public class BarbarianClass extends RPGClass {
             case 3:
             case 2:
             case 1:
-            abilities.add(null);
+                abilities.add(RpgAbilities.RAGE_ABILITY);
             default:
             break;
         }
-        return (RPGAbility[])abilities.toArray();
+        return Util.reverse((RPGAbility[])abilities.toArray());
     }
 
     @Override

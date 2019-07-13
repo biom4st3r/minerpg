@@ -43,14 +43,14 @@ public class GUIhelper
         }, bools[1], 1);
         buttons[2] = new InventoryTab(xPos+(buttonWidth*2)-2, yPos, buttonWidth, "Stats", b ->
         {
-            mc.player.networkHandler.sendPacket(Packets.CLIENT.requestStatComp());
+            mc.getNetworkHandler().sendPacket(Packets.CLIENT.requestStatComp());
             mc.openScreen(new StatMenu());
 
         }, bools[2], 2);
         buttons[3] = new InventoryTab(xPos+(buttonWidth*3)-3, yPos, buttonWidth, "Class", b->
         {
-            mc.player.networkHandler.sendPacket(Packets.CLIENT.requestRpgComponent());
-            if(!((RPGPlayer)mc.player).getRPGComponent().hasRpgClass())
+            mc.getNetworkHandler().sendPacket(Packets.CLIENT.requestRpgComponent());
+            if(!((RPGPlayer)mc.player).getRPGClassComponent().hasRpgClass())
             {
                 mc.openScreen(new InitClassMenu());
             }
