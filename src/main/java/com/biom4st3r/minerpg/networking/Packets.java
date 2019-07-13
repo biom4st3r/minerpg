@@ -36,13 +36,13 @@ public class Packets
         {
 
             RPGPlayer player = ((RPGPlayer)MinecraftClient.getInstance().player);
-            player.getRPGComponent().fromBuffer(buffer);
+            player.getRPGClassComponent().deserializeBuffer(buffer);
 
         });
         ClientSidePacketRegistry.INSTANCE.register(Packets.SEND_STAT_UPDATE, (context,buffer) ->
         {
             RPGPlayer player = ((RPGPlayer)MinecraftClient.getInstance().player);
-            player.getStatsComponent().fromBuffer(buffer);
+            player.getStatsComponent().deserializeBuffer(buffer);
         });
 
     }
@@ -52,7 +52,7 @@ public class Packets
         ServerSidePacketRegistry.INSTANCE.register(REQ_RPG_COMPONENT, (context,buffer) ->
         {
 
-            ((ServerPlayerEntity)context.getPlayer()).networkHandler.sendPacket(SERVER.sendRPGComps(((RPGPlayer)context.getPlayer())));
+            ((ServerPlayerEntity)context.getPlayer()).networkHandler.sendPacket(SERVER.sendRPGClassComponent(((RPGPlayer)context.getPlayer())));
         });
         ServerSidePacketRegistry.INSTANCE.register(MineRPG.COMPONENT_BAG_ID, (context,buffer) ->
         {
@@ -61,15 +61,15 @@ public class Packets
         ServerSidePacketRegistry.INSTANCE.register(REQ_CHANGE_STAT, (context,buffer) ->
         {
             StatsComponent rpgClientc = new StatsComponent();
-            rpgClientc.fromBuffer(buffer);
+            rpgClientc.deserializeBuffer(buffer);
             ((RPGPlayer)context.getPlayer()).getStatsComponent().clientRequestChanges(rpgClientc);
 
         });
         ServerSidePacketRegistry.INSTANCE.register(REQ_ADD_CLASS, (context,buffer) ->
         {
             RPGPlayer player = (RPGPlayer)context.getPlayer();
-            player.getRPGComponent().addRpgClass(RPG_Registry.CLASS_REGISTRY.get(buffer.readIdentifier()));
-            ((ServerPlayerEntity)context.getPlayer()).networkHandler.sendPacket(SERVER.sendRPGComps(player));
+            player.getRPGClassComponent().addRpgClass(RPG_Registry.CLASS_REGISTRY.get(buffer.readIdentifier()));
+            ((ServerPlayerEntity)context.getPlayer()).networkHandler.sendPacket(SERVER.sendRPGClassComponent(player));
         });
         ServerSidePacketRegistry.INSTANCE.register(REQ_STAT_COMPONENT, (context,buffer) ->
         {
@@ -94,7 +94,7 @@ public class Packets
         public static CustomPayloadC2SPacket statChange(StatsComponent statC)
         {
             PacketByteBuf pbb = new PacketByteBuf(Unpooled.buffer());
-            statC.toBuffer(pbb);
+            statC.serializeBuffer(pbb);
             return new CustomPayloadC2SPacket(REQ_CHANGE_STAT, pbb);
         }
     
@@ -117,15 +117,15 @@ public class Packets
         public static CustomPayloadS2CPacket sendStats(RPGPlayer player)
         {
             PacketByteBuf pbb = new PacketByteBuf(Unpooled.buffer());
-            player.getStatsComponent().toBuffer(pbb);
+            player.getStatsComponent().serializeBuffer(pbb);
         
             return new CustomPayloadS2CPacket(Packets.SEND_STAT_UPDATE,pbb);
         }
     
-        public static CustomPayloadS2CPacket sendRPGComps(RPGPlayer player)
+        public static CustomPayloadS2CPacket sendRPGClassComponent(RPGPlayer player)
         {
             PacketByteBuf pbb = new PacketByteBuf(Unpooled.buffer());
-            player.getRPGComponent().toBuffer(pbb);
+            player.getRPGClassComponent().serializeBuffer(pbb);
             return new CustomPayloadS2CPacket(Packets.SEND_RPG_COMPONENT,pbb);
         }
     }

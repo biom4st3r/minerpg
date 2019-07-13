@@ -1,5 +1,7 @@
 package com.biom4st3r.minerpg.impl.abilities.barbarian;
 
+import java.util.List;
+
 import com.biom4st3r.minerpg.api.RPGAbility;
 import com.biom4st3r.minerpg.util.RPGPlayer;
 
@@ -34,6 +36,10 @@ public class RageAbility extends RPGAbility
         return Type.ACTIVED;
     }
 
+    @Override
+    public List<String> getToolTips() {
+        return null;
+    }
 
 
 }

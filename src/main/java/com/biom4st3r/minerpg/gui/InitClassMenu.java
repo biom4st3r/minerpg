@@ -111,12 +111,14 @@ public class InitClassMenu extends Screen
                     }
                     cb.setFocused(true);
                     Util.debug(cb.rpgClass.name);
+                    
                 },index));
                 classButtons[index].visible = false;
             }
         }
         confirm = this.addButton(new ButtonWidget(startX+50-22, yGrid(7)-1, 44, 16, "Confirm", b->{
             MinecraftClient.getInstance().getNetworkHandler().sendPacket(Packets.CLIENT.addClass(classButtons[focusedButton].rpgClass));
+            minecraft.openScreen(new ClassMenu());
         }));
         confirm.active = false;
     }

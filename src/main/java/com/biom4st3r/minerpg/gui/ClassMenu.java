@@ -29,7 +29,7 @@ public class ClassMenu extends Screen {
         this.player = ((RPGPlayer)MinecraftClient.getInstance().player);
         this.left = (this.width - this.containerWidth) / 2;
         this.top = (this.height - this.containerHeight) / 2;
-        cb = this.addButton(new ClassButton(this.xMid()-29, this.yGrid(0), player.getRPGComponent().getRpgClass(0), button ->
+        cb = this.addButton(new ClassButton(this.xMid()-29, this.yGrid(0), player.getRPGClassComponent().getRpgClass(0), button ->
         {
 
         }, 0));

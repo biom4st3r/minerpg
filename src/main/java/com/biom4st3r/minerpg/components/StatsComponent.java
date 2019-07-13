@@ -7,11 +7,10 @@ import com.biom4st3r.minerpg.util.RPGPlayer;
 import com.biom4st3r.minerpg.util.Util;
 import com.google.common.collect.Maps;
 
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.PacketByteBuf;
 
-public class StatsComponent
+public class StatsComponent implements AbstractComponent
 {
     HashMap<Stats, Integer> stats;
 
@@ -23,11 +22,6 @@ public class StatsComponent
     public StatsComponent()
     {
         stats = Maps.newHashMap();
-        // for(Stats stat : Stats.values())
-        // {
-        //     this.stats.put(stat,0);
-        // }
-        //remainingPoints = 0;
     }
 
 
@@ -97,7 +91,7 @@ public class StatsComponent
         return false;
     }
 
-    public void serialize(CompoundTag tag)
+    public void serializeNBT(CompoundTag tag)
     {
         CompoundTag statTag = new CompoundTag();
         if(this.stats.size() == 6)
@@ -112,7 +106,7 @@ public class StatsComponent
         }
     }
 
-    public void deserialize(CompoundTag tag)
+    public void deserializeNBT(CompoundTag tag)
     {
         if(tag.getCompound(STATS).isEmpty() )//|| true)
         {
@@ -137,7 +131,7 @@ public class StatsComponent
         return this.remainingPoints;
     }
 
-    public void fromBuffer(PacketByteBuf pbb)
+    public void deserializeBuffer(PacketByteBuf pbb)
     {
         for(Stats s :Stats.values())
         {
@@ -157,7 +151,7 @@ public class StatsComponent
         this.remainingPoints = 27;
     }
 
-    public void toBuffer(PacketByteBuf pbb)
+    public void serializeBuffer(PacketByteBuf pbb)
     {
 
         if(this.stats.size() != 6)
@@ -171,15 +165,15 @@ public class StatsComponent
         pbb.writeByte(this.getStatPoints());
     }
 
-    public void copy(PlayerEntity pe)
+    public <T extends AbstractComponent> void clone(T origin)
     {
         Util.debug("");
-        if(pe.world.isClient)
-        {
-            Util.errorMSG("Attempted StatComponent.copy on client. That's not bad, just unnessisary");
-            return;
-        }
-        StatsComponent original = ((RPGPlayer)pe).getStatsComponent();
+        // if(pe.world.isClient)
+        // {
+        //     Util.errorMSG("Attempted StatComponent.copy on client. That's not bad, just unnessisary");
+        //     return;
+        // }
+        StatsComponent original = (StatsComponent)origin;
         for(Stats s : Stats.values())
         {
             this.stats.put(s, original.getStats().get(s).intValue());
@@ -207,5 +201,10 @@ public class StatsComponent
         //((PlayerEntity)pe);
         //((PlayerEntity)pe).abilities.allowFlying = true;
         //((PlayerEntity)pe).abilities.invulnerable = true;
+    }
+
+    @Override
+    public <T extends AbstractComponent> T getCopy() {
+        return null;
     }
 }

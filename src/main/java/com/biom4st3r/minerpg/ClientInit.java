@@ -15,7 +15,6 @@ public class ClientInit implements ClientModInitializer
 {
     public static KeyBinding swapHotBar;
 
-
     @Override
     public void onInitializeClient() {
         ScreenProviderRegistry.INSTANCE.registerFactory(

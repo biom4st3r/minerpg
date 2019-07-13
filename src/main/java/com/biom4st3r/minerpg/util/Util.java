@@ -1,6 +1,8 @@
 package com.biom4st3r.minerpg.util;
 
 
+import java.lang.reflect.Array;
+
 import com.biom4st3r.minerpg.MineRPG;
 
 import net.minecraft.entity.player.PlayerEntity;
@@ -60,5 +62,16 @@ public class Util
     public static void errorMSG(Object o)
     {
         System.out.println(MineRPG.MODID + ": " + o.toString());
+    }
+
+    public static <T extends Object> T[] reverse(T[] array)
+    {
+        @SuppressWarnings("unchecked")
+        T[] reversed = (T[])Array.newInstance(array[0].getClass(), array.length);
+        for(int i = 0; i < array.length; i++)
+        {
+            reversed[i] = array[(array.length-1)-i];
+        }
+        return reversed;
     }
 }

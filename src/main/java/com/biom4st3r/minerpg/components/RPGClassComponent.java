@@ -1,27 +1,23 @@
 package com.biom4st3r.minerpg.components;
 
-import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Hashtable;
-import java.util.List;
-
-import com.biom4st3r.minerpg.api.RPGAbility;
+import java.util.Iterator;
 import com.biom4st3r.minerpg.api.RPGClass;
 import com.biom4st3r.minerpg.registery.RPG_Registry;
 import com.biom4st3r.minerpg.util.Util;
-
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.PacketByteBuf;
 
-public class RPGComponent
+public class RPGClassComponent implements AbstractComponent
 {
 
     //private List<RPGClass> rpgclasses;
     public Hashtable<RPGClass,Integer> rpgClasses;
 
-    private List<RPGAbility> abilities;
+    //private List<RPGAbility> abilities;
 
     private int maxClasses = 1;
 
@@ -29,15 +25,17 @@ public class RPGComponent
     public static final String CLASS_ID = "id";
     public static final String LEVEL = "lvl";
 
-    public RPGAbility[] abilityBar;
+    //public RPGAbility[] abilityBar;
 
-    public RPGComponent()
+    public RPGClassComponent()
+    {
+        init();
+    }
+    private void init()
     {
         rpgClasses = new Hashtable<RPGClass,Integer>(1);
-        //rpgclasses = new ArrayList<RPGClass>(1);
-        abilities = new ArrayList<RPGAbility>(20);
-        abilities.isEmpty(); //TODO: Remove me
-        abilityBar = new RPGAbility[9];
+        //abilities = new ArrayList<RPGAbility>(20);
+        //abilityBar = new RPGAbility[9];
     }
 
     public RPGClass getRpgClass(int index)
@@ -77,7 +75,7 @@ public class RPGComponent
         rpgClasses.put(NewrpgClass,1);
     }
 
-    public void toBuffer(PacketByteBuf pbb)
+    public void serializeBuffer(PacketByteBuf pbb)
     {
         Enumeration<RPGClass> classes = rpgClasses.keys();
         RPGClass rpgclass;
@@ -90,7 +88,7 @@ public class RPGComponent
         }
 
     }
-    public void fromBuffer(PacketByteBuf pbb)
+    public void deserializeBuffer(PacketByteBuf pbb)
     {
         int size = pbb.readInt();
         for(int i = 0; i < size; i++)
@@ -99,7 +97,7 @@ public class RPGComponent
         }
     }
 
-    public void writeNbt(CompoundTag ct)
+    public void serializeNBT(CompoundTag ct)
     {
         ListTag lt = new ListTag();
         Enumeration<RPGClass> e = this.rpgClasses.keys();
@@ -116,9 +114,8 @@ public class RPGComponent
         
     }
 
-    public static RPGComponent readNbt(CompoundTag ct)
+    public void deserializeNBT(CompoundTag ct)
     {
-        RPGComponent rpgC = new RPGComponent();
         ListTag lt = ct.getList(RPG_COMPONENT, 10);
         RPGClass rpgclass;
         int lvl;
@@ -131,11 +128,47 @@ public class RPGComponent
                 continue;
             }
             lvl = lt.getCompoundTag(i).getInt(LEVEL);
-            rpgC.rpgClasses.put(rpgclass, lvl);
+            this.rpgClasses.put(rpgclass, lvl);
             //rpgClasses.put(lt.getCompoundTag(i)., value)
         }
-        return rpgC;
     }
+
+    @Override
+    public <T extends AbstractComponent> void clone(T origin) {
+        this.init();
+        RPGClassComponent original = (RPGClassComponent)origin;
+        Iterator<RPGClass> iterator = original.rpgClasses.keySet().iterator();
+        while(iterator.hasNext())
+        {
+            RPGClass rpgClass = iterator.next();
+            this.rpgClasses.put(rpgClass, original.rpgClasses.get(rpgClass).intValue());
+        }
+        // for(RPGAbility a : original.abilities)
+        // {
+        //     this.abilities.add(a);
+        // }
+        // for(int i  = 0; i < original.abilityBar.length; i++)
+        // {
+        //     this.abilityBar[i] = original.abilityBar[i];
+        // }
+    }
+
+    @Override
+    public <T extends AbstractComponent> T getCopy() {
+        return null;
+    }
+
+    // @Override
+    // public int hashCode() {
+    //     int i = super.hashCode();
+    //     for(RPGClass s : this.rpgClasses.keySet())
+    //     {
+    //         i ^= s.hashCode();
+    //         i ^= rpgClasses.get(s).hashCode();
+    //     }
+    //     return i;
+    // }
+
     
 
 
