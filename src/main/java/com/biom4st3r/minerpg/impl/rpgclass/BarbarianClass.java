@@ -4,6 +4,7 @@ package com.biom4st3r.minerpg.impl.rpgclass;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import com.biom4st3r.minerpg.api.RPGAbility;
 import com.biom4st3r.minerpg.api.RPGClass;
 import com.biom4st3r.minerpg.registery.RpgAbilities;
@@ -20,6 +21,7 @@ public class BarbarianClass extends RPGClass {
     
     public BarbarianClass(Identifier name) {
         super(name);
+        //Item
     }
 
     @Override

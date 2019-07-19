@@ -4,7 +4,9 @@ import java.util.List;
 
 import com.biom4st3r.minerpg.api.RPGAbility;
 import com.biom4st3r.minerpg.util.RPGPlayer;
+import com.google.common.collect.Lists;
 
+import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 
 public class RageAbility extends RPGAbility 
@@ -37,8 +39,12 @@ public class RageAbility extends RPGAbility
     }
 
     @Override
-    public List<String> getToolTips() {
-        return null;
+    public List<String> getToolTips() 
+    {//Enchantment
+        List<String> l = Lists.newArrayList();
+        l.add(Formatting.GRAY+ this.name.getPath().toUpperCase() + Formatting.RESET);
+        l.add(this.getType().toString());
+        return l;
     }
 
 

@@ -13,6 +13,8 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
@@ -21,6 +23,8 @@ import net.minecraft.inventory.BasicInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
+import net.minecraft.server.network.ServerPlayNetworkHandler;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.world.World;
 
 @Mixin(PlayerEntity.class)
@@ -42,6 +46,23 @@ public abstract class RPGPlayerEntity extends LivingEntity implements RPGPlayer 
     public StatsComponent getStatsComponent() 
     {
         return statsComponent;
+    }
+
+    @Override
+    public ClientPlayNetworkHandler getNetworkHandlerC() {
+        if(this.world.isClient)
+        {
+            return MinecraftClient.getInstance().getNetworkHandler();
+        }
+        return null;
+    }
+    @Override
+    public ServerPlayNetworkHandler getNetworkHandlerS() {
+        if(!this.world.isClient)
+        {
+            return ((ServerPlayerEntity)(Object)this).networkHandler;
+        }
+        return null;
     }
 
     @Override

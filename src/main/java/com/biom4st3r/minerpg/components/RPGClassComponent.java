@@ -24,7 +24,7 @@ public class RPGClassComponent implements AbstractComponent
     public static final String RPG_COMPONENT = "rpgcomponent";
     public static final String CLASS_ID = "id";
     public static final String LEVEL = "lvl";
-
+    
     //public RPGAbility[] abilityBar;
 
     public RPGClassComponent()
