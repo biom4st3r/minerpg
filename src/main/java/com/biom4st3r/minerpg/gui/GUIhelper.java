@@ -1,6 +1,7 @@
 package com.biom4st3r.minerpg.gui;
 
 import com.biom4st3r.minerpg.networking.Packets;
+import com.biom4st3r.minerpg.registery.RPG_Registry;
 import com.biom4st3r.minerpg.util.RPGPlayer;
 
 import net.fabricmc.api.EnvType;
@@ -60,5 +61,45 @@ public class GUIhelper
             }
         }, bools[3], 3);
         return buttons;
+    }
+
+    public static ButtonWidget[] drawAbilities(int xPos, int yPos)
+    {
+        ButtonWidget[] bw = new ButtonWidget[12];
+        for(int i = 0; i < bw.length; i++)
+        {
+            if(!(i >= bw.length/2))
+            {
+                bw[i] = new AbilityButton(xPos+(i*24) , yPos, RPG_Registry.ABILITY_REGISTRY.get(0), b->{});
+            }
+            else
+            {
+                bw[i] = new AbilityButton(xPos+((i-(bw.length/2))*24) , yPos+24, RPG_Registry.ABILITY_REGISTRY.get(0), b->{});
+            }
+        }
+        return bw;
+    }
+
+    public static ButtonWidget[] drawAbilityArrows(int xPos,int yPos)
+    {
+        ButtonWidget[] bw = new ButtonWidget[2];
+        bw[0] = new ArrowButton(xPos-11, yPos+24-8, true, b->{});
+        bw[1] = new ArrowButton(xPos+(6*24)+1,yPos+24-8,false,b->{});
+        return bw;
+    }
+
+    public static boolean isPointOverClassButton(ClassButton cb, double mouseX, double mouseY) {
+        return isPointWithinBounds(cb.x, cb.y, 21, 21, mouseX, mouseY);
+    }
+  
+    public static boolean isPointWithinBounds(int xPos, int yPos, int width, int height, double mouseX, double mouseY) {
+        return mouseX >= (double)(xPos - 1) &&
+         mouseX < (double)(xPos + width + 1) &&
+          mouseY >= (double)(yPos - 1) &&
+           mouseY < (double)(yPos + height + 1);
+    }
+    public static boolean isPointOverAbilityButton(AbilityButton ab, double mouseX, double mouseY)
+    {
+        return isPointWithinBounds(ab.x, ab.y, 21, 21, mouseX, mouseY);
     }
 }

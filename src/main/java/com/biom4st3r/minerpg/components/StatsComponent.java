@@ -22,6 +22,7 @@ public class StatsComponent implements AbstractComponent
     public StatsComponent()
     {
         stats = Maps.newHashMap();
+        this.initStats();
     }
 
 

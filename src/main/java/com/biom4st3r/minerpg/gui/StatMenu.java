@@ -30,6 +30,9 @@ public class StatMenu extends Screen {
     protected int left;
     protected int top;
 
+    ButtonWidget[] abilityButtons;
+    ButtonWidget[] arrowbuttons;
+
     public StatMenu() {
         super(new TranslatableText(""));
     }
@@ -107,7 +110,7 @@ public class StatMenu extends Screen {
         confirmButton = this.addButton(new ButtonWidget(xMid()+31, yMid()-50, 50, 20, "Confirm", button -> {
             for(StatButton statbuttons : statButtons)
             {
-                statbuttons.visible = false;
+                statbuttons.active = false;
             }
             backupComponent = this.rpgComponent.copyOfStats();
             MinecraftClient
@@ -117,8 +120,22 @@ public class StatMenu extends Screen {
             Util.debug("Checking rpgComponent 1");
             button.visible = false;
         }));
-        this.confirmButton.active = false;
+        if(this.rpgComponent.remainingPoints > 0)
+            this.confirmButton.active = false;
+        else
+            this.confirmButton.visible = false;
 
+        abilityButtons = GUIhelper.drawAbilities(17+this.left, 90+this.top);
+        for(ButtonWidget b : abilityButtons)
+        {
+            this.addButton(b);
+        }
+        arrowbuttons = GUIhelper.drawAbilityArrows(17+this.left, 90+this.top);
+        for(ButtonWidget b : arrowbuttons)
+        {
+            this.addButton(b);
+        }
+        
     }
 
     @Override
@@ -131,10 +148,15 @@ public class StatMenu extends Screen {
         this.blit(int_3, int_4, 0, 0, this.containerWidth, this.containerHeight);
         super.render(mouseX, mouseY, float_1);
         InventoryScreen.drawEntity(int_3 + 51-18, int_4 + 75, 30, (float)(int_3 + 51) - mouseX, (float)(int_4 + 75 - 50) - mouseY, this.minecraft.player);
-
         //float scale = 0.91f;
         renderStats();
-        
+        for(ButtonWidget bw : abilityButtons)
+        {
+            if(GUIhelper.isPointOverAbilityButton((AbilityButton)bw, mouseX, mouseY))
+            {
+                this.renderTooltip(((AbilityButton)bw).ability.getToolTips(), mouseX, mouseY);
+            }
+        }
     }
 
     public void renderStats()

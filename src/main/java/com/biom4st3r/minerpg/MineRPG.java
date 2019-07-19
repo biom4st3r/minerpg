@@ -1,5 +1,6 @@
 package com.biom4st3r.minerpg;
 
+import com.biom4st3r.minerpg.items.ItemReg;
 import com.biom4st3r.minerpg.networking.Packets;
 import com.biom4st3r.minerpg.registery.RpgAbilities;
 import com.biom4st3r.minerpg.registery.RpgClasses;
@@ -25,6 +26,7 @@ public class MineRPG implements ModInitializer
         //Registry.register(RPG_Registry.CLASS_REGISTRY, "barbarian", BarbarianClass);
         RpgAbilities.init();
         RpgClasses.init();
+        ItemReg.init();
         Packets.serverPacketReg();
         ContainerProviderRegistry.INSTANCE.registerFactory(
             COMPONENT_BAG_ID,

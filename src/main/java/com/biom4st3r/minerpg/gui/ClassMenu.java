@@ -18,11 +18,18 @@ public class ClassMenu extends Screen {
     protected int top;
     protected int containerWidth = 176;
     protected int containerHeight = 166;
+    ButtonWidget[] abilityButtons;
+    ButtonWidget[] arrowbuttons;
     RPGPlayer player;
     ClassButton cb;
 
     protected ClassMenu() {
         super(new TranslatableText(""));
+    }
+
+    @Override
+    public boolean isPauseScreen() {
+        return true == false;
     }
     @Override
     protected void init() {
@@ -41,6 +48,17 @@ public class ClassMenu extends Screen {
             this.addButton(button);
         }
 
+        abilityButtons = GUIhelper.drawAbilities(17+this.left, 90+this.top);
+        for(ButtonWidget b : abilityButtons)
+        {
+            this.addButton(b);
+        }
+        arrowbuttons = GUIhelper.drawAbilityArrows(17+this.left, 90+this.top);
+        for(ButtonWidget b : arrowbuttons)
+        {
+            this.addButton(b);
+        }
+        
         super.init();
     }
 
@@ -61,7 +79,13 @@ public class ClassMenu extends Screen {
         // {
         //     this.renderTooltip(cb.rpgClass.getToolTips(), mouseX, mouseY);
         // }
-        
+        for(ButtonWidget bw : abilityButtons)
+        {
+            if(GUIhelper.isPointOverAbilityButton((AbilityButton)bw, mouseX, mouseY))
+            {
+                this.renderTooltip(((AbilityButton)bw).ability.getToolTips(), mouseX, mouseY);
+            }
+        }
     }
 
     private int xMid()
