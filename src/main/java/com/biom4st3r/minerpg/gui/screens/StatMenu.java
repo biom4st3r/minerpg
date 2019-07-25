@@ -1,40 +1,43 @@
-package com.biom4st3r.minerpg.gui;
+package com.biom4st3r.minerpg.gui.screens;
 
 import com.biom4st3r.minerpg.MineRPG;
 import com.biom4st3r.minerpg.api.Stat.Stats;
-import com.biom4st3r.minerpg.components.StatsComponent;
+import com.biom4st3r.minerpg.components.RPGStatsComponent;
+import com.biom4st3r.minerpg.gui.GUIhelper;
+import com.biom4st3r.minerpg.gui.buttons.StatButton;
 import com.biom4st3r.minerpg.networking.Packets;
 import com.biom4st3r.minerpg.util.RPGPlayer;
 import com.biom4st3r.minerpg.util.Util;
 import com.mojang.blaze3d.platform.GlStateManager;
 
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ingame.InventoryScreen;
 import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
 
-public class StatMenu extends Screen {
+public class StatMenu extends AbstractAbilitiesContainer {
 
     public Identifier BG_Texture = new Identifier(MineRPG.MODID, "textures/gui/statsmenu.png");
     private StatButton[] statButtons;
     ButtonWidget confirmButton;
     //private int modY[];
 
-    private StatsComponent rpgComponent;
-    private StatsComponent backupComponent;
+    private RPGStatsComponent rpgComponent;
+    private RPGStatsComponent backupComponent;
 
     protected int containerWidth = 176;
     protected int containerHeight = 166;
     protected int left;
     protected int top;
 
-    ButtonWidget[] abilityButtons;
-    ButtonWidget[] arrowbuttons;
+    // ButtonWidget[] abilityButtons;
+    // ButtonWidget[] arrowbuttons;
+    // ButtonWidget[] abilitySlots;
+
+    //RPGAbility mouseSlot = RpgAbilities.NONE;
 
     public StatMenu() {
-        super(new TranslatableText(""));
+        super();
     }
 
     @Override
@@ -125,18 +128,53 @@ public class StatMenu extends Screen {
         else
             this.confirmButton.visible = false;
 
-        abilityButtons = GUIhelper.drawAbilities(17+this.left, 90+this.top);
-        for(ButtonWidget b : abilityButtons)
-        {
-            this.addButton(b);
-        }
-        arrowbuttons = GUIhelper.drawAbilityArrows(17+this.left, 90+this.top);
-        for(ButtonWidget b : arrowbuttons)
-        {
-            this.addButton(b);
-        }
+
+        // abilityButtons = GUIhelper.drawAbilities(17+this.left, 90+this.top);
+        // for(ButtonWidget b : abilityButtons)
+        // {
+        //     this.addButton(b);
+        //     ((AbilityButton)b).pressAction = bu -> {
+        //         this.mouseSlot = ((AbilityButton)bu).ability;
+
+        //     };
+        // }
+        // arrowbuttons = GUIhelper.drawAbilityArrows(17+this.left, 90+this.top);
+        // for(ButtonWidget b : arrowbuttons)
+        // {
+        //     this.addButton(b);
+        // }
+        // abilitySlots = GUIhelper.drawAbilitySlots(xMid()-80,yGrid(15)+1);
+        // for(ButtonWidget b : abilitySlots)
+        // {
+        //     this.addButton(b);
+        //     RPGAbilityComponent ac = ((RPGPlayer)this.minecraft.player).getRPGAbilityComponent();
+        //     ((AbilitySlotButton)b).pressAction = bu -> {
+        //         AbilitySlotButton asb = ((AbilitySlotButton)bu);
+        //         if(this.mouseSlot == RpgAbilities.NONE)
+        //         {
+        //             asb.resetAbility();
+        //         }
+        //         else
+        //         {
+        //             asb.setAbiliy(mouseSlot);
+        //             mouseSlot = RpgAbilities.NONE;
+        //         }
+        //     };
+        // }
         
     }
+
+    // @Override
+    // public boolean mouseClicked(double double_1, double double_2, int int_1) {
+    //     for(int i  = 0; i < abilityButtons.length && mouseSlot != RpgAbilities.NONE;i++)
+    //     {
+    //         if(abilityButtons[i].active && abilityButtons[i].visible && GUIhelper.isPointOverAbilityButton(((AbilityButton)abilityButtons[i]),double_1,double_2))
+    //         {
+    //             mouseSlot = ((AbilityButton)abilityButtons[i]).ability;
+    //         }
+    //     }
+    //     return true;
+    // }
 
     @Override
     public void render(int mouseX, int mouseY, float float_1) {
@@ -147,16 +185,11 @@ public class StatMenu extends Screen {
         int int_4 = this.top;
         this.blit(int_3, int_4, 0, 0, this.containerWidth, this.containerHeight);
         super.render(mouseX, mouseY, float_1);
+        renderStats();
         InventoryScreen.drawEntity(int_3 + 51-18, int_4 + 75, 30, (float)(int_3 + 51) - mouseX, (float)(int_4 + 75 - 50) - mouseY, this.minecraft.player);
         //float scale = 0.91f;
-        renderStats();
-        for(ButtonWidget bw : abilityButtons)
-        {
-            if(GUIhelper.isPointOverAbilityButton((AbilityButton)bw, mouseX, mouseY))
-            {
-                this.renderTooltip(((AbilityButton)bw).ability.getToolTips(), mouseX, mouseY);
-            }
-        }
+        
+
     }
 
     public void renderStats()

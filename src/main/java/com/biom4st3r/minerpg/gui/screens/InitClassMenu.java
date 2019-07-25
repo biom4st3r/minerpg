@@ -1,7 +1,10 @@
-package com.biom4st3r.minerpg.gui;
+package com.biom4st3r.minerpg.gui.screens;
 
 import com.biom4st3r.minerpg.MineRPG;
 import com.biom4st3r.minerpg.api.RPGClass;
+import com.biom4st3r.minerpg.gui.GUIhelper;
+import com.biom4st3r.minerpg.gui.buttons.ArrowButton;
+import com.biom4st3r.minerpg.gui.buttons.ClassButton;
 import com.biom4st3r.minerpg.networking.Packets;
 import com.biom4st3r.minerpg.registery.RPG_Registry;
 import com.biom4st3r.minerpg.util.RPGPlayer;
@@ -15,6 +18,7 @@ import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
+
 
 public class InitClassMenu extends Screen
 {
@@ -118,6 +122,7 @@ public class InitClassMenu extends Screen
         }
         confirm = this.addButton(new ButtonWidget(startX+50-22, yGrid(7)-1, 44, 16, "Confirm", b->{
             MinecraftClient.getInstance().getNetworkHandler().sendPacket(Packets.CLIENT.addClass(classButtons[focusedButton].rpgClass));
+            this.player.getRPGClassComponent().addRpgClass(classButtons[focusedButton].rpgClass);
             minecraft.openScreen(new ClassMenu());
         }));
         confirm.active = false;

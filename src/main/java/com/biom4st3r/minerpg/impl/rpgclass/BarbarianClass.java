@@ -53,7 +53,7 @@ public class BarbarianClass extends RPGClass {
             default:
             break;
         }
-        return Util.reverse((RPGAbility[])abilities.toArray());
+        return Util.reverse((RPGAbility[])abilities.toArray(new RPGAbility[0]));
     }
 
     @Override

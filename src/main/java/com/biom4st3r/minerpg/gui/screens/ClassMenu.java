@@ -1,9 +1,10 @@
-package com.biom4st3r.minerpg.gui;
+package com.biom4st3r.minerpg.gui.screens;
 
 import com.biom4st3r.minerpg.MineRPG;
+import com.biom4st3r.minerpg.gui.GUIhelper;
+import com.biom4st3r.minerpg.gui.buttons.ClassButton;
 import com.biom4st3r.minerpg.util.RPGPlayer;
 import com.mojang.blaze3d.platform.GlStateManager;
-
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ingame.InventoryScreen;
@@ -18,12 +19,13 @@ public class ClassMenu extends Screen {
     protected int top;
     protected int containerWidth = 176;
     protected int containerHeight = 166;
-    ButtonWidget[] abilityButtons;
-    ButtonWidget[] arrowbuttons;
+    // ButtonWidget[] abilityButtons;
+    // ButtonWidget[] arrowbuttons;
+    // ButtonWidget[] abilitySlots;
     RPGPlayer player;
     ClassButton cb;
 
-    protected ClassMenu() {
+    public ClassMenu() {
         super(new TranslatableText(""));
     }
 
@@ -31,11 +33,13 @@ public class ClassMenu extends Screen {
     public boolean isPauseScreen() {
         return true == false;
     }
+    
     @Override
     protected void init() {
         this.player = ((RPGPlayer)MinecraftClient.getInstance().player);
         this.left = (this.width - this.containerWidth) / 2;
         this.top = (this.height - this.containerHeight) / 2;
+        System.out.println(player.getRPGClassComponent().getRpgClass(0));
         cb = this.addButton(new ClassButton(this.xMid()-29, this.yGrid(0), player.getRPGClassComponent().getRpgClass(0), button ->
         {
 
@@ -48,16 +52,21 @@ public class ClassMenu extends Screen {
             this.addButton(button);
         }
 
-        abilityButtons = GUIhelper.drawAbilities(17+this.left, 90+this.top);
-        for(ButtonWidget b : abilityButtons)
-        {
-            this.addButton(b);
-        }
-        arrowbuttons = GUIhelper.drawAbilityArrows(17+this.left, 90+this.top);
-        for(ButtonWidget b : arrowbuttons)
-        {
-            this.addButton(b);
-        }
+        // abilityButtons = GUIhelper.drawAbilities(17+this.left, 90+this.top);
+        // for(ButtonWidget b : abilityButtons)
+        // {
+        //     this.addButton(b);
+        // }
+        // arrowbuttons = GUIhelper.drawAbilityArrows(17+this.left, 90+this.top);
+        // for(ButtonWidget b : arrowbuttons)
+        // {
+        //     this.addButton(b);
+        // }
+        // abilitySlots = GUIhelper.drawAbilitySlots(xMid()-80,yGrid(15)+1);
+        // for(ButtonWidget b : abilitySlots)
+        // {
+        //     this.addButton(b);
+        // }
         
         super.init();
     }
@@ -72,20 +81,15 @@ public class ClassMenu extends Screen {
         int top = this.top;
         this.blit(left, top, 0, 0, 176, 166);
         InventoryScreen.drawEntity(left + 51-18, top + 75, 30, (float)(left + 51) - mouseX, (float)(top + 75 - 50) - mouseY, this.minecraft.player);
-        
         super.render(mouseX, mouseY, float_1);
         GUIhelper.drawString(this.font, cb.rpgClass.getToolTips().get(0), xMid()-(28-22), yGrid(1)+3, 0x000000);
-        // if(InitClassMenu.isPointOverClassButton(cb, mouseX, mouseY))
+        // for(ButtonWidget bw : abilityButtons)
         // {
-        //     this.renderTooltip(cb.rpgClass.getToolTips(), mouseX, mouseY);
+        //     if(GUIhelper.isPointOverAbilityButton((AbilityButton)bw, mouseX, mouseY))
+        //     {
+        //         this.renderTooltip(((AbilityButton)bw).ability.getToolTips(), mouseX, mouseY);
+        //     }
         // }
-        for(ButtonWidget bw : abilityButtons)
-        {
-            if(GUIhelper.isPointOverAbilityButton((AbilityButton)bw, mouseX, mouseY))
-            {
-                this.renderTooltip(((AbilityButton)bw).ability.getToolTips(), mouseX, mouseY);
-            }
-        }
     }
 
     private int xMid()

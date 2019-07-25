@@ -2,7 +2,7 @@ package com.biom4st3r.minerpg.mixin;
 
 import com.biom4st3r.minerpg.components.RPGAbilityComponent;
 import com.biom4st3r.minerpg.components.RPGClassComponent;
-import com.biom4st3r.minerpg.components.StatsComponent;
+import com.biom4st3r.minerpg.components.RPGStatsComponent;
 import com.biom4st3r.minerpg.gui.ComponentContainer;
 import com.biom4st3r.minerpg.util.BasicInventoryHelper;
 import com.biom4st3r.minerpg.util.RPGPlayer;
@@ -33,17 +33,27 @@ public abstract class RPGPlayerEntity extends LivingEntity implements RPGPlayer 
     protected RPGPlayerEntity(EntityType<? extends LivingEntity> entityType_1, World world_1) {
         super(entityType_1, world_1);
         //this.RPGContainer = new RPGComponent();
+        //MinecraftServer
+    }
+    @Inject(at = @At("RETURN"), method = "<init>*")
+    private void onConst(CallbackInfo ci) {
+        if (bag == null) {
+            bag = new BasicInventory(componentInvSize);
+        }
+        this.componentInventory = new ComponentContainer(2834671, ((PlayerEntity) (Object) this).inventory, bag);
+        this.statsComponent = new RPGStatsComponent();
+        this.rpgClassComponent = new RPGClassComponent();
+        this.rpgAbilityComponent = new RPGAbilityComponent();
     }
 
     private final String COMPONENT_BAG = "compInv";
     private final String SLOT = "Slot";
-
-    private StatsComponent statsComponent;
+    private RPGStatsComponent statsComponent;
     private RPGClassComponent rpgClassComponent;
     private RPGAbilityComponent rpgAbilityComponent;
 
     @Override
-    public StatsComponent getStatsComponent() 
+    public RPGStatsComponent getStatsComponent() 
     {
         return statsComponent;
     }
@@ -54,6 +64,9 @@ public abstract class RPGPlayerEntity extends LivingEntity implements RPGPlayer 
         {
             return MinecraftClient.getInstance().getNetworkHandler();
         }
+        //ClientPlayerEntity
+        //AbstractClientPlayerEntity
+        //ServerPlayerEntity
         return null;
     }
     @Override
@@ -73,17 +86,6 @@ public abstract class RPGPlayerEntity extends LivingEntity implements RPGPlayer 
     @Override
     public RPGAbilityComponent getRPGAbilityComponent() {
         return rpgAbilityComponent;
-    }
-
-    @Inject(at = @At("RETURN"), method = "<init>*")
-    private void onConst(CallbackInfo ci) {
-        if (bag == null) {
-            bag = new BasicInventory(componentInvSize);
-        }
-        this.componentInventory = new ComponentContainer(2834671, ((PlayerEntity) (Object) this).inventory, bag);
-        this.statsComponent = new StatsComponent();
-        this.rpgClassComponent = new RPGClassComponent();
-        this.rpgAbilityComponent = new RPGAbilityComponent();
     }
 
     @Override
@@ -145,6 +147,7 @@ public abstract class RPGPlayerEntity extends LivingEntity implements RPGPlayer 
     @Inject(at = @At("HEAD"), method = "jump")
     public void jump(CallbackInfo ci)
     {
+        //Util.debug(this.rpgClassComponent.getRpgClass(0));
         //Util.debugV("Hello",3);
         // Enumeration<RPGClass> rpgclasses = this.rpgComponent.rpgClasses.keys();
         // while(rpgclasses.hasMoreElements())
@@ -160,7 +163,9 @@ public abstract class RPGPlayerEntity extends LivingEntity implements RPGPlayer 
         this.statsComponent.deserializeNBT(tag);
         bag = deserialize(tag.getList(COMPONENT_BAG, 10), componentInvSize);
         this.rpgClassComponent.deserializeNBT(tag);
-        System.out.println(this.world.isClient);
+        this.rpgAbilityComponent.deserializeNBT(tag);
+        Util.debug(this == null);
+        //this.getNetworkHandlerS().sendPacket(Packets.SERVER.sendRPGClassComponent(this));
         //((ServerPlayerEntity)(Object)this).networkHandler.sendPacket(Packets.SERVER.sendRPGClassComponent(this));
     }
 
@@ -170,6 +175,7 @@ public abstract class RPGPlayerEntity extends LivingEntity implements RPGPlayer 
         this.statsComponent.serializeNBT(tag);
         tag.put(COMPONENT_BAG, serialize(this.componentInventory.bag));
         this.rpgClassComponent.serializeNBT(tag);
+        this.rpgAbilityComponent.serializeNBT(tag);
     }
 
     @Override
@@ -177,13 +183,8 @@ public abstract class RPGPlayerEntity extends LivingEntity implements RPGPlayer 
         return this.componentInventory;
     }
 
-
     @Override
     public void setComponentContainer(ComponentContainer cc) {
         this.componentInventory = cc;
     }
-
-
-
-
 }

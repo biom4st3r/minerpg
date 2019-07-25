@@ -10,7 +10,7 @@ import com.google.common.collect.Maps;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.PacketByteBuf;
 
-public class StatsComponent implements AbstractComponent
+public class RPGStatsComponent implements AbstractComponent
 {
     HashMap<Stats, Integer> stats;
 
@@ -19,7 +19,7 @@ public class StatsComponent implements AbstractComponent
 
     public int remainingPoints;
 
-    public StatsComponent()
+    public RPGStatsComponent()
     {
         stats = Maps.newHashMap();
         this.initStats();
@@ -43,9 +43,9 @@ public class StatsComponent implements AbstractComponent
         this.remainingPoints++;
     }
 
-    public StatsComponent copyOfStats()
+    public RPGStatsComponent copyOfStats()
     {
-        StatsComponent rpgc = new StatsComponent();
+        RPGStatsComponent rpgc = new RPGStatsComponent();
         for(Stats stat : Stats.values())
         {
             rpgc.stats.put(stat, this.getStat(stat));
@@ -54,7 +54,7 @@ public class StatsComponent implements AbstractComponent
         return rpgc;
     }
 
-    public boolean clientRequestChanges(StatsComponent client)
+    public boolean clientRequestChanges(RPGStatsComponent client)
     {
         int delta = 0;
 
@@ -174,7 +174,7 @@ public class StatsComponent implements AbstractComponent
         //     Util.errorMSG("Attempted StatComponent.copy on client. That's not bad, just unnessisary");
         //     return;
         // }
-        StatsComponent original = (StatsComponent)origin;
+        RPGStatsComponent original = (RPGStatsComponent)origin;
         for(Stats s : Stats.values())
         {
             this.stats.put(s, original.getStats().get(s).intValue());
