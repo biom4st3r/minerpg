@@ -1,5 +1,13 @@
 package com.biom4st3r.minerpg.gui;
 
+import com.biom4st3r.minerpg.gui.buttons.AbilityButton;
+import com.biom4st3r.minerpg.gui.buttons.AbilitySlotButton;
+import com.biom4st3r.minerpg.gui.buttons.ArrowButton;
+import com.biom4st3r.minerpg.gui.buttons.ClassButton;
+import com.biom4st3r.minerpg.gui.buttons.InventoryTab;
+import com.biom4st3r.minerpg.gui.screens.ClassMenu;
+import com.biom4st3r.minerpg.gui.screens.InitClassMenu;
+import com.biom4st3r.minerpg.gui.screens.StatMenu;
 import com.biom4st3r.minerpg.networking.Packets;
 import com.biom4st3r.minerpg.registery.RPG_Registry;
 import com.biom4st3r.minerpg.util.RPGPlayer;
@@ -50,12 +58,12 @@ public class GUIhelper
         }, bools[2], 2);
         buttons[3] = new InventoryTab(xPos+(buttonWidth*3)-3, yPos, buttonWidth, "Class", b->
         {
-            mc.getNetworkHandler().sendPacket(Packets.CLIENT.requestRpgComponent());
+            mc.getNetworkHandler().sendPacket(Packets.CLIENT.requestRpgClassComponent());
             if(!((RPGPlayer)mc.player).getRPGClassComponent().hasRpgClass())
             {
                 mc.openScreen(new InitClassMenu());
             }
-            else
+            else;
             {
                 mc.openScreen(new ClassMenu());
             }
@@ -101,5 +109,15 @@ public class GUIhelper
     public static boolean isPointOverAbilityButton(AbilityButton ab, double mouseX, double mouseY)
     {
         return isPointWithinBounds(ab.x, ab.y, 21, 21, mouseX, mouseY);
+    }
+
+    public static ButtonWidget[] drawAbilitySlots(int xPos,int yPos)
+    {
+        ButtonWidget[] abilitySlotButtons = new ButtonWidget[9];
+        for(int i =0; i < 9; i++)
+        {
+            abilitySlotButtons[i] = new AbilitySlotButton(xPos + ((i*18)), yPos, i,((RPGPlayer)MinecraftClient.getInstance().player).getRPGAbilityComponent(), b->{});
+        }
+        return abilitySlotButtons;
     }
 }

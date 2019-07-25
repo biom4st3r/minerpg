@@ -3,11 +3,17 @@ package com.biom4st3r.minerpg.components;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Iterator;
+
+import com.biom4st3r.minerpg.api.RPGAbility;
 import com.biom4st3r.minerpg.api.RPGClass;
 import com.biom4st3r.minerpg.registery.RPG_Registry;
 import com.biom4st3r.minerpg.util.Util;
+
+import net.minecraft.client.network.ClientPlayerInteractionManager;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
+import net.minecraft.server.PlayerManager;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.PacketByteBuf;
 
@@ -18,6 +24,7 @@ public class RPGClassComponent implements AbstractComponent
     public Hashtable<RPGClass,Integer> rpgClasses;
 
     //private List<RPGAbility> abilities;
+    //ServerPlayerEntity
 
     private int maxClasses = 1;
 
@@ -38,6 +45,13 @@ public class RPGClassComponent implements AbstractComponent
         //abilityBar = new RPGAbility[9];
     }
 
+    public RPGAbility[] getAvalibleAbilities()
+    {
+        RPGClass rpgc = getRpgClass(0);
+        int lvl = getRpgClassLvl(rpgc);
+        return rpgc.abilitysAvalibleAtLevel(lvl);
+    }
+
     public RPGClass getRpgClass(int index)
     {
         if(hasRpgClass())
@@ -47,10 +61,19 @@ public class RPGClassComponent implements AbstractComponent
         }
         return null;
     }
+    
 
     public int getRpgClassLvl(RPGClass rpgclass)
-    {
-        return rpgClasses.get(rpgclass);
+    {   
+        try
+        {
+            return rpgClasses.get(rpgclass).intValue();
+        }
+        catch(NullPointerException e)
+        {
+            return 1;
+        }
+        
     }
 
     public boolean hasRpgClass()
@@ -129,6 +152,9 @@ public class RPGClassComponent implements AbstractComponent
             }
             lvl = lt.getCompoundTag(i).getInt(LEVEL);
             this.rpgClasses.put(rpgclass, lvl);
+            //ClientPlayerInteractionManager
+            //System.out.println(this.getRpgClass(0));
+            //Util.debugV(this.getRpgClass(0), 10);
             //rpgClasses.put(lt.getCompoundTag(i)., value)
         }
     }

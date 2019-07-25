@@ -1,8 +1,7 @@
-package com.biom4st3r.minerpg.gui;
+package com.biom4st3r.minerpg.gui.buttons;
 
 import com.biom4st3r.minerpg.MineRPG;
 import com.biom4st3r.minerpg.api.Stat.Stats;
-
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.util.Identifier;
@@ -11,10 +10,11 @@ public class StatButton extends ButtonWidget
 {
 
     //private static final long serialVersionUID = 682316677533249302L;
+    //ServerPlayerEntity
 
     public Identifier BG_Texture = new Identifier(MineRPG.MODID, "textures/gui/rpgmenu.png");
 
-    Stats stat;
+    public Stats stat;
 
     boolean add;
 

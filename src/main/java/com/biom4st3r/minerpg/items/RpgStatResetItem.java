@@ -1,6 +1,6 @@
 package com.biom4st3r.minerpg.items;
 
-import com.biom4st3r.minerpg.components.StatsComponent;
+import com.biom4st3r.minerpg.components.RPGStatsComponent;
 import com.biom4st3r.minerpg.util.RPGPlayer;
 
 import net.minecraft.entity.player.PlayerEntity;
@@ -14,7 +14,8 @@ import net.minecraft.world.World;
 public class RpgStatResetItem extends Item
 {
 
-    public RpgStatResetItem(Settings item$Settings_1) {
+    public RpgStatResetItem(Settings item$Settings_1) 
+    {
         super(item$Settings_1);
     }
 
@@ -23,7 +24,7 @@ public class RpgStatResetItem extends Item
         // if(!world.isClient)
         // {
         RPGPlayer rpgPe = (RPGPlayer)pe;
-        rpgPe.getStatsComponent().clone(new StatsComponent());
+        rpgPe.getStatsComponent().clone(new RPGStatsComponent());
         //rpgPe.getNetworkHandlerS().sendPacket(Packets.SERVER.sendStats(rpgPe));
         //}
         return new TypedActionResult<ItemStack>(ActionResult.SUCCESS, pe.getStackInHand(hand));

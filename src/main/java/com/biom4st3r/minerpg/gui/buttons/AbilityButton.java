@@ -1,7 +1,9 @@
-package com.biom4st3r.minerpg.gui;
+package com.biom4st3r.minerpg.gui.buttons;
 
 import com.biom4st3r.minerpg.MineRPG;
 import com.biom4st3r.minerpg.api.RPGAbility;
+import com.biom4st3r.minerpg.gui.GUIhelper;
+import com.biom4st3r.minerpg.registery.RpgAbilities;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.widget.ButtonWidget;
@@ -9,13 +11,20 @@ import net.minecraft.util.Identifier;
 
 public class AbilityButton extends ButtonWidget
 {
-    public RPGAbility ability;
+    public RPGAbility ability = RpgAbilities.NONE;
 
     private Identifier BG_Texture = new Identifier(MineRPG.MODID, "textures/gui/classmenu.png");
     
+    public ButtonWidget.PressAction pressAction;
+
     public AbilityButton(int xPos, int yPos, RPGAbility ability, PressAction buttonWidget$PressAction_1) {
         super(xPos, yPos, 22, 22, "", buttonWidget$PressAction_1);
         this.ability = ability;
+    }
+
+    @Override
+    public void onPress() {
+        this.pressAction.onPress(this);
     }
     
     int frameU = 256-22;

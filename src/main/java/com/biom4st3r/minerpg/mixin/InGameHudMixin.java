@@ -1,7 +1,10 @@
 package com.biom4st3r.minerpg.mixin;
 
 import com.biom4st3r.minerpg.MineRPG;
+import com.biom4st3r.minerpg.api.RPGAbility;
 import com.biom4st3r.minerpg.components.RPGAbilityComponent;
+import com.biom4st3r.minerpg.gui.GUIhelper;
+import com.biom4st3r.minerpg.registery.RpgAbilities;
 import com.biom4st3r.minerpg.util.InGameHudHelper;
 import com.biom4st3r.minerpg.util.RPGPlayer;
 import com.mojang.blaze3d.platform.GlStateManager;
@@ -93,7 +96,7 @@ public abstract class InGameHudMixin extends DrawableHelper implements InGameHud
             {
                 xPos = width - 90 + i * 20 + 2;
                 yPos = this.scaledHeight - 16 - 3;
-                this.renderAbilitySlot(xPos, yPos, ((RPGPlayer)player).getRPGAbilityComponent());
+                this.renderAbilitySlot(xPos, yPos, ((RPGPlayer)player).getRPGAbilityComponent().abilityBar.get(i));
             }
 
             // if (!offHandStack.isEmpty()) 
@@ -113,8 +116,10 @@ public abstract class InGameHudMixin extends DrawableHelper implements InGameHud
         }
     }
 
-    protected void renderAbilitySlot(int xPos, int yPos, RPGAbilityComponent rpgAC)
+    protected void renderAbilitySlot(int xPos, int yPos, RPGAbility rpgA)
     {
+        if(rpgA!=RpgAbilities.NONE)
+            GUIhelper.drawString(MinecraftClient.getInstance().textRenderer, rpgA.name.getPath().substring(0, 1), xPos+4, yPos+2, 0xFFBB44);
 
     }
 

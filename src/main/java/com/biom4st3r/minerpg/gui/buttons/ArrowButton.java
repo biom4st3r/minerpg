@@ -1,7 +1,6 @@
-package com.biom4st3r.minerpg.gui;
+package com.biom4st3r.minerpg.gui.buttons;
 
 import com.biom4st3r.minerpg.MineRPG;
-
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.util.Identifier;

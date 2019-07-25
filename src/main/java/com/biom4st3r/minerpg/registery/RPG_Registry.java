@@ -18,7 +18,7 @@ public abstract class RPG_Registry
 
     public static Registry<RPGAbility> ABILITY_REGISTRY = create("rpgabilities", ()->
     {
-        return RpgAbilities.RAGE_ABILITY;
+        return RpgAbilities.NONE;
     });
 
     //public static final RPGClass barbarianClass = new BarbarianClass(new Identifier(MineRPG.MODID, "barbarian"));

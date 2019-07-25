@@ -1,4 +1,4 @@
-package com.biom4st3r.minerpg.gui;
+package com.biom4st3r.minerpg.gui.buttons;
 
 import com.biom4st3r.minerpg.MineRPG;
 import com.mojang.blaze3d.platform.GlStateManager;
