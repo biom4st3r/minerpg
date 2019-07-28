@@ -14,7 +14,7 @@ public class RPGStatsComponent implements AbstractComponent
 {
     HashMap<Stats, Integer> stats;
 
-    private final String STATS = "rpgstats";
+    private final String STATS = "rpgstatscomp";
     private final String SPAREPOINTS = "points";
 
     public int remainingPoints;

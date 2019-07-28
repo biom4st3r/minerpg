@@ -38,4 +38,9 @@ public abstract class RPGAbility
     }
     public abstract List<String> getToolTips();
 
+    @Override
+    public String toString() {
+        return this.name.toString();
+    }
+
 }

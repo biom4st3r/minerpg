@@ -1,11 +1,15 @@
 package com.biom4st3r.minerpg.gui.screens;
 
 import com.biom4st3r.minerpg.api.RPGAbility;
+import com.biom4st3r.minerpg.api.RPGClass;
+import com.biom4st3r.minerpg.components.RPGClassComponent;
 import com.biom4st3r.minerpg.gui.GUIhelper;
 import com.biom4st3r.minerpg.gui.buttons.AbilityButton;
 import com.biom4st3r.minerpg.gui.buttons.AbilitySlotButton;
+import com.biom4st3r.minerpg.networking.Packets;
 import com.biom4st3r.minerpg.registery.RpgAbilities;
 import com.biom4st3r.minerpg.util.RPGPlayer;
+import com.biom4st3r.minerpg.util.RpgAbilityContext;
 
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
@@ -17,7 +21,7 @@ public abstract class AbstractAbilitiesContainer extends Screen {
         super(new TranslatableText("string_1"));
         // TODO Auto-generated constructor stub
     }
-    protected RPGAbility mouseSlot = RpgAbilities.NONE;
+    protected RpgAbilityContext mouseSlot = RpgAbilityContext.EMPTY;
     protected ButtonWidget[] abilityDisplay;
     protected ButtonWidget[] abilitySlots;
     protected ButtonWidget[] arrowbuttons;
@@ -39,16 +43,18 @@ public abstract class AbstractAbilitiesContainer extends Screen {
         {
             this.addButton(abilityDisplay[i]);
             ((AbilityButton)abilityDisplay[i]).pressAction = bu -> {
-                this.mouseSlot = ((AbilityButton)bu).ability;
+                this.mouseSlot = ((AbilityButton)bu).abilityContext;
 
             };
-            if(abilities.length <= i)
+            if(abilities.length <= i || abilities[i] == RpgAbilities.NONE)
             {
                 abilityDisplay[i].visible = false;
             }
             else
             {
-                ((AbilityButton) abilityDisplay[i]).ability = abilities[i];
+                RPGClassComponent classComp = player.getRPGClassComponent();
+                RPGClass rpgClass = classComp.getRpgClass(0);
+                ((AbilityButton) abilityDisplay[i]).abilityContext = new RpgAbilityContext(classComp.getRpgClassContext(rpgClass),i,abilities[i]);
             }
         }
         arrowbuttons = GUIhelper.drawAbilityArrows(17+this.left, 90+this.top);
@@ -63,14 +69,15 @@ public abstract class AbstractAbilitiesContainer extends Screen {
             //RPGAbilityComponent ac = ((RPGPlayer)this.minecraft.player).getRPGAbilityComponent();
             ((AbilitySlotButton)b).pressAction = bu -> {
                 AbilitySlotButton asb = ((AbilitySlotButton)bu);
-                if(this.mouseSlot == RpgAbilities.NONE)
+                if(this.mouseSlot == RpgAbilityContext.EMPTY)
                 {
                     asb.resetAbility();
+                    //player.getNetworkHandlerC().sendPacket(Packets.CLIENT.reqChangeAbilityBar(barIndex, newAbility, sourceClass, currentLvl, abilityAtLvlIndex));
                 }
                 else
                 {
                     asb.setAbiliy(mouseSlot);
-                    mouseSlot = RpgAbilities.NONE;
+                    mouseSlot = RpgAbilityContext.EMPTY;
                 }
             };
         }   
@@ -101,12 +108,12 @@ public abstract class AbstractAbilitiesContainer extends Screen {
         {
             if(bw.visible && GUIhelper.isPointOverAbilityButton((AbilityButton)bw, mouseX, mouseY))
             {
-                this.renderTooltip(((AbilityButton)bw).ability.getToolTips(), mouseX, mouseY);
+                this.renderTooltip(((AbilityButton)bw).abilityContext.ability.getToolTips(), mouseX, mouseY);
             }
         }
-        if(mouseSlot != RpgAbilities.NONE)
+        if(mouseSlot != RpgAbilityContext.EMPTY)
         {
-            GUIhelper.drawString(this.font, mouseSlot.name.getPath(), mouseX, mouseY, 0xFFBB44);
+            GUIhelper.drawString(this.font, mouseSlot.ability.name.getPath(), mouseX, mouseY, 0xFFBB44);
         }
         
     }

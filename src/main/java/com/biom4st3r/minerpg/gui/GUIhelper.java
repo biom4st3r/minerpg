@@ -11,6 +11,7 @@ import com.biom4st3r.minerpg.gui.screens.StatMenu;
 import com.biom4st3r.minerpg.networking.Packets;
 import com.biom4st3r.minerpg.registery.RPG_Registry;
 import com.biom4st3r.minerpg.util.RPGPlayer;
+import com.biom4st3r.minerpg.util.RpgAbilityContext;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -63,7 +64,7 @@ public class GUIhelper
             {
                 mc.openScreen(new InitClassMenu());
             }
-            else;
+            else
             {
                 mc.openScreen(new ClassMenu());
             }
@@ -78,11 +79,11 @@ public class GUIhelper
         {
             if(!(i >= bw.length/2))
             {
-                bw[i] = new AbilityButton(xPos+(i*24) , yPos, RPG_Registry.ABILITY_REGISTRY.get(0), b->{});
+                bw[i] = new AbilityButton(xPos+(i*24) , yPos, RpgAbilityContext.EMPTY, b->{});
             }
             else
             {
-                bw[i] = new AbilityButton(xPos+((i-(bw.length/2))*24) , yPos+24, RPG_Registry.ABILITY_REGISTRY.get(0), b->{});
+                bw[i] = new AbilityButton(xPos+((i-(bw.length/2))*24) , yPos+24, RpgAbilityContext.EMPTY, b->{});
             }
         }
         return bw;

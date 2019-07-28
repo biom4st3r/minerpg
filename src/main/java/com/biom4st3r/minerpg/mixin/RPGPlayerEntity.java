@@ -1,5 +1,8 @@
 package com.biom4st3r.minerpg.mixin;
 
+import java.util.List;
+
+import com.biom4st3r.minerpg.api.RPGAbility;
 import com.biom4st3r.minerpg.components.RPGAbilityComponent;
 import com.biom4st3r.minerpg.components.RPGClassComponent;
 import com.biom4st3r.minerpg.components.RPGStatsComponent;
@@ -147,13 +150,8 @@ public abstract class RPGPlayerEntity extends LivingEntity implements RPGPlayer 
     @Inject(at = @At("HEAD"), method = "jump")
     public void jump(CallbackInfo ci)
     {
-        //Util.debug(this.rpgClassComponent.getRpgClass(0));
-        //Util.debugV("Hello",3);
-        // Enumeration<RPGClass> rpgclasses = this.rpgComponent.rpgClasses.keys();
-        // while(rpgclasses.hasMoreElements())
-        // {
-        //     Util.debug(rpgclasses.nextElement().name.getPath());
-        // }
+        //List<RPGAbility> a = this.rpgAbilityComponent.abilityBar;
+        //Util.debug(String.format("%s, %s, %s, %s, %s, %s, %s, %s, %s", a.get(0),a.get(1),a.get(2),a.get(3),a.get(4),a.get(5),a.get(6),a.get(7),a.get(8)));
         
     }
 
@@ -164,7 +162,7 @@ public abstract class RPGPlayerEntity extends LivingEntity implements RPGPlayer 
         bag = deserialize(tag.getList(COMPONENT_BAG, 10), componentInvSize);
         this.rpgClassComponent.deserializeNBT(tag);
         this.rpgAbilityComponent.deserializeNBT(tag);
-        Util.debug(this == null);
+       // Util.debug(this == null);
         //this.getNetworkHandlerS().sendPacket(Packets.SERVER.sendRPGClassComponent(this));
         //((ServerPlayerEntity)(Object)this).networkHandler.sendPacket(Packets.SERVER.sendRPGClassComponent(this));
     }

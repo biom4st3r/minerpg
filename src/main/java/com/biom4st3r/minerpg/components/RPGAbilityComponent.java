@@ -6,6 +6,10 @@ import java.util.List;
 import com.biom4st3r.minerpg.api.RPGAbility;
 import com.biom4st3r.minerpg.registery.RPG_Registry;
 import com.biom4st3r.minerpg.registery.RpgAbilities;
+import com.biom4st3r.minerpg.util.RpgAbilityContext;
+import com.biom4st3r.minerpg.util.Util;
+
+import org.apache.commons.lang3.NotImplementedException;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -18,7 +22,7 @@ public class RPGAbilityComponent implements AbstractComponent {
 
     public  List<RPGAbility> specialAbilities;
 
-    public DefaultedList<RPGAbility> abilityBar;
+    public DefaultedList<RpgAbilityContext> abilityBar;
 
     public static final String ABILITY_LIST = "rpgAbilList";
     public static final String ABILITY_LIST_SIZE = "rpgAbLSize";
@@ -32,7 +36,7 @@ public class RPGAbilityComponent implements AbstractComponent {
     public RPGAbilityComponent()
     {
         specialAbilities = new ArrayList<RPGAbility>();
-        abilityBar = DefaultedList.ofSize(9, RpgAbilities.NONE);
+        abilityBar = DefaultedList.ofSize(9, RpgAbilityContext.EMPTY);
         //MinecraftServer
     }
 
@@ -43,37 +47,43 @@ public class RPGAbilityComponent implements AbstractComponent {
 
     @Override
     public void serializeNBT(CompoundTag tag) {
-        tag.putInt(ABILITY_LIST_SIZE, specialAbilities.size());
         ListTag lt = new ListTag();
         for(RPGAbility a : specialAbilities)
         {
             lt.add(new StringTag(a.name.toString()));
         }
         tag.put(ABILITY_LIST, lt);
-
         lt = new ListTag();
         //CompoundTag ct;
         for(int i = 0; i < 9; i++)
         {
-            lt.add(new StringTag(abilityBar.get(i).name.toString()));
+            Identifier id = abilityBar.get(i).name;
+            lt.add(new StringTag(id.toString()));
+            //String ids = id.toString();
+            //Identifier id2 = new Identifier(ids);
+            //Util.debug(String.format("%s\n %s\n %s\n %s\n", id,ids,id2,id2.getPath()));
         }
         tag.put(ABILITY_BAR, lt);
-        
+        Util.debug(tag.getType(ABILITY_BAR));
     }
 
     @Override
     public void deserializeNBT(CompoundTag tag) {
-        int size = tag.getInt(ABILITY_LIST_SIZE);
-        ListTag lt = tag.getList(ABILITY_LIST, 10);
+        Util.debug(tag);
+        ListTag lt = tag.getList(ABILITY_LIST,10);
         int i;
-        for(i = 0; i < size; i++)
+        for(i = 0; i < lt.size(); i++)
         {
             specialAbilities.add( getAbility(new Identifier(lt.getString(i))));
         }
         lt = tag.getList(ABILITY_BAR, 10);
-        for(i = 0; i < 9 ; i++)
+        Util.debug(lt.size());
+        Util.debug(lt);
+        for(i = 0; i < 9 && lt.size() > 0 ; i++)
         {
-            abilityBar.set(i, getAbility(new Identifier(lt.getString(i))));
+            Identifier id = new Identifier(lt.getString(i));
+            Util.debug(id);
+            abilityBar.set(i, getAbility(id));
         }
 
     }
@@ -89,7 +99,7 @@ public class RPGAbilityComponent implements AbstractComponent {
 
     @Override
     public void deserializeBuffer(PacketByteBuf buf) {
-
+        
     }
 
     @Override
