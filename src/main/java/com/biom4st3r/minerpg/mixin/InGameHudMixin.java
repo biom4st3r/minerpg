@@ -49,6 +49,11 @@ public abstract class InGameHudMixin extends DrawableHelper implements InGameHud
     @Shadow
     private int scaledHeight;
 
+    public boolean isAbilityBarActive()
+    {
+        return abilityBar;
+    }
+
     @Override
     public void toggleRenderAbilityBar() 
     {
@@ -96,7 +101,7 @@ public abstract class InGameHudMixin extends DrawableHelper implements InGameHud
             {
                 xPos = width - 90 + i * 20 + 2;
                 yPos = this.scaledHeight - 16 - 3;
-                this.renderAbilitySlot(xPos, yPos, ((RPGPlayer)player).getRPGAbilityComponent().abilityBar.get(i));
+                this.renderAbilitySlot(xPos, yPos, ((RPGPlayer)player).getRPGAbilityComponent().abilityBar.get(i).ability);
             }
 
             // if (!offHandStack.isEmpty()) 

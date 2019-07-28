@@ -13,7 +13,7 @@ public abstract class RPG_Registry
 {
     public static Registry<RPGClass> CLASS_REGISTRY = create("rpgclasses", () -> 
     {
-        return RpgClasses.BARBARIAN_CLASS;
+        return RpgClasses.NONE;
     });
 
     public static Registry<RPGAbility> ABILITY_REGISTRY = create("rpgabilities", ()->

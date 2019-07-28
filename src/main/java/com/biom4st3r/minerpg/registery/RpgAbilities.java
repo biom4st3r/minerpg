@@ -35,7 +35,7 @@ public class RpgAbilities {
 class No_Ability extends RPGAbility {
 
     public No_Ability() {
-        super(new Identifier(MineRPG.MODID,"none"));
+        super(new Identifier(MineRPG.MODID,"noability"));
         // TODO Auto-generated constructor stub
     }
 

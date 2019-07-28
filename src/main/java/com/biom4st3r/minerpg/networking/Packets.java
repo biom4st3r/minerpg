@@ -1,21 +1,20 @@
 package com.biom4st3r.minerpg.networking;
 
 import com.biom4st3r.minerpg.MineRPG;
+import com.biom4st3r.minerpg.api.RPGAbility;
 import com.biom4st3r.minerpg.api.RPGClass;
 import com.biom4st3r.minerpg.components.RPGStatsComponent;
 import com.biom4st3r.minerpg.registery.RPG_Registry;
+import com.biom4st3r.minerpg.registery.RpgClasses;
 import com.biom4st3r.minerpg.util.RPGPlayer;
-
 import io.netty.buffer.Unpooled;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.container.ContainerProviderRegistry;
 import net.fabricmc.fabric.api.network.ClientSidePacketRegistry;
-import net.fabricmc.fabric.api.network.PacketContext;
 import net.fabricmc.fabric.api.network.ServerSidePacketRegistry;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.packet.CustomPayloadS2CPacket;
-import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.network.packet.CustomPayloadC2SPacket;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.PacketByteBuf;
@@ -31,6 +30,7 @@ public class Packets
     public static final Identifier REQ_ADD_CLASS = new Identifier(MineRPG.MODID,"addclass");
     public static final Identifier REQ_STAT_COMPONENT = new Identifier(MineRPG.MODID,"reqstatcomp");
     public static final Identifier REQ_ABILITY_COMPONENT = new Identifier(MineRPG.MODID,"reqabicomp");
+    public static final Identifier REQ_ABILITY_BAR_CHANGE = new Identifier(MineRPG.MODID,"reqabarchng");
 
     @Environment(EnvType.CLIENT)
     public static void clientPacketReg()
@@ -85,7 +85,38 @@ public class Packets
             RPGPlayer player = (RPGPlayer)context.getPlayer();
             player.getNetworkHandlerS().sendPacket(SERVER.sendStats(player));
         });
-
+        ServerSidePacketRegistry.INSTANCE.register(REQ_ABILITY_BAR_CHANGE, (context,buff)->
+        {
+            RPGPlayer player = (RPGPlayer)context.getPlayer();
+            int barIndex = buff.readInt();
+            RPGAbility ab = RPG_Registry.ABILITY_REGISTRY.get( buff.readIdentifier());
+            RPGClass cl = RPG_Registry.CLASS_REGISTRY.get(buff.readIdentifier());
+            String playername = context.getPlayer().getName().asFormattedString();
+            if(!player.getRPGClassComponent().rpgClasses.contains(cl) && cl != RpgClasses.NONE)
+            {
+                System.out.println(String.format("Warning: %s attempted to use ability from class they dont have.", playername));
+                return;
+            }
+            if(cl == RpgClasses.NONE)
+            {
+                if(!player.getRPGAbilityComponent().specialAbilities.contains(ab))
+                {
+                    System.out.println(String.format("Warning: %s attemped to use ability not avilible to them", playername));
+                    return;
+                }
+                player.getRPGAbilityComponent().abilityBar.set(barIndex, ab);
+            }
+            else
+            {
+                int Lvl = buff.readInt();
+                int index = buff.readInt();
+                if(cl.abilitysAvalibleAtLevel(Lvl)[index] == ab)
+                {
+                    player.getRPGAbilityComponent().abilityBar.set(barIndex,ab);
+                }
+            }
+            
+        });
     }
     
     @Environment(EnvType.CLIENT)
@@ -125,6 +156,16 @@ public class Packets
             return new CustomPayloadC2SPacket(REQ_ADD_CLASS,pbb);
         }
 
+        public static CustomPayloadC2SPacket reqChangeAbilityBar(int barIndex, RPGAbility newAbility,RPGClass sourceClass, int currentLvl, int abilityAtLvlIndex)
+        {
+            PacketByteBuf pbb = new PacketByteBuf(Unpooled.buffer());
+            pbb.writeInt(barIndex);
+            pbb.writeIdentifier(newAbility.name);
+            pbb.writeIdentifier(sourceClass == null ? RpgClasses.NONE.name : sourceClass.name);
+            pbb.writeInt(currentLvl);
+            pbb.writeInt(abilityAtLvlIndex);
+            return new CustomPayloadC2SPacket(REQ_ABILITY_BAR_CHANGE,pbb);
+        }
 
     }
 

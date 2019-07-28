@@ -4,4 +4,6 @@ public interface InGameHudHelper
 {
     public void toggleRenderAbilityBar();
 
+    public boolean isAbilityBarActive();
+
 }

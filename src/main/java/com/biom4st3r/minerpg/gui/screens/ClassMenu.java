@@ -1,6 +1,7 @@
 package com.biom4st3r.minerpg.gui.screens;
 
 import com.biom4st3r.minerpg.MineRPG;
+import com.biom4st3r.minerpg.components.RPGClassComponent;
 import com.biom4st3r.minerpg.gui.GUIhelper;
 import com.biom4st3r.minerpg.gui.buttons.ClassButton;
 import com.biom4st3r.minerpg.util.RPGPlayer;
@@ -42,7 +43,7 @@ public class ClassMenu extends Screen {
         System.out.println(player.getRPGClassComponent().getRpgClass(0));
         cb = this.addButton(new ClassButton(this.xMid()-29, this.yGrid(0), player.getRPGClassComponent().getRpgClass(0), button ->
         {
-
+            //RPGClassComponent
         }, 0));
         cb.active = false;
 
