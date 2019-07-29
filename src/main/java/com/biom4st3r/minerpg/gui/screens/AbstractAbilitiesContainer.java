@@ -6,7 +6,6 @@ import com.biom4st3r.minerpg.components.RPGClassComponent;
 import com.biom4st3r.minerpg.gui.GUIhelper;
 import com.biom4st3r.minerpg.gui.buttons.AbilityButton;
 import com.biom4st3r.minerpg.gui.buttons.AbilitySlotButton;
-import com.biom4st3r.minerpg.networking.Packets;
 import com.biom4st3r.minerpg.registery.RpgAbilities;
 import com.biom4st3r.minerpg.util.RPGPlayer;
 import com.biom4st3r.minerpg.util.RpgAbilityContext;
@@ -19,7 +18,6 @@ public abstract class AbstractAbilitiesContainer extends Screen {
 
     protected AbstractAbilitiesContainer() {
         super(new TranslatableText("string_1"));
-        // TODO Auto-generated constructor stub
     }
     protected RpgAbilityContext mouseSlot = RpgAbilityContext.EMPTY;
     protected ButtonWidget[] abilityDisplay;

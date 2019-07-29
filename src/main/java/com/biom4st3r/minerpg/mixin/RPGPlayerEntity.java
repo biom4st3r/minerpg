@@ -1,8 +1,5 @@
 package com.biom4st3r.minerpg.mixin;
 
-import java.util.List;
-
-import com.biom4st3r.minerpg.api.RPGAbility;
 import com.biom4st3r.minerpg.components.RPGAbilityComponent;
 import com.biom4st3r.minerpg.components.RPGClassComponent;
 import com.biom4st3r.minerpg.components.RPGStatsComponent;
@@ -10,12 +7,10 @@ import com.biom4st3r.minerpg.gui.ComponentContainer;
 import com.biom4st3r.minerpg.util.BasicInventoryHelper;
 import com.biom4st3r.minerpg.util.RPGPlayer;
 import com.biom4st3r.minerpg.util.Util;
-
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.entity.EntityType;

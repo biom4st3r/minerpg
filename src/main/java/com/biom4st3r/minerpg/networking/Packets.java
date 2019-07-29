@@ -1,12 +1,14 @@
 package com.biom4st3r.minerpg.networking;
 
 import com.biom4st3r.minerpg.MineRPG;
-import com.biom4st3r.minerpg.api.RPGAbility;
 import com.biom4st3r.minerpg.api.RPGClass;
 import com.biom4st3r.minerpg.components.RPGStatsComponent;
 import com.biom4st3r.minerpg.registery.RPG_Registry;
+import com.biom4st3r.minerpg.registery.RpgAbilities;
 import com.biom4st3r.minerpg.registery.RpgClasses;
 import com.biom4st3r.minerpg.util.RPGPlayer;
+import com.biom4st3r.minerpg.util.RpgAbilityContext;
+import com.biom4st3r.minerpg.util.RpgClassContext;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -88,33 +90,34 @@ public class Packets
         ServerSidePacketRegistry.INSTANCE.register(REQ_ABILITY_BAR_CHANGE, (context,buff)->
         {
             RPGPlayer player = (RPGPlayer)context.getPlayer();
-            int barIndex = buff.readInt();
-            RPGAbility ab = RPG_Registry.ABILITY_REGISTRY.get( buff.readIdentifier());
-            RPGClass cl = RPG_Registry.CLASS_REGISTRY.get(buff.readIdentifier());
-            String playername = context.getPlayer().getName().asFormattedString();
-            if(!player.getRPGClassComponent().rpgClasses.contains(cl) && cl != RpgClasses.NONE)
+            int barIndex = buff.readByte();
+            RpgAbilityContext rac = new RpgAbilityContext(buff);
+            if(rac.ability == RpgAbilities.NONE)
             {
-                System.out.println(String.format("Warning: %s attempted to use ability from class they dont have.", playername));
+                player.getRPGAbilityComponent().abilityBar.set(barIndex, RpgAbilityContext.EMPTY);
                 return;
             }
-            if(cl == RpgClasses.NONE)
+            if(rac.classContext.rpgclass == RpgClasses.NONE)
             {
-                if(!player.getRPGAbilityComponent().specialAbilities.contains(ab))
+                if(player.getRPGAbilityComponent().specialAbilities.contains(rac.ability))
                 {
-                    System.out.println(String.format("Warning: %s attemped to use ability not avilible to them", playername));
+                    player.getRPGAbilityComponent().abilityBar.set(barIndex, rac);
                     return;
                 }
-                player.getRPGAbilityComponent().abilityBar.set(barIndex, ab);
             }
             else
             {
-                int Lvl = buff.readInt();
-                int index = buff.readInt();
-                if(cl.abilitysAvalibleAtLevel(Lvl)[index] == ab)
+                RpgClassContext player_rcc = player.getRPGClassComponent().getRpgClassContext(rac.classContext.rpgclass);
+                if(player_rcc != RpgClassContext.EMPTY && player_rcc.Lvl == rac.classContext.Lvl)
                 {
-                    player.getRPGAbilityComponent().abilityBar.set(barIndex,ab);
+                    if(rac.classContext.getAbilities()[rac.abilityIndexInClass] == rac.ability)
+                    {
+                        player.getRPGAbilityComponent().abilityBar.set(barIndex, rac);
+                        return;
+                    }
                 }
             }
+            System.out.println(String.format("Warning: %s failed 1 or more checks while trying to add ability to bar", context.getPlayer().getDisplayName().asFormattedString()));
             
         });
     }
@@ -156,14 +159,11 @@ public class Packets
             return new CustomPayloadC2SPacket(REQ_ADD_CLASS,pbb);
         }
 
-        public static CustomPayloadC2SPacket reqChangeAbilityBar(int barIndex, RPGAbility newAbility,RPGClass sourceClass, int currentLvl, int abilityAtLvlIndex)
+        public static CustomPayloadC2SPacket reqChangeAbilityBar(int barIndex,RpgAbilityContext rac)
         {
             PacketByteBuf pbb = new PacketByteBuf(Unpooled.buffer());
-            pbb.writeInt(barIndex);
-            pbb.writeIdentifier(newAbility.name);
-            pbb.writeIdentifier(sourceClass == null ? RpgClasses.NONE.name : sourceClass.name);
-            pbb.writeInt(currentLvl);
-            pbb.writeInt(abilityAtLvlIndex);
+            pbb.writeByte(barIndex);
+            rac.serializeBuffer(pbb);
             return new CustomPayloadC2SPacket(REQ_ABILITY_BAR_CHANGE,pbb);
         }
 
