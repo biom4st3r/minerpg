@@ -9,7 +9,6 @@ import com.biom4st3r.minerpg.gui.screens.ClassMenu;
 import com.biom4st3r.minerpg.gui.screens.InitClassMenu;
 import com.biom4st3r.minerpg.gui.screens.StatMenu;
 import com.biom4st3r.minerpg.networking.Packets;
-import com.biom4st3r.minerpg.registery.RPG_Registry;
 import com.biom4st3r.minerpg.util.RPGPlayer;
 import com.biom4st3r.minerpg.util.RpgAbilityContext;
 

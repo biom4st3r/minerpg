@@ -1,9 +1,7 @@
 package com.biom4st3r.minerpg.gui.buttons;
 
 import com.biom4st3r.minerpg.MineRPG;
-import com.biom4st3r.minerpg.api.RPGAbility;
 import com.biom4st3r.minerpg.gui.GUIhelper;
-import com.biom4st3r.minerpg.registery.RpgAbilities;
 import com.biom4st3r.minerpg.util.RpgAbilityContext;
 
 import net.minecraft.client.MinecraftClient;

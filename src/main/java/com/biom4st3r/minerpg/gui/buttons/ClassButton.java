@@ -26,7 +26,6 @@ public class ClassButton extends ButtonWidget {
         this.rpgClass = rpgclass;
         this.ICON = getPath(rpgClass.name);
         this.index = index;
-        //this.ICON.getNamespace(); // TODO: Remove me
     }
 
     private Identifier getPath(Identifier name)

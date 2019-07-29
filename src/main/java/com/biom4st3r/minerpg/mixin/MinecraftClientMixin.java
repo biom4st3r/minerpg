@@ -3,14 +3,11 @@ package com.biom4st3r.minerpg.mixin;
 import com.biom4st3r.minerpg.ClientInit;
 import com.biom4st3r.minerpg.util.InGameHudHelper;
 import com.biom4st3r.minerpg.util.Util;
-
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.At.Shift;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.hud.InGameHud;
 import net.minecraft.client.network.ClientPlayerEntity;

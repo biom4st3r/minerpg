@@ -11,7 +11,7 @@ import net.minecraft.util.PacketByteBuf;
 
 public class RpgAbilityContext
 {
-    public static final String CONTEXT = "cntxt";
+    //public static final String CONTEXT = "cntxt";
 
     public static final String RPG_CLASS = "rpgclss";
     public static final String RPG_CLASS_LVL = "clsslvl";
@@ -36,29 +36,40 @@ public class RpgAbilityContext
         this.abilityIndexInClass = abilityIndexInClass;
         this.ability = ability;
     }
+    public RpgAbilityContext(PacketByteBuf pbb)
+    {
+        this.classContext = new RpgClassContext(RPG_Registry.CLASS_REGISTRY.get(pbb.readIdentifier()), pbb.readByte());
+        this.abilityIndexInClass = pbb.readByte();
+        this.ability = RPG_Registry.ABILITY_REGISTRY.get(pbb.readIdentifier());
+
+    }
+
     public void serializeNbt(CompoundTag tag)
     {
-        CompoundTag ct = new CompoundTag();
-        ct.putString(RPG_CLASS, classContext.rpgclass.name.toString());
-        ct.putByte(RPG_CLASS_LVL, (byte)classContext.Lvl);
-        ct.putByte(ABILITY_INDEX, (byte)abilityIndexInClass);
-        ct.putString(RPG_ABILITY, ability.name.toString());
-        tag.put(CONTEXT, ct);
+        tag.putString(RPG_CLASS, classContext.rpgclass.name.toString());
+        tag.putByte(RPG_CLASS_LVL, (byte)classContext.Lvl);
+        tag.putByte(ABILITY_INDEX, (byte)abilityIndexInClass);
+        tag.putString(RPG_ABILITY, ability.name.toString());
+        //tag.put(CONTEXT, ct);
 
     }
     public void deserializeNbt(CompoundTag tag)
     {
-        CompoundTag ct = tag.getCompound(CONTEXT);
-        this.classContext = new RpgClassContext(RPG_Registry.CLASS_REGISTRY.get(new Identifier(ct.getString(RPG_CLASS))), ct.getByte(RPG_CLASS_LVL));
-        this.abilityIndexInClass = ct.getByte(ABILITY_INDEX);
-        this.ability = RPG_Registry.ABILITY_REGISTRY.get(new Identifier(ct.getString(RPG_ABILITY)));
+        this.classContext = new RpgClassContext(RPG_Registry.CLASS_REGISTRY.get(new Identifier(tag.getString(RPG_CLASS))), tag.getByte(RPG_CLASS_LVL));
+        this.abilityIndexInClass = tag.getByte(ABILITY_INDEX);
+        this.ability = RPG_Registry.ABILITY_REGISTRY.get(new Identifier(tag.getString(RPG_ABILITY)));
     }
     public void serializeBuffer(PacketByteBuf pbb)
     {
-
+        pbb.writeIdentifier(classContext.rpgclass.name);
+        pbb.writeByte((byte)classContext.Lvl);
+        pbb.writeByte((byte)abilityIndexInClass);
+        pbb.writeIdentifier(ability.name);
     }
     public void deserializebuffer(PacketByteBuf pbb)
     {
-
+        this.classContext = new RpgClassContext(RPG_Registry.CLASS_REGISTRY.get( pbb.readIdentifier()),pbb.readByte());
+        this.abilityIndexInClass = pbb.readByte();
+        this.ability = RPG_Registry.ABILITY_REGISTRY.get(pbb.readIdentifier());
     }
 }

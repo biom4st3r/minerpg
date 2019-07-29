@@ -1,18 +1,13 @@
 package com.biom4st3r.minerpg.mixin;
 
-import com.biom4st3r.minerpg.networking.Packets;
 import com.biom4st3r.minerpg.util.RPGPlayer;
 import com.biom4st3r.minerpg.util.Util;
-
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.PlayerManager;
-import net.minecraft.server.network.ServerPlayNetworkHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.world.dimension.DimensionType;
 

@@ -1,9 +1,8 @@
 package com.biom4st3r.minerpg.util;
 
+import com.biom4st3r.minerpg.api.RPGAbility;
 import com.biom4st3r.minerpg.api.RPGClass;
 import com.biom4st3r.minerpg.registery.RpgClasses;
-
-import net.minecraft.util.Identifier;
 
 public class RpgClassContext
 {
@@ -18,5 +17,8 @@ public class RpgClassContext
     public RPGClass rpgclass;
     public int Lvl = -1;
 
-
+    public RPGAbility[] getAbilities()
+    {
+        return this.rpgclass.abilitysAvalibleAtLevel(this.Lvl);
+    }
 }

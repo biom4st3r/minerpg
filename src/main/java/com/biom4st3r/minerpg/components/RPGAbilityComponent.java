@@ -5,11 +5,8 @@ import java.util.List;
 
 import com.biom4st3r.minerpg.api.RPGAbility;
 import com.biom4st3r.minerpg.registery.RPG_Registry;
-import com.biom4st3r.minerpg.registery.RpgAbilities;
 import com.biom4st3r.minerpg.util.RpgAbilityContext;
 import com.biom4st3r.minerpg.util.Util;
-
-import org.apache.commons.lang3.NotImplementedException;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -57,11 +54,10 @@ public class RPGAbilityComponent implements AbstractComponent {
         //CompoundTag ct;
         for(int i = 0; i < 9; i++)
         {
-            Identifier id = abilityBar.get(i).name;
-            lt.add(new StringTag(id.toString()));
-            //String ids = id.toString();
-            //Identifier id2 = new Identifier(ids);
-            //Util.debug(String.format("%s\n %s\n %s\n %s\n", id,ids,id2,id2.getPath()));
+            RpgAbilityContext rac = abilityBar.get(i);
+            CompoundTag ct = new CompoundTag();
+            rac.serializeNbt(ct);
+            lt.add(ct);
         }
         tag.put(ABILITY_BAR, lt);
         Util.debug(tag.getType(ABILITY_BAR));
@@ -81,9 +77,10 @@ public class RPGAbilityComponent implements AbstractComponent {
         Util.debug(lt);
         for(i = 0; i < 9 && lt.size() > 0 ; i++)
         {
-            Identifier id = new Identifier(lt.getString(i));
-            Util.debug(id);
-            abilityBar.set(i, getAbility(id));
+            RpgAbilityContext rac = new RpgAbilityContext(null, -1, null);
+            rac.deserializeNbt(lt.getCompoundTag(i));
+            this.abilityBar.set(i, rac);
+            
         }
 
     }
