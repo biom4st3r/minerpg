@@ -4,11 +4,14 @@ package com.biom4st3r.minerpg.util;
 import java.lang.reflect.Array;
 
 import com.biom4st3r.minerpg.MineRPG;
+import com.biom4st3r.minerpg.networking.Packets;
 
+import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.network.ServerPlayNetworkHandler;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 
@@ -17,6 +20,21 @@ public class Util
     public static RPGPlayer toRPG(PlayerEntity pe)
     {
         return (RPGPlayer)(Object)pe;
+    }
+
+    public static void sendAllComponents(RPGPlayer player)
+    {
+        ServerPlayNetworkHandler networkhandler = player.getNetworkHandlerS();
+        networkhandler.sendPacket(Packets.SERVER.sendAbilityComponent(player));
+        networkhandler.sendPacket(Packets.SERVER.sendRPGClassComponent(player));
+        networkhandler.sendPacket(Packets.SERVER.sendStats(player));
+    }
+
+    public static void requestAllComponents(ClientPlayNetworkHandler networkhandler)
+    {
+        networkhandler.sendPacket(Packets.CLIENT.requestRpgClassComponent());
+        networkhandler.sendPacket(Packets.CLIENT.requestStatComp());
+        networkhandler.sendPacket(Packets.CLIENT.requestAbilityComp());
     }
     
     public static CompoundTag ShortItemStackToTag(ItemStack iS, CompoundTag tag) {

@@ -2,7 +2,6 @@ package com.biom4st3r.minerpg.gui;
 
 import java.util.Iterator;
 import java.util.Set;
-
 import com.biom4st3r.minerpg.util.Util;
 import com.google.common.collect.Sets;
 import net.minecraft.container.Container;
@@ -17,6 +16,7 @@ public class ComponentContainer extends Container {
 
     public final PlayerInventory playerInv;
     public final BasicInventory bag;
+    //PlayerContainer
 
     public ComponentContainer(int syncid, PlayerInventory playerInv, BasicInventory components) 
     {

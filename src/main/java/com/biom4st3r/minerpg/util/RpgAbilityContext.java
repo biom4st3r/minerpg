@@ -41,7 +41,6 @@ public class RpgAbilityContext
         this.classContext = new RpgClassContext(RPG_Registry.CLASS_REGISTRY.get(pbb.readIdentifier()), pbb.readByte());
         this.abilityIndexInClass = pbb.readByte();
         this.ability = RPG_Registry.ABILITY_REGISTRY.get(pbb.readIdentifier());
-
     }
 
     public void serializeNbt(CompoundTag tag)

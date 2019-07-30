@@ -28,21 +28,4 @@ public abstract class PlayerManagerRespawn
         spe.openContainer(((RPGPlayer)spe).getComponentContainer());
         Util.debugV("updateInventory", 10);
     }
-    // @Inject(at = @At("TAIL"),method = "createPlayer")
-    // public void createPlayer(CallbackInfoReturnable<ServerPlayerEntity> ci)
-    // {
-    //     RPGPlayer player = ((RPGPlayer)ci.getReturnValue());
-    //     ServerPlayNetworkHandler nh = ci.getReturnValue().networkHandler;
-    //     nh.sendPacket(Packets.SERVER.sendRPGClassComponent(player));
-    //     nh.sendPacket(Packets.SERVER.sendStats(player));
-    // }
-    // @Inject(at = @At("TAIL"),method="onPlayerConnect")
-    // public void onPlayerConnect(final ClientConnection clientConnection_1, final ServerPlayerEntity serverPlayerEntity_1, CallbackInfo ci)
-    // {
-    //     RPGPlayer player = ((RPGPlayer)serverPlayerEntity_1);
-    //     ServerPlayNetworkHandler nh = serverPlayerEntity_1.networkHandler;
-    //     nh.sendPacket(Packets.SERVER.sendRPGClassComponent(player));
-    //     nh.sendPacket(Packets.SERVER.sendStats(player));
-
-    // }
 }

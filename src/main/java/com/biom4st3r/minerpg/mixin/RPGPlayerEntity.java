@@ -96,6 +96,7 @@ public abstract class RPGPlayerEntity extends LivingEntity implements RPGPlayer 
         this.componentInventory = new ComponentContainer(2834671, ((PlayerEntity) (Object) this).inventory, bag);
         this.statsComponent.clone(pe.getStatsComponent());
         this.rpgClassComponent.clone(pe.getRPGClassComponent());
+        this.rpgAbilityComponent.clone(pe.getRPGAbilityComponent());
     }
 
     int componentInvSize = 3 * 4;

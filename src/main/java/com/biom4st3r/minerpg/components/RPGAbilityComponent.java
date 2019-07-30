@@ -39,7 +39,15 @@ public class RPGAbilityComponent implements AbstractComponent {
 
     @Override
     public <T extends AbstractComponent> void clone(T origin) {
-
+        RPGAbilityComponent original = (RPGAbilityComponent)origin;
+        for(RPGAbility a : original.specialAbilities)
+        {
+            this.specialAbilities.add(a);
+        }
+        for(int i = 0; i < 9; i++)
+        {
+            this.abilityBar.set(i, original.abilityBar.get(i));
+        }
     }
 
     @Override
@@ -60,12 +68,12 @@ public class RPGAbilityComponent implements AbstractComponent {
             lt.add(ct);
         }
         tag.put(ABILITY_BAR, lt);
-        Util.debug(tag.getType(ABILITY_BAR));
+        //Util.debug(tag.getType(ABILITY_BAR));
     }
 
     @Override
     public void deserializeNBT(CompoundTag tag) {
-        Util.debug(tag);
+        //Util.debug(tag);
         ListTag lt = tag.getList(ABILITY_LIST,10);
         int i;
         for(i = 0; i < lt.size(); i++)
@@ -74,16 +82,15 @@ public class RPGAbilityComponent implements AbstractComponent {
         }
         lt = tag.getList(ABILITY_BAR, 10);
         Util.debug(lt.size());
-        Util.debug(lt);
+        //Util.debug(lt);
         for(i = 0; i < 9 && lt.size() > 0 ; i++)
         {
             RpgAbilityContext rac = new RpgAbilityContext(null, -1, null);
             rac.deserializeNbt(lt.getCompoundTag(i));
             this.abilityBar.set(i, rac);
-            
         }
-
     }
+
     private static RPGAbility getAbility(Identifier i)
     {
         return RPG_Registry.ABILITY_REGISTRY.get(i);
@@ -91,12 +98,28 @@ public class RPGAbilityComponent implements AbstractComponent {
 
     @Override
     public void serializeBuffer(PacketByteBuf buf) {
-
+        buf.writeByte(specialAbilities.size());
+        for(RPGAbility a : specialAbilities)
+        {
+            buf.writeString(a.name.toString());
+        }
+        for(RpgAbilityContext rac : abilityBar)
+        {
+            rac.serializeBuffer(buf);
+        }
     }
 
     @Override
     public void deserializeBuffer(PacketByteBuf buf) {
-        
+        int size = buf.readByte();
+        for(int i = 0; i< size; i++)
+        {
+            specialAbilities.add(getAbility(new Identifier(buf.readString(32767))));
+        }
+        for(int i = 0; i < 9; i++)
+        {
+            abilityBar.set(i, new RpgAbilityContext(buf));
+        }
     }
 
     @Override

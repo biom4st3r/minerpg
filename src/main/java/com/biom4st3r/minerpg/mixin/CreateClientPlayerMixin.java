@@ -1,6 +1,7 @@
 package com.biom4st3r.minerpg.mixin;
 
 import com.biom4st3r.minerpg.networking.Packets;
+import com.biom4st3r.minerpg.util.Util;
 
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -17,9 +18,6 @@ public abstract class CreateClientPlayerMixin
     @Inject(at = @At("RETURN"), method = "createPlayer")
     public void createPlayer(CallbackInfoReturnable<ClientPlayerEntity> ci) 
     {
-        ClientPlayNetworkHandler cph = ci.getReturnValue().networkHandler;
-        cph.sendPacket(Packets.CLIENT.requestRpgClassComponent());
-        cph.sendPacket(Packets.CLIENT.requestStatComp());
-        cph.sendPacket(Packets.CLIENT.requestAbilityComp());
+        Util.requestAllComponents(ci.getReturnValue().networkHandler);
     }
 }
