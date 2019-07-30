@@ -179,14 +179,6 @@ public class RPGClassComponent implements AbstractComponent
             RPGClass rpgClass = iterator.next();
             this.rpgClasses.put(rpgClass, original.rpgClasses.get(rpgClass).intValue());
         }
-        // for(RPGAbility a : original.abilities)
-        // {
-        //     this.abilities.add(a);
-        // }
-        // for(int i  = 0; i < original.abilityBar.length; i++)
-        // {
-        //     this.abilityBar[i] = original.abilityBar[i];
-        // }
     }
 
     @Override

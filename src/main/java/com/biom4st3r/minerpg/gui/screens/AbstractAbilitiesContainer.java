@@ -2,10 +2,12 @@ package com.biom4st3r.minerpg.gui.screens;
 
 import com.biom4st3r.minerpg.api.RPGAbility;
 import com.biom4st3r.minerpg.api.RPGClass;
+import com.biom4st3r.minerpg.components.RPGAbilityComponent;
 import com.biom4st3r.minerpg.components.RPGClassComponent;
 import com.biom4st3r.minerpg.gui.GUIhelper;
 import com.biom4st3r.minerpg.gui.buttons.AbilityButton;
 import com.biom4st3r.minerpg.gui.buttons.AbilitySlotButton;
+import com.biom4st3r.minerpg.networking.Packets;
 import com.biom4st3r.minerpg.registery.RpgAbilities;
 import com.biom4st3r.minerpg.util.RPGPlayer;
 import com.biom4st3r.minerpg.util.RpgAbilityContext;
@@ -70,12 +72,14 @@ public abstract class AbstractAbilitiesContainer extends Screen {
                 if(this.mouseSlot == RpgAbilityContext.EMPTY)
                 {
                     asb.resetAbility();
-                    //player.getNetworkHandlerC().sendPacket(Packets.CLIENT.reqChangeAbilityBar(barIndex, newAbility, sourceClass, currentLvl, abilityAtLvlIndex));
+                    player.getNetworkHandlerC().sendPacket(Packets.CLIENT.reqChangeAbilityBar(asb.index,RpgAbilityContext.EMPTY));
                 }
                 else
                 {
                     asb.setAbiliy(mouseSlot);
+                    player.getNetworkHandlerC().sendPacket(Packets.CLIENT.reqChangeAbilityBar(asb.index, mouseSlot));
                     mouseSlot = RpgAbilityContext.EMPTY;
+                    
                 }
             };
         }   

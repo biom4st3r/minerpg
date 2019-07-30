@@ -144,6 +144,7 @@ public class RPGStatsComponent implements AbstractComponent
 
     public void initStats()
     {
+        
         Util.debug("Init Stats");
         for(Stats stat : Stats.values())
         {
@@ -168,12 +169,6 @@ public class RPGStatsComponent implements AbstractComponent
 
     public <T extends AbstractComponent> void clone(T origin)
     {
-        Util.debug("");
-        // if(pe.world.isClient)
-        // {
-        //     Util.errorMSG("Attempted StatComponent.copy on client. That's not bad, just unnessisary");
-        //     return;
-        // }
         RPGStatsComponent original = (RPGStatsComponent)origin;
         for(Stats s : Stats.values())
         {
@@ -195,13 +190,6 @@ public class RPGStatsComponent implements AbstractComponent
     public HashMap<Stats, Integer> getStats()
     {
         return this.stats;
-    }
-
-    public static void doRandomDebugShit(RPGPlayer pe)
-    {
-        //((PlayerEntity)pe);
-        //((PlayerEntity)pe).abilities.allowFlying = true;
-        //((PlayerEntity)pe).abilities.invulnerable = true;
     }
 
     @Override

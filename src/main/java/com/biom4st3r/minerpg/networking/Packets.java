@@ -9,6 +9,8 @@ import com.biom4st3r.minerpg.registery.RpgClasses;
 import com.biom4st3r.minerpg.util.RPGPlayer;
 import com.biom4st3r.minerpg.util.RpgAbilityContext;
 import com.biom4st3r.minerpg.util.RpgClassContext;
+import com.biom4st3r.minerpg.util.Util;
+
 import io.netty.buffer.Unpooled;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -49,7 +51,11 @@ public class Packets
             RPGPlayer player = ((RPGPlayer)MinecraftClient.getInstance().player);
             player.getStatsComponent().deserializeBuffer(buffer);
         });
-
+        ClientSidePacketRegistry.INSTANCE.register(Packets.SEND_ABILITY_COMPONENT, (context,buffer)->
+        {
+            RPGPlayer player = ((RPGPlayer)context.getPlayer());
+            player.getRPGAbilityComponent().deserializeBuffer(buffer);
+        });
     }
 
     public static void serverPacketReg()
@@ -95,6 +101,7 @@ public class Packets
             if(rac.ability == RpgAbilities.NONE)
             {
                 player.getRPGAbilityComponent().abilityBar.set(barIndex, RpgAbilityContext.EMPTY);
+                Util.debug(String.format("reset slot %s", barIndex));
                 return;
             }
             if(rac.classContext.rpgclass == RpgClasses.NONE)
@@ -102,6 +109,7 @@ public class Packets
                 if(player.getRPGAbilityComponent().specialAbilities.contains(rac.ability))
                 {
                     player.getRPGAbilityComponent().abilityBar.set(barIndex, rac);
+                    Util.debug(String.format("specialSet slot %s to %s", barIndex,rac.ability.name.toString()));
                     return;
                 }
             }
@@ -113,6 +121,7 @@ public class Packets
                     if(rac.classContext.getAbilities()[rac.abilityIndexInClass] == rac.ability)
                     {
                         player.getRPGAbilityComponent().abilityBar.set(barIndex, rac);
+                        Util.debug(String.format("set slot %s to %s", barIndex,rac.ability.name.toString()));
                         return;
                     }
                 }
@@ -188,7 +197,7 @@ public class Packets
         }
         public static CustomPayloadS2CPacket sendAbilityComponent(RPGPlayer player)
         {
-            PacketByteBuf pbb=  new PacketByteBuf(Unpooled.buffer());
+            PacketByteBuf pbb =  new PacketByteBuf(Unpooled.buffer());
             player.getRPGAbilityComponent().serializeBuffer(pbb);
             return new CustomPayloadS2CPacket(Packets.SEND_ABILITY_COMPONENT, pbb);
         }
