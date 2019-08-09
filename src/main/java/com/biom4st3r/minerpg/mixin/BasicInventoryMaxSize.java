@@ -3,21 +3,15 @@ package com.biom4st3r.minerpg.mixin;
 import java.util.List;
 
 import com.biom4st3r.minerpg.util.BasicInventoryHelper;
-import com.biom4st3r.minerpg.util.Util;
 
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 
-import net.minecraft.client.texture.TextureStitcher.Slot;
-import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.BasicInventory;
 import net.minecraft.inventory.InventoryListener;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
 import net.minecraft.util.DefaultedList;
-import net.minecraft.util.PacketByteBuf;
 
 @Mixin(BasicInventory.class)
 public abstract class BasicInventoryMaxSize implements BasicInventoryHelper {

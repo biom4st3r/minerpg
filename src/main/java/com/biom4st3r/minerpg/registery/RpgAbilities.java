@@ -40,7 +40,7 @@ class No_Ability extends RPGAbility {
     }
 
     @Override
-    public void doAbility() {
+    public void doAbility(RPGPlayer player) {
 
     }
 

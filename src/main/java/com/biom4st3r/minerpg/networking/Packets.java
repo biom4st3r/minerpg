@@ -35,6 +35,7 @@ public class Packets
     public static final Identifier REQ_STAT_COMPONENT = new Identifier(MineRPG.MODID,"reqstatcomp");
     public static final Identifier REQ_ABILITY_COMPONENT = new Identifier(MineRPG.MODID,"reqabicomp");
     public static final Identifier REQ_ABILITY_BAR_CHANGE = new Identifier(MineRPG.MODID,"reqabarchng");
+    public static final Identifier USE_ABILITY = new Identifier(MineRPG.MODID,"useabi");
 
     @Environment(EnvType.CLIENT)
     public static void clientPacketReg()
@@ -129,6 +130,11 @@ public class Packets
             System.out.println(String.format("Warning: %s failed 1 or more checks while trying to add ability to bar", context.getPlayer().getDisplayName().asFormattedString()));
             
         });
+        ServerSidePacketRegistry.INSTANCE.register(USE_ABILITY, (context,buff)->
+        {
+            RPGPlayer player = (RPGPlayer)context.getPlayer();
+            player.getRPGAbilityComponent().abilityBar.get(buff.readByte()).ability.doAbility(player);
+        });
     }
     
     @Environment(EnvType.CLIENT)
@@ -174,6 +180,13 @@ public class Packets
             pbb.writeByte(barIndex);
             rac.serializeBuffer(pbb);
             return new CustomPayloadC2SPacket(REQ_ABILITY_BAR_CHANGE,pbb);
+        }
+
+        public static CustomPayloadC2SPacket useAbility(int barIndex)
+        {
+            PacketByteBuf pbb = new PacketByteBuf(Unpooled.buffer());
+            pbb.writeByte(barIndex);
+            return new CustomPayloadC2SPacket(USE_ABILITY,pbb);
         }
 
     }

@@ -3,7 +3,7 @@ package com.biom4st3r.minerpg.components;
 import java.util.HashMap;
 
 import com.biom4st3r.minerpg.api.Stat.Stats;
-import com.biom4st3r.minerpg.util.RPGPlayer;
+
 import com.biom4st3r.minerpg.util.Util;
 import com.google.common.collect.Maps;
 
