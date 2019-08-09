@@ -22,7 +22,7 @@ public abstract class RPGAbility
         return this.name;
     }
 
-    public abstract void doAbility();
+    public abstract void doAbility(RPGPlayer player);
 
     public abstract boolean applyCost(RPGPlayer player);
 

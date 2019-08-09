@@ -19,7 +19,7 @@ public class RageAbility extends RPGAbility
     }
 
     @Override
-    public void doAbility() {
+    public void doAbility(RPGPlayer player) {
         
     }
 
