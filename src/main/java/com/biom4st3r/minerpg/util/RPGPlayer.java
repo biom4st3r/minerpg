@@ -26,4 +26,6 @@ public interface RPGPlayer
     public ServerPlayNetworkHandler getNetworkHandlerS();
 
     public ClientPlayNetworkHandler getNetworkHandlerC();
+
+    public PlayerEntity getPlayer();
 }

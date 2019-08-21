@@ -2,11 +2,13 @@ package com.biom4st3r.minerpg.components;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import com.biom4st3r.minerpg.api.RPGAbility;
 import com.biom4st3r.minerpg.registery.RPG_Registry;
 import com.biom4st3r.minerpg.util.RpgAbilityContext;
 import com.biom4st3r.minerpg.util.Util;
+import com.google.common.collect.Maps;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -21,6 +23,8 @@ public class RPGAbilityComponent implements AbstractComponent {
 
     public DefaultedList<RpgAbilityContext> abilityBar;
 
+    public Map<Identifier,Integer> timeouts;
+
     public static final String ABILITY_LIST = "rpgAbilList";
     public static final String ABILITY_LIST_SIZE = "rpgAbLSize";
     public static final String SLOT_ID = "slotid";
@@ -34,6 +38,7 @@ public class RPGAbilityComponent implements AbstractComponent {
     {
         specialAbilities = new ArrayList<RPGAbility>();
         abilityBar = DefaultedList.ofSize(9, RpgAbilityContext.EMPTY);
+        timeouts = Maps.newHashMap();
         //MinecraftServer
     }
 
