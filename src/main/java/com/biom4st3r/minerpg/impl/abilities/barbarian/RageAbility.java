@@ -24,18 +24,8 @@ public class RageAbility extends RPGAbility
     }
 
     @Override
-    public boolean applyCost(RPGPlayer player) {
-        return true;
-    }
-
-    @Override
-    public boolean checkRequirements(RPGPlayer player) {
-        return false;
-    }
-
-    @Override
     public Type getType() {
-        return Type.ACTIVED;
+        return Type.RIGHT_CLICK;
     }
 
     @Override

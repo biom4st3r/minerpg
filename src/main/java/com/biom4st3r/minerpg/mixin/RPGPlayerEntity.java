@@ -23,6 +23,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.server.network.ServerPlayNetworkHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.util.Identifier;
 import net.minecraft.world.World;
 
 @Mixin(PlayerEntity.class)
@@ -33,6 +34,12 @@ public abstract class RPGPlayerEntity extends LivingEntity implements RPGPlayer 
         //this.RPGContainer = new RPGComponent();
         //MinecraftServer
     }
+
+    @Override
+    public PlayerEntity getPlayer() {
+        return (PlayerEntity)(Object)this;
+    }
+
     @Inject(at = @At("RETURN"), method = "<init>*")
     private void onConst(CallbackInfo ci) {
         if (bag == null) {
@@ -74,6 +81,23 @@ public abstract class RPGPlayerEntity extends LivingEntity implements RPGPlayer 
             return ((ServerPlayerEntity)(Object)this).networkHandler;
         }
         return null;
+    }
+
+    @Inject(at = @At("HEAD"),method="tick")
+    public void tick(CallbackInfo ci)
+    {
+        RPGAbilityComponent abC = this.rpgAbilityComponent;
+        if(abC.timeouts.size() != 0)
+        {
+            for(Identifier i : abC.timeouts.keySet())
+            {
+                abC.timeouts.put(i, abC.timeouts.get(i).intValue()-1);
+                if(abC.timeouts.get(i) <= 0)
+                {
+                    abC.timeouts.remove(i); 
+                }
+            }
+        }
     }
 
     @Override

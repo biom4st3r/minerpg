@@ -1,9 +1,7 @@
 package com.biom4st3r.minerpg.api;
 
 import java.util.List;
-
 import com.biom4st3r.minerpg.util.RPGPlayer;
-
 import net.minecraft.util.Identifier;
 
 public abstract class RPGAbility
@@ -24,17 +22,19 @@ public abstract class RPGAbility
 
     public abstract void doAbility(RPGPlayer player);
 
-    public abstract boolean applyCost(RPGPlayer player);
+    //public abstract boolean applyCost(RPGPlayer player);
 
     public float cooldown;
-    public abstract boolean checkRequirements(RPGPlayer player);
+    //public abstract boolean checkRequirements(RPGPlayer player);
 
     public abstract Type getType();
 
     public enum Type{
         PASSIVE,
-        REACTIVE,
-        ACTIVED
+        RIGHT_CLICK,
+        LEFT_CLICK,
+        USE
+        
     }
     public abstract List<String> getToolTips();
 
