@@ -6,11 +6,13 @@ import net.minecraft.util.Identifier;
 
 public abstract class RPGAbility
 {
-    protected RPGAbility(Identifier name)
+    protected RPGAbility(Identifier name,int coolDownDuration)
     {
         this.name = name;
+        this.coolDownDuration = coolDownDuration;
     }
 
+    protected int coolDownDuration;
 
 
     public final Identifier name;
@@ -18,6 +20,11 @@ public abstract class RPGAbility
     public Identifier getIcon()
     {
         return this.name;
+    }
+
+    public boolean isCooledDown(RPGPlayer player)
+    {
+        return player.getRPGAbilityComponent().timeouts.containsKey(name);
     }
 
     public abstract void doAbility(RPGPlayer player);

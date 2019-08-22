@@ -120,6 +120,8 @@ public abstract class InGameHudMixin extends DrawableHelper implements InGameHud
 
     protected void renderAbilitySlot(int xPos, int yPos, RPGAbility rpgA)
     {
+        this.client.getTextureManager().bindTexture(rpgA.name);
+        // TODO: Pull and render icon texture instead of letter
         if(rpgA!=RpgAbilities.NONE)
             GUIhelper.drawString(MinecraftClient.getInstance().textRenderer, rpgA.name.getPath().substring(0, 1), xPos+4, yPos+2, 0xFFBB44);
 

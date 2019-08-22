@@ -38,7 +38,6 @@ class NoClass extends RPGClass {
 
     public NoClass() {
         super(new Identifier(MineRPG.MODID,"noclass"));
-        // TODO Auto-generated constructor stub
     }
 
     @Override
