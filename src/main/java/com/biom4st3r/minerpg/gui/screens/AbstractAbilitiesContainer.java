@@ -2,7 +2,6 @@ package com.biom4st3r.minerpg.gui.screens;
 
 import com.biom4st3r.minerpg.api.RPGAbility;
 import com.biom4st3r.minerpg.api.RPGClass;
-import com.biom4st3r.minerpg.components.RPGAbilityComponent;
 import com.biom4st3r.minerpg.components.RPGClassComponent;
 import com.biom4st3r.minerpg.gui.GUIhelper;
 import com.biom4st3r.minerpg.gui.buttons.AbilityButton;

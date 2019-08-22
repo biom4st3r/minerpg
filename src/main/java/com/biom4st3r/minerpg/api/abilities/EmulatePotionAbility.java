@@ -14,17 +14,17 @@ public abstract class EmulatePotionAbility extends RPGAbility
     protected boolean ambient = false;
     protected boolean showParticles = true;
     protected boolean showIcon = true;
-    protected EmulatePotionAbility(Identifier name,StatusEffect se, int duration, int amplifier)
+    protected EmulatePotionAbility(Identifier name, int coolDownDuration,StatusEffect se, int duration, int amplifier)
     {
-        super(name);
+        super(name,coolDownDuration);
         this.se = se;
         this.duration = duration;
         this.amplifier = amplifier;
     }
-    protected EmulatePotionAbility(Identifier name,StatusEffect se, int duration, int amplifier,
+    protected EmulatePotionAbility(Identifier name, int coolDownDuration,StatusEffect se, int duration, int amplifier,
         boolean ambient,boolean showParticles, boolean showIcon)
     {
-        this(name,se,duration,amplifier);
+        this(name,coolDownDuration,se,duration,amplifier);
         this.ambient = ambient;
         this.showParticles = showParticles;
         this.showIcon = showIcon;
