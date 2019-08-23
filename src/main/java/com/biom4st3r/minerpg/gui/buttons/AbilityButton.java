@@ -2,6 +2,7 @@ package com.biom4st3r.minerpg.gui.buttons;
 
 import com.biom4st3r.minerpg.MineRPG;
 import com.biom4st3r.minerpg.gui.GUIhelper;
+import com.biom4st3r.minerpg.registery.RpgAbilities;
 import com.biom4st3r.minerpg.util.RpgAbilityContext;
 
 import net.minecraft.client.MinecraftClient;
@@ -36,17 +37,27 @@ public class AbilityButton extends ButtonWidget
     {
         MinecraftClient.getInstance().getTextureManager().bindTexture(BG_Texture);
         blit(this.x,this.y,frameU,frameV,width,height);
-        if((!this.isHovered && !this.isFocused() )|| !this.active)
+        // if((!this.isHovered && !this.isFocused() )|| !this.active)
+        // {
+        //     blit(this.x+3,this.y+3,bg_lightU,bg_lightV,16,16);
+        // }
+        // else if((this.isHovered || this.isFocused()) && this.active)
+        // {
+        //     blit(this.x+3,this.y+3,bg_lightU,bg_lightV+16,16,16);
+        // }
+        if(abilityContext.ability != RpgAbilities.NONE)
         {
-            blit(this.x+3,this.y+3,bg_lightU,bg_lightV,16,16);
+            MinecraftClient.getInstance().getTextureManager().bindTexture(abilityContext.ability.getIcon());
+            // TODO: Pull and render icon texture instead of letter
+            blit(this.x+3,this.y+3 ,16,16,16,16,16,16);//x y u v w h
+
         }
-        else if((this.isHovered || this.isFocused()) && this.active)
+        if((this.isHovered || this.isFocused()) && this.active)
         {
-            blit(this.x+3,this.y+3,bg_lightU,bg_lightV+16,16,16);
+            fill(this.x+3, this.y+3, this.x+3 + 16, this.y+3 + 16, 0x80FFFFFF);
         }
-        GUIhelper.drawString(MinecraftClient.getInstance().textRenderer, 
-        abilityContext.ability.name.getPath().substring(0,1).toUpperCase(),
-        this.x+9, this.y+7, 0x000000);
+
+
         //MinecraftClient.getInstance().getTextureManager().bindTexture(ICON);
         //blit(this.x+3,this.y+3,this.width,this.height,0,0,128,128,256,256);
 

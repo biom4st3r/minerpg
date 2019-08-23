@@ -11,6 +11,7 @@ import com.biom4st3r.minerpg.registery.RpgAbilities;
 import com.biom4st3r.minerpg.util.RPGPlayer;
 import com.biom4st3r.minerpg.util.RpgAbilityContext;
 
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.text.TranslatableText;
@@ -114,7 +115,10 @@ public abstract class AbstractAbilitiesContainer extends Screen {
         }
         if(mouseSlot != RpgAbilityContext.EMPTY)
         {
-            GUIhelper.drawString(this.font, mouseSlot.ability.name.getPath(), mouseX, mouseY, 0xFFBB44);
+            //GUIhelper.drawString(this.font, mouseSlot.ability.name.getPath(), mouseX, mouseY, 0xFFBB44);
+            MinecraftClient.getInstance().getTextureManager().bindTexture(mouseSlot.ability.getIcon());
+            // TODO: Pull and render icon texture instead of letter
+            blit(mouseX ,mouseY ,16,16,16,16,16,16);//x y u v w h
         }
         
     }

@@ -25,6 +25,16 @@ public class RPGAbilityComponent implements AbstractComponent {
 
     public Map<Identifier,Integer> timeouts;
 
+    public void addCooldown(RPGAbility ability)
+    {
+        timeouts.put(ability.name, ability.getCoolDown());
+    }
+
+    public void addCooldown(Identifier i, int coolDown)
+    {
+        timeouts.put(i,coolDown);
+    }
+
     public static final String ABILITY_LIST = "rpgAbilList";
     public static final String ABILITY_LIST_SIZE = "rpgAbLSize";
     public static final String SLOT_ID = "slotid";

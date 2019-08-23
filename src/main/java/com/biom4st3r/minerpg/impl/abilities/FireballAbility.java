@@ -23,7 +23,7 @@ public class FireballAbility extends RPGAbility {
             World world = player.getPlayer().getEntityWorld();
             FireballEntity fbe = new FireballEntity(world, player.getPlayer(), 0, 0, 0);
             world.spawnEntity(fbe);
-
+            player.getRPGAbilityComponent().addCooldown(this);
         }        
         //BlazeEntity.ShootFireballGoal;
     }
