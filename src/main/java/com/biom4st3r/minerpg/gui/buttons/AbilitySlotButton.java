@@ -23,16 +23,17 @@ public class AbilitySlotButton extends ButtonWidget
     
     @Override
     public void renderButton(int int_1, int int_2, float float_1) {
+        if(abilitiesC.abilityBar.get(index).ability != RpgAbilities.NONE)
+        {
+
+            MinecraftClient.getInstance().getTextureManager().bindTexture(abilitiesC.abilityBar.get(index).ability.getIcon());
+            // TODO: Pull and render icon texture instead of letter
+            blit(this.x,this.y ,16,16,16,16,16,16);//x y u v w h
+        
+        }
         if(this.isHovered())
         {
             fill(this.x, this.y, this.x + 16, this.y + 16, 0x80FFFFFF);
-        }
-        if(abilitiesC.abilityBar.get(index).ability != RpgAbilities.NONE)
-        {
-            GUIhelper.drawString(
-                MinecraftClient.getInstance().textRenderer,
-                abilitiesC.abilityBar.get(index).ability.name.getPath().substring(0,1), 
-                this.x+6, this.y+4, 0xFFBB44);
         }
     }
 

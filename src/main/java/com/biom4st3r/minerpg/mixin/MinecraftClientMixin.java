@@ -64,11 +64,10 @@ public abstract class MinecraftClientMixin
         {
             
             Util.debug(ability.name.getPath());
-            //ability.doAbility(rpgPlayer);
+            ability.doAbility(rpgPlayer);
             rpgPlayer.getNetworkHandlerC().sendPacket(Packets.CLIENT.useAbility(player.inventory.selectedSlot));
             ci.cancel();
         }
-        
     }
 
     @Inject(at = @At(value = "INVOKE",target = "net/minecraft/client/MinecraftClient.doItemUse()V"), method = "handleInputEvents", cancellable = true)
@@ -82,11 +81,11 @@ public abstract class MinecraftClientMixin
           (ability.getType() == Type.RIGHT_CLICK || ability.getType() == Type.USE))
         {
             Util.debug(ability.name.getPath());
-            //ability.doAbility(rpgPlayer);
+            ability.doAbility(rpgPlayer);
             rpgPlayer.getNetworkHandlerC().sendPacket(Packets.CLIENT.useAbility(player.inventory.selectedSlot));
+            
             ci.cancel();    
         }
-        
     }
 
 

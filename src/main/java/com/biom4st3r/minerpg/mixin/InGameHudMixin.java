@@ -18,7 +18,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.gui.hud.InGameHud;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.render.GuiLighting;
+import net.minecraft.client.texture.Sprite;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Arm;
@@ -120,11 +122,13 @@ public abstract class InGameHudMixin extends DrawableHelper implements InGameHud
 
     protected void renderAbilitySlot(int xPos, int yPos, RPGAbility rpgA)
     {
-        this.client.getTextureManager().bindTexture(rpgA.name);
-        // TODO: Pull and render icon texture instead of letter
-        if(rpgA!=RpgAbilities.NONE)
-            GUIhelper.drawString(MinecraftClient.getInstance().textRenderer, rpgA.name.getPath().substring(0, 1), xPos+4, yPos+2, 0xFFBB44);
+        if(rpgA != RpgAbilities.NONE)
+        {
+            this.client.getTextureManager().bindTexture(rpgA.getIcon());
+            // TODO: Pull and render icon texture instead of letter
+            blit(xPos,yPos ,16,16,16,16,16,16);//x y u v w h
 
+        }
     }
 
     // @Inject(at = @At("HEAD"), method="renderHotBar",cancellable = true)
