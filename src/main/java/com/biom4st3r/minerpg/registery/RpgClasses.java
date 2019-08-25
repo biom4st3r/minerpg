@@ -18,7 +18,7 @@ public class RpgClasses
 
     public static RPGClass register(RPGClass rpgclass)
     {
-        return (RPGClass)((MutableRegistry<RPGClass>)RPG_Registry.CLASS_REGISTRY).add(rpgclass.name, rpgclass);
+        return (RPGClass)((MutableRegistry<RPGClass>)RPG_Registry.CLASS_REGISTRY).add(rpgclass.id, rpgclass);
     }
 
 

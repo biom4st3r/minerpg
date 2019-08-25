@@ -294,7 +294,7 @@ public class ComponentContainer extends Container {
             }
         } 
         else if (this.quickCraftButton != 0) {
-        this.endQuickCraft();
+            this.endQuickCraft();
         } 
         else {
         Slot currSlot;

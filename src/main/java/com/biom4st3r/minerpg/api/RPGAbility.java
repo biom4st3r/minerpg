@@ -1,17 +1,20 @@
 package com.biom4st3r.minerpg.api;
 
 import java.util.List;
-import com.biom4st3r.minerpg.util.RPGPlayer;
 
-import net.minecraft.item.Item;
+import com.biom4st3r.minerpg.util.RPGPlayer;
+import com.google.common.collect.Lists;
+
+import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.SystemUtil;
 
 public abstract class RPGAbility
 {
-    protected RPGAbility(Identifier name,int coolDownDuration)
+    protected RPGAbility(Identifier id,int coolDownDuration)
     {
-        this.name = name;
+        this.id = id;
         this.coolDownDuration = coolDownDuration;
     }
 
@@ -22,19 +25,26 @@ public abstract class RPGAbility
         return coolDownDuration;
     }
 
+    public String getTranslationKey()
+    {
+        return SystemUtil.createTranslationKey("rpgability", id);
+    }
 
-    public final Identifier name;
+    public Text getDisplayName()
+    {
+        return new TranslatableText(this.getTranslationKey());
+    }
+
+    public final Identifier id;
 
     public Identifier getIcon()
     {
-        return new Identifier(name.getNamespace(),"abilities/icons/" + name.getPath() + ".png");
-        //return this.name; // TODO: Should return translation key line Item
-        //Item
+        return new Identifier(id.getNamespace(),"abilities/icons/" + id.getPath() + ".png");
     }
 
     public boolean isCooledDown(RPGPlayer player)
     {
-        return player.getRPGAbilityComponent().timeouts.containsKey(name);
+        return player.getRPGAbilityComponent().timeouts.containsKey(id);
     }
 
     public abstract void doAbility(RPGPlayer player);
@@ -52,11 +62,15 @@ public abstract class RPGAbility
         USE
         
     }
-    public abstract List<String> getToolTips();
+    public List<String> getToolTips()
+    {
+        return Lists.newArrayList(this.getDisplayName().asFormattedString());
+    }
 
     @Override
     public String toString() {
-        return this.name.toString();
+        return this.id.toString();
     }
+
 
 }

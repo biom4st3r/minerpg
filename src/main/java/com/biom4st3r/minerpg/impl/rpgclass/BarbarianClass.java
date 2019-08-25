@@ -59,7 +59,7 @@ public class BarbarianClass extends RPGClass {
     @Override
     public List<String> getToolTips() {
         List<String> tips = new ArrayList<>(3);
-        tips.add(this.name.getPath().toUpperCase());
+        tips.add(this.getDisplayName().asFormattedString());
         return tips;
     }
 }

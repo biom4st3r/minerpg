@@ -19,7 +19,7 @@ public class PotionAbility extends EmulatePotionAbility {
 
 	@Override
     public void doAbility(RPGPlayer player) {
-        if(!player.getRPGAbilityComponent().timeouts.containsKey(name))
+        if(!player.getRPGAbilityComponent().timeouts.containsKey(id))
         {
             player.getPlayer().addPotionEffect(this.getEffect());
             //player.getRPGAbilityComponent().timeouts.put(name, coolDownDuration);
@@ -35,9 +35,11 @@ public class PotionAbility extends EmulatePotionAbility {
     @Override
 	public List<String> getToolTips() {
         List<String> list = new ArrayList<String>(1);
-        list.add(name.getPath().toUpperCase());
+        //list.add(id.getPath().toUpperCase());
+        list.add(this.getDisplayName().asFormattedString());
         list.add("Gives you " + new TranslatableText(this.se.getTranslationKey()).asFormattedString() + " " + (amplifier+1) + " for " + duration/20 + " seconds.");
-		return list;
+        list.add("Cool Down of " + coolDownDuration/20 + " seconds");
+        return list;
 	}
     
 } 

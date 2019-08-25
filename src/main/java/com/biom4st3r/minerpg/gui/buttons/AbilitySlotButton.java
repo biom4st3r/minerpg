@@ -1,7 +1,7 @@
 package com.biom4st3r.minerpg.gui.buttons;
 
+import com.biom4st3r.minerpg.api.RPGAbility;
 import com.biom4st3r.minerpg.components.RPGAbilityComponent;
-import com.biom4st3r.minerpg.gui.GUIhelper;
 import com.biom4st3r.minerpg.registery.RpgAbilities;
 import com.biom4st3r.minerpg.util.RpgAbilityContext;
 
@@ -20,6 +20,11 @@ public class AbilitySlotButton extends ButtonWidget
         this.index = index;
         this.abilitiesC = abilitiesC;
     }
+
+    public RPGAbility getAbility()
+    {  
+        return this.abilitiesC.abilityBar.get(index).ability;
+    }
     
     @Override
     public void renderButton(int int_1, int int_2, float float_1) {
@@ -27,7 +32,6 @@ public class AbilitySlotButton extends ButtonWidget
         {
 
             MinecraftClient.getInstance().getTextureManager().bindTexture(abilitiesC.abilityBar.get(index).ability.getIcon());
-            // TODO: Pull and render icon texture instead of letter
             blit(this.x,this.y ,16,16,16,16,16,16);//x y u v w h
         
         }

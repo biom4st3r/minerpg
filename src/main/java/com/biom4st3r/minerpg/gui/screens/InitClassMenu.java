@@ -114,7 +114,7 @@ public class InitClassMenu extends Screen
                         focusedButton = cb.index;
                     }
                     cb.setFocused(true);
-                    Util.debug(cb.rpgClass.name);
+                    Util.debug(cb.rpgClass.id);
                     
                 },index));
                 classButtons[index].visible = false;

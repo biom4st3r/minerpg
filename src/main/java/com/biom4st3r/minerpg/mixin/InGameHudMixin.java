@@ -2,25 +2,24 @@ package com.biom4st3r.minerpg.mixin;
 
 import com.biom4st3r.minerpg.MineRPG;
 import com.biom4st3r.minerpg.api.RPGAbility;
-import com.biom4st3r.minerpg.gui.GUIhelper;
 import com.biom4st3r.minerpg.registery.RpgAbilities;
 import com.biom4st3r.minerpg.util.InGameHudHelper;
 import com.biom4st3r.minerpg.util.RPGPlayer;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.platform.GlStateManager.DestFactor;
 import com.mojang.blaze3d.platform.GlStateManager.SourceFactor;
+
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.gui.hud.InGameHud;
-import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.render.GuiLighting;
-import net.minecraft.client.texture.Sprite;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Arm;
@@ -125,7 +124,6 @@ public abstract class InGameHudMixin extends DrawableHelper implements InGameHud
         if(rpgA != RpgAbilities.NONE)
         {
             this.client.getTextureManager().bindTexture(rpgA.getIcon());
-            // TODO: Pull and render icon texture instead of letter
             blit(xPos,yPos ,16,16,16,16,16,16);//x y u v w h
 
         }

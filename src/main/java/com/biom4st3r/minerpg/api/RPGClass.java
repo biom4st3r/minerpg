@@ -3,20 +3,32 @@ package com.biom4st3r.minerpg.api;
 
 import java.util.List;
 
+import com.google.common.collect.Lists;
+
+import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.SystemUtil;
 
 public abstract class RPGClass
 {
-    
 
-    //protected HashMap<Integer,Ability[]> abilities;
-
-    public RPGClass(Identifier name)
+    public RPGClass(Identifier id)
     {
-        this.name = name;
+        this.id = id;
     }
 
-    public final Identifier name;
+    public String getTranslationKey()
+    {
+        return SystemUtil.createTranslationKey("rpgclass", id);
+    }
+
+    public Text getDisplayName()
+    {
+        return new TranslatableText(this.getTranslationKey());
+    }
+    
+    public final Identifier id;
 
     public int maxLvl;
 
@@ -25,11 +37,18 @@ public abstract class RPGClass
 
     @Override
     public int hashCode() {
-        return name.hashCode();
+        return id.hashCode();
     }
 
-    public abstract List<String> getToolTips();
+    public List<String> getToolTips()
+    {
+        return Lists.newArrayList(this.getDisplayName().asFormattedString());
+    }
 
+    public Identifier getIcon()
+    {
+        return new Identifier(id.getNamespace(),"classes/icons/" + id.getPath() + ".png");
+    }
 
 
 

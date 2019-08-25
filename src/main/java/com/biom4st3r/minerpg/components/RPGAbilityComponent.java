@@ -27,7 +27,7 @@ public class RPGAbilityComponent implements AbstractComponent {
 
     public void addCooldown(RPGAbility ability)
     {
-        timeouts.put(ability.name, ability.getCoolDown());
+        timeouts.put(ability.id, ability.getCoolDown());
     }
 
     public void addCooldown(Identifier i, int coolDown)
@@ -70,7 +70,7 @@ public class RPGAbilityComponent implements AbstractComponent {
         ListTag lt = new ListTag();
         for(RPGAbility a : specialAbilities)
         {
-            lt.add(new StringTag(a.name.toString()));
+            lt.add(new StringTag(a.id.toString()));
         }
         tag.put(ABILITY_LIST, lt);
         lt = new ListTag();
@@ -116,7 +116,7 @@ public class RPGAbilityComponent implements AbstractComponent {
         buf.writeByte(specialAbilities.size());
         for(RPGAbility a : specialAbilities)
         {
-            buf.writeString(a.name.toString());
+            buf.writeString(a.id.toString());
         }
         for(RpgAbilityContext rac : abilityBar)
         {
