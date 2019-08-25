@@ -110,7 +110,7 @@ public class Packets
                 if(player.getRPGAbilityComponent().specialAbilities.contains(rac.ability))
                 {
                     player.getRPGAbilityComponent().abilityBar.set(barIndex, rac);
-                    Util.debug(String.format("specialSet slot %s to %s", barIndex,rac.ability.name.toString()));
+                    Util.debug(String.format("specialSet slot %s to %s", barIndex,rac.ability.id.toString()));
                     return;
                 }
             }
@@ -122,7 +122,7 @@ public class Packets
                     if(rac.classContext.getAbilities()[rac.abilityIndexInClass] == rac.ability)
                     {
                         player.getRPGAbilityComponent().abilityBar.set(barIndex, rac);
-                        Util.debug(String.format("set slot %s to %s", barIndex,rac.ability.name.toString()));
+                        Util.debug(String.format("set slot %s to %s", barIndex,rac.ability.id.toString()));
                         return;
                     }
                 }
@@ -170,7 +170,7 @@ public class Packets
         public static CustomPayloadC2SPacket addClass(RPGClass rpgClass)
         {
             PacketByteBuf pbb = new PacketByteBuf(Unpooled.buffer());
-            pbb.writeIdentifier(rpgClass.name);
+            pbb.writeIdentifier(rpgClass.id);
             return new CustomPayloadC2SPacket(REQ_ADD_CLASS,pbb);
         }
 

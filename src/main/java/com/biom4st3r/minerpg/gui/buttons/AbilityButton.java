@@ -1,7 +1,6 @@
 package com.biom4st3r.minerpg.gui.buttons;
 
 import com.biom4st3r.minerpg.MineRPG;
-import com.biom4st3r.minerpg.gui.GUIhelper;
 import com.biom4st3r.minerpg.registery.RpgAbilities;
 import com.biom4st3r.minerpg.util.RpgAbilityContext;
 
@@ -37,18 +36,17 @@ public class AbilityButton extends ButtonWidget
     {
         MinecraftClient.getInstance().getTextureManager().bindTexture(BG_Texture);
         blit(this.x,this.y,frameU,frameV,width,height);
-        // if((!this.isHovered && !this.isFocused() )|| !this.active)
-        // {
-        //     blit(this.x+3,this.y+3,bg_lightU,bg_lightV,16,16);
-        // }
-        // else if((this.isHovered || this.isFocused()) && this.active)
-        // {
-        //     blit(this.x+3,this.y+3,bg_lightU,bg_lightV+16,16,16);
-        // }
+        if((!this.isHovered && !this.isFocused() )|| !this.active)
+        {
+            blit(this.x+3,this.y+3,bg_lightU,bg_lightV,16,16);
+        }
+        else if((this.isHovered || this.isFocused()) && this.active)
+        {
+            blit(this.x+3,this.y+3,bg_lightU,bg_lightV+16,16,16);
+        }
         if(abilityContext.ability != RpgAbilities.NONE)
         {
             MinecraftClient.getInstance().getTextureManager().bindTexture(abilityContext.ability.getIcon());
-            // TODO: Pull and render icon texture instead of letter
             blit(this.x+3,this.y+3 ,16,16,16,16,16,16);//x y u v w h
 
         }

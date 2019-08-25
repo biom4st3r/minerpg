@@ -83,7 +83,7 @@ public class ClassMenu extends Screen {
         this.blit(left, top, 0, 0, 176, 166);
         InventoryScreen.drawEntity(left + 51-18, top + 75, 30, (float)(left + 51) - mouseX, (float)(top + 75 - 50) - mouseY, this.minecraft.player);
         super.render(mouseX, mouseY, float_1);
-        GUIhelper.drawString(this.font, cb.rpgClass.getToolTips().get(0), xMid()-(28-22), yGrid(1)+3, 0x000000);
+        GUIhelper.drawString(this.font, cb.rpgClass.getDisplayName().asFormattedString(), xMid()-(28-22), yGrid(1)+3, 0x000000);
         // for(ButtonWidget bw : abilityButtons)
         // {
         //     if(GUIhelper.isPointOverAbilityButton((AbilityButton)bw, mouseX, mouseY))

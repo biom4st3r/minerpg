@@ -106,7 +106,7 @@ public class GUIhelper
           mouseY >= (double)(yPos - 1) &&
            mouseY < (double)(yPos + height + 1);
     }
-    public static boolean isPointOverAbilityButton(AbilityButton ab, double mouseX, double mouseY)
+    public static boolean isPointOverAbilityButton(ButtonWidget ab, double mouseX, double mouseY)
     {
         return isPointWithinBounds(ab.x, ab.y, 21, 21, mouseX, mouseY);
     }

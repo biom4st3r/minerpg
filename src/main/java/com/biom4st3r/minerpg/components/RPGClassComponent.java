@@ -116,7 +116,7 @@ public class RPGClassComponent implements AbstractComponent
         while(classes.hasMoreElements())
         {
             rpgclass = classes.nextElement();
-            pbb.writeIdentifier(rpgclass.name);
+            pbb.writeIdentifier(rpgclass.id);
             pbb.writeInt(rpgClasses.get(rpgclass));
         }
 
@@ -139,7 +139,7 @@ public class RPGClassComponent implements AbstractComponent
         {
             rpgclass = e.nextElement();
             CompoundTag set = new CompoundTag();
-            set.putString(CLASS_ID, rpgclass.name.toString());
+            set.putString(CLASS_ID, rpgclass.id.toString());
             set.putInt(LEVEL, this.rpgClasses.get(rpgclass));
             lt.add(set);
         }

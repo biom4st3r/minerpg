@@ -1,4 +1,6 @@
 {
     "item.minerpg.classreset": "Reset Class",
-    "item.minerpg.statreset": "Reset Stats"
+    "item.minerpg.statreset": "Reset Stats",
+    "rpgability.minerpg.rage": "Rage!",
+    "rpgclass.minerpg.barbarian": "Barbarian"
 }

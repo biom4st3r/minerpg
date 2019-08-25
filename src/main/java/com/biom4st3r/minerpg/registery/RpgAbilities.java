@@ -21,7 +21,7 @@ public class RpgAbilities {
 
     public static RPGAbility register(RPGAbility rpgability)
     {
-        return (RPGAbility)((MutableRegistry<RPGAbility>)RPG_Registry.ABILITY_REGISTRY).add(rpgability.name, rpgability);
+        return (RPGAbility)((MutableRegistry<RPGAbility>)RPG_Registry.ABILITY_REGISTRY).add(rpgability.id, rpgability);
     }
 
     public static void init()
@@ -54,6 +54,7 @@ class No_Ability extends RPGAbility {
 
     @Override
     public List<String> getToolTips() {
+        
         return Lists.newArrayList("you shouldn't see this. Please report as issue");
         //return Lists.newArrayList();
     }

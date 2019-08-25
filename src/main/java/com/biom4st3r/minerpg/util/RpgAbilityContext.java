@@ -45,10 +45,10 @@ public class RpgAbilityContext
 
     public void serializeNbt(CompoundTag tag)
     {
-        tag.putString(RPG_CLASS, classContext.rpgclass.name.toString());
+        tag.putString(RPG_CLASS, classContext.rpgclass.id.toString());
         tag.putByte(RPG_CLASS_LVL, (byte)classContext.Lvl);
         tag.putByte(ABILITY_INDEX, (byte)abilityIndexInClass);
-        tag.putString(RPG_ABILITY, ability.name.toString());
+        tag.putString(RPG_ABILITY, ability.id.toString());
         //tag.put(CONTEXT, ct);
 
     }
@@ -60,10 +60,10 @@ public class RpgAbilityContext
     }
     public void serializeBuffer(PacketByteBuf pbb)
     {
-        pbb.writeIdentifier(classContext.rpgclass.name);
+        pbb.writeIdentifier(classContext.rpgclass.id);
         pbb.writeByte((byte)classContext.Lvl);
         pbb.writeByte((byte)abilityIndexInClass);
-        pbb.writeIdentifier(ability.name);
+        pbb.writeIdentifier(ability.id);
     }
     public void deserializebuffer(PacketByteBuf pbb)
     {

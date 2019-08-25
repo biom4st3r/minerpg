@@ -113,11 +113,18 @@ public abstract class AbstractAbilitiesContainer extends Screen {
                 this.renderTooltip(((AbilityButton)bw).abilityContext.ability.getToolTips(), mouseX, mouseY);
             }
         }
+        for(ButtonWidget bw : abilitySlots)
+        {
+            if(bw.visible && GUIhelper.isPointOverAbilityButton((AbilitySlotButton)bw, mouseX, mouseY))
+            {
+                this.renderTooltip(((AbilitySlotButton)bw).getAbility().getToolTips(), mouseX, mouseY);
+            
+            }
+        }
         if(mouseSlot != RpgAbilityContext.EMPTY)
         {
             //GUIhelper.drawString(this.font, mouseSlot.ability.name.getPath(), mouseX, mouseY, 0xFFBB44);
             MinecraftClient.getInstance().getTextureManager().bindTexture(mouseSlot.ability.getIcon());
-            // TODO: Pull and render icon texture instead of letter
             blit(mouseX ,mouseY ,16,16,16,16,16,16);//x y u v w h
         }
         
