@@ -18,13 +18,15 @@ public class PotionAbility extends EmulatePotionAbility {
     }
 
 	@Override
-    public void doAbility(RPGPlayer player) {
+    public boolean doAbility(RPGPlayer player) {
         if(!player.getRPGAbilityComponent().timeouts.containsKey(id))
         {
             player.getPlayer().addPotionEffect(this.getEffect());
             //player.getRPGAbilityComponent().timeouts.put(name, coolDownDuration);
             player.getRPGAbilityComponent().addCooldown(this);
+            return true;
         }
+        return false;
     }
 
     @Override
@@ -41,5 +43,15 @@ public class PotionAbility extends EmulatePotionAbility {
         list.add("Cool Down of " + coolDownDuration/20 + " seconds");
         return list;
 	}
+
+    @Override
+    public void applyCost() {
+
+    }
+
+    @Override
+    public boolean hasCost(RPGPlayer player) {
+        return true;
+    }
     
 } 

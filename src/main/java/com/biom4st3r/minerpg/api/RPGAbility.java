@@ -25,12 +25,16 @@ public abstract class RPGAbility
         return coolDownDuration;
     }
 
+    public abstract void applyCost();
+
+    public abstract boolean hasCost(RPGPlayer player);
+
     public String getTranslationKey()
     {
         return SystemUtil.createTranslationKey("rpgability", id);
     }
 
-    public Text getDisplayName()
+    public Text  getDisplayName()
     {
         return new TranslatableText(this.getTranslationKey());
     }
@@ -44,10 +48,10 @@ public abstract class RPGAbility
 
     public boolean isCooledDown(RPGPlayer player)
     {
-        return player.getRPGAbilityComponent().timeouts.containsKey(id);
+        return !player.getRPGAbilityComponent().timeouts.containsKey(id);
     }
 
-    public abstract void doAbility(RPGPlayer player);
+    public abstract boolean doAbility(RPGPlayer player);
 
     //public abstract boolean applyCost(RPGPlayer player);
 
