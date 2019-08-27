@@ -4,6 +4,7 @@ package com.biom4st3r.minerpg.util;
 import java.lang.reflect.Array;
 
 import com.biom4st3r.minerpg.MineRPG;
+import com.biom4st3r.minerpg.api.RPGAbility;
 import com.biom4st3r.minerpg.networking.Packets;
 
 import net.minecraft.client.network.ClientPlayNetworkHandler;
@@ -86,6 +87,16 @@ public class Util
     {
         @SuppressWarnings("unchecked")
         T[] reversed = (T[])Array.newInstance(array[0].getClass(), array.length);
+        for(int i = 0; i < array.length; i++)
+        {
+            reversed[i] = array[(array.length-1)-i];
+        }
+        return reversed;
+    }
+
+    public static RPGAbility[] reverse(RPGAbility[] array)
+    {
+        RPGAbility[] reversed = new RPGAbility[array.length];
         for(int i = 0; i < array.length; i++)
         {
             reversed[i] = array[(array.length-1)-i];

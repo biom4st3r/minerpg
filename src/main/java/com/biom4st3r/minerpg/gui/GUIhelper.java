@@ -35,7 +35,7 @@ public class GUIhelper
         // textRenderer_1.getStringWidth(string_1) / 2), (float)int_2, int_3);
     }
 
-    public static ButtonWidget[] drawTabs(int xPos, int yPos, MinecraftClient mc,Boolean... bools)
+    public static ButtonWidget[] drawTabs(int xPos, int yPos, MinecraftClient mc,Boolean... bools)//vararg
     {        
         int buttonWidth = 26+5;
         ButtonWidget[] buttons = new ButtonWidget[4];

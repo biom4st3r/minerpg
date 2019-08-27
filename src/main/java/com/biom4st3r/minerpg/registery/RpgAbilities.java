@@ -16,7 +16,7 @@ import net.minecraft.util.registry.MutableRegistry;
 public class RpgAbilities {
     public static final RPGAbility RAGE_ABILITY = new PotionAbility(new Identifier(MineRPG.MODID, "rage"), 600, StatusEffects.REGENERATION, 1000, 1);//new RageAbility(new Identifier(MineRPG.MODID, "rage"));
     public static final RPGAbility NONE = new No_Ability();
-    public static final RPGAbility FIREBALL_ABILITY = new FireballAbility(new Identifier(MineRPG.MODID, "fireball"),200);
+    public static final RPGAbility FIREBALL_ABILITY = new FireballAbility(new Identifier(MineRPG.MODID, "fireball"),20);
     
 
     public static RPGAbility register(RPGAbility rpgability)
@@ -43,8 +43,8 @@ class No_Ability extends RPGAbility {
     }
 
     @Override
-    public void doAbility(RPGPlayer player) {
-
+    public boolean doAbility(RPGPlayer player) {
+        return false;
     }
 
     @Override
@@ -57,6 +57,16 @@ class No_Ability extends RPGAbility {
         
         return Lists.newArrayList("you shouldn't see this. Please report as issue");
         //return Lists.newArrayList();
+    }
+
+    @Override
+    public void applyCost() {
+
+    }
+
+    @Override
+    public boolean hasCost(RPGPlayer player) {
+        return true;
     }
     
 }

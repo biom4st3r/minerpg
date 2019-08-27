@@ -26,7 +26,7 @@ public class BarbarianClass extends RPGClass {
 
     @Override
     public RPGAbility[] abilitysAvalibleAtLevel(int Lvl) {
-        List<RPGAbility> abilities = new ArrayList<RPGAbility>(20);
+        List<RPGAbility> abilities = new ArrayList<RPGAbility>(2);
         switch(Lvl)
         {
             case 20:
@@ -49,11 +49,12 @@ public class BarbarianClass extends RPGClass {
             case 3:
             case 2:
             case 1:
+                abilities.add(RpgAbilities.FIREBALL_ABILITY);
                 abilities.add(RpgAbilities.RAGE_ABILITY);
             default:
             break;
         }
-        return Util.reverse((RPGAbility[])abilities.toArray(new RPGAbility[0]));
+        return Util.reverse(abilities.toArray(new RPGAbility[0]));
     }
 
     @Override

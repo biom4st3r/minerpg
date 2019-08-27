@@ -117,8 +117,7 @@ public abstract class AbstractAbilitiesContainer extends Screen {
         {
             if(bw.visible && GUIhelper.isPointOverAbilityButton((AbilitySlotButton)bw, mouseX, mouseY))
             {
-                this.renderTooltip(((AbilitySlotButton)bw).getAbility().getToolTips(), mouseX, mouseY);
-            
+                this.renderTooltip(((AbilitySlotButton)bw).getAbility().getToolTips(), mouseX, mouseY);            
             }
         }
         if(mouseSlot != RpgAbilityContext.EMPTY)
