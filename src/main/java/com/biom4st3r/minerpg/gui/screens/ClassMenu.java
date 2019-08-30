@@ -7,13 +7,11 @@ import com.biom4st3r.minerpg.util.RPGPlayer;
 import com.mojang.blaze3d.platform.GlStateManager;
 
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ingame.InventoryScreen;
 import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
 
-public class ClassMenu extends Screen {
+public class ClassMenu extends AbstractAbilitiesContainer {
     public Identifier BG_Texture = new Identifier(MineRPG.MODID, "textures/gui/classmenu.png");
 
     protected int left;
@@ -27,7 +25,7 @@ public class ClassMenu extends Screen {
     ClassButton cb;
 
     public ClassMenu() {
-        super(new TranslatableText(""));
+        super();
     }
 
     @Override
@@ -37,6 +35,7 @@ public class ClassMenu extends Screen {
     
     @Override
     protected void init() {
+        super.init();
         this.player = ((RPGPlayer)MinecraftClient.getInstance().player);
         this.left = (this.width - this.containerWidth) / 2;
         this.top = (this.height - this.containerHeight) / 2;
@@ -69,7 +68,7 @@ public class ClassMenu extends Screen {
         //     this.addButton(b);
         // }
         
-        super.init();
+
     }
 
 
@@ -84,6 +83,8 @@ public class ClassMenu extends Screen {
         InventoryScreen.drawEntity(left + 51-18, top + 75, 30, (float)(left + 51) - mouseX, (float)(top + 75 - 50) - mouseY, this.minecraft.player);
         super.render(mouseX, mouseY, float_1);
         GUIhelper.drawString(this.font, cb.rpgClass.getDisplayName().asFormattedString(), xMid()-(28-22), yGrid(1)+3, 0x000000);
+        super.render(mouseX, mouseY, float_1);
+        renderStats(player.getStatsComponent());
         // for(ButtonWidget bw : abilityButtons)
         // {
         //     if(GUIhelper.isPointOverAbilityButton((AbilityButton)bw, mouseX, mouseY))
