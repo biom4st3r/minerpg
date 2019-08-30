@@ -2,7 +2,9 @@ package com.biom4st3r.minerpg.gui.screens;
 
 import com.biom4st3r.minerpg.api.RPGAbility;
 import com.biom4st3r.minerpg.api.RPGClass;
+import com.biom4st3r.minerpg.api.Stat.Stats;
 import com.biom4st3r.minerpg.components.RPGClassComponent;
+import com.biom4st3r.minerpg.components.RPGStatsComponent;
 import com.biom4st3r.minerpg.gui.GUIhelper;
 import com.biom4st3r.minerpg.gui.buttons.AbilityButton;
 import com.biom4st3r.minerpg.gui.buttons.AbilitySlotButton;
@@ -141,6 +143,35 @@ public abstract class AbstractAbilitiesContainer extends Screen {
     {
         int ySpacing = 9;
         return (yMid()-76) + (i * ySpacing);
+    }
+    public void renderStats(RPGStatsComponent rpgStatsComponent)
+    {
+        int modX = 28;
+        GUIhelper.drawString(this.font, "Stats", xMid()-22, yGrid(0), 0x000000);
+
+        for(int i = 0; i < 6; i++)
+        {
+
+            Stats stat = Stats.values()[i];
+
+            
+            modX = -28;
+
+            GUIhelper.drawString(this.font, stat.toString().substring(0, 3), xMid()+modX, yGrid(i+1), 0x000000);
+            modX = -10;
+
+            GUIhelper.drawString(this.font, ":", xMid()+modX, yGrid(i+1), 0x000000);
+            modX = 10;
+
+            GUIhelper.drawCenteredString(this.font, "" + rpgStatsComponent.getStat(stat), xMid()+modX, yGrid(i+1), 0x000000);
+            
+        }
+
+        if(rpgStatsComponent.remainingPoints != 0)
+        {
+            GUIhelper.drawString(this.font, "Points: ", xMid()-28, yGrid(7), 0x000000);
+            GUIhelper.drawCenteredString(this.font, "" + rpgStatsComponent.remainingPoints, xMid()+12, yGrid(7), 0x000000);
+        }
     }
     
 

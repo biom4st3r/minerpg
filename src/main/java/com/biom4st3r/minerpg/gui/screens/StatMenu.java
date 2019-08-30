@@ -22,7 +22,7 @@ public class StatMenu extends AbstractAbilitiesContainer {
     ButtonWidget confirmButton;
     //private int modY[];
 
-    private RPGStatsComponent rpgComponent;
+    private RPGStatsComponent rpgStatComponent;
     private RPGStatsComponent backupComponent;
 
     protected int containerWidth = 176;
@@ -43,7 +43,7 @@ public class StatMenu extends AbstractAbilitiesContainer {
     @Override
     public void tick() {
         super.tick();
-        if(this.rpgComponent.remainingPoints > 0 && !this.statButtons[0].visible)
+        if(this.rpgStatComponent.remainingPoints > 0 && !this.statButtons[0].visible)
         {
             for(StatButton button : statButtons)
             {
@@ -52,7 +52,7 @@ public class StatMenu extends AbstractAbilitiesContainer {
         }
         if(backupComponent.getStat(Stats.CONSTITUTION) == -1)
         {
-            this.backupComponent = this.rpgComponent.copyOfStats();
+            this.backupComponent = this.rpgStatComponent.copyOfStats();
         }
         // else if(this.rpgComponent.remainingPoints <= 0 && this.statButtons[0].visible)
         // {
@@ -76,8 +76,8 @@ public class StatMenu extends AbstractAbilitiesContainer {
         super.init();
         this.left = (this.width - this.containerWidth) / 2;
         this.top = (this.height - this.containerHeight) / 2;
-        this.rpgComponent = ((RPGPlayer)this.minecraft.player).getStatsComponent();
-        this.backupComponent = this.rpgComponent.copyOfStats();
+        this.rpgStatComponent = ((RPGPlayer)this.minecraft.player).getStatsComponent();
+        this.backupComponent = this.rpgStatComponent.copyOfStats();
         statButtons =  new StatButton[12];
 
         for(int i = 0, j = 0; i < 6; i++, j+=2)
@@ -87,10 +87,10 @@ public class StatMenu extends AbstractAbilitiesContainer {
             { // minus
                 Stats s = ((StatButton)button).stat;
                 Util.debug(s + " " + this.backupComponent.getStat(s));
-                if(this.rpgComponent.getStat(s) > this.backupComponent.getStat(s))
+                if(this.rpgStatComponent.getStat(s) > this.backupComponent.getStat(s))
                 {
                     this.confirmButton.active = true;
-                    this.rpgComponent.decreaseStatUnProtected(s);
+                    this.rpgStatComponent.decreaseStatUnProtected(s);
                 }
             }, false,Stats.values()[i]));
 
@@ -98,7 +98,7 @@ public class StatMenu extends AbstractAbilitiesContainer {
             statButtons[j+1] = this.addButton(new StatButton(xMod+25 , yGrid(i+1)-1, (button) ->
             { //plus
                 this.confirmButton.active = true;
-                this.rpgComponent.increaseStatProtected(((StatButton)button).stat);
+                this.rpgStatComponent.increaseStatProtected(((StatButton)button).stat);
             }, true,Stats.values()[i]));
 
             statButtons[j].visible = false;
@@ -115,66 +115,20 @@ public class StatMenu extends AbstractAbilitiesContainer {
             {
                 statbuttons.active = false;
             }
-            backupComponent = this.rpgComponent.copyOfStats();
+            backupComponent = this.rpgStatComponent.copyOfStats();
             MinecraftClient
                 .getInstance()
                 .getNetworkHandler()
-                .sendPacket(Packets.CLIENT.statChange(rpgComponent));
+                .sendPacket(Packets.CLIENT.statChange(rpgStatComponent));
             Util.debug("Checking rpgComponent 1");
             button.visible = false;
         }));
-        if(this.rpgComponent.remainingPoints > 0)
+        if(this.rpgStatComponent.remainingPoints > 0)
             this.confirmButton.active = false;
         else
             this.confirmButton.visible = false;
 
-
-        // abilityButtons = GUIhelper.drawAbilities(17+this.left, 90+this.top);
-        // for(ButtonWidget b : abilityButtons)
-        // {
-        //     this.addButton(b);
-        //     ((AbilityButton)b).pressAction = bu -> {
-        //         this.mouseSlot = ((AbilityButton)bu).ability;
-
-        //     };
-        // }
-        // arrowbuttons = GUIhelper.drawAbilityArrows(17+this.left, 90+this.top);
-        // for(ButtonWidget b : arrowbuttons)
-        // {
-        //     this.addButton(b);
-        // }
-        // abilitySlots = GUIhelper.drawAbilitySlots(xMid()-80,yGrid(15)+1);
-        // for(ButtonWidget b : abilitySlots)
-        // {
-        //     this.addButton(b);
-        //     RPGAbilityComponent ac = ((RPGPlayer)this.minecraft.player).getRPGAbilityComponent();
-        //     ((AbilitySlotButton)b).pressAction = bu -> {
-        //         AbilitySlotButton asb = ((AbilitySlotButton)bu);
-        //         if(this.mouseSlot == RpgAbilities.NONE)
-        //         {
-        //             asb.resetAbility();
-        //         }
-        //         else
-        //         {
-        //             asb.setAbiliy(mouseSlot);
-        //             mouseSlot = RpgAbilities.NONE;
-        //         }
-        //     };
-        // }
-        
     }
-
-    // @Override
-    // public boolean mouseClicked(double double_1, double double_2, int int_1) {
-    //     for(int i  = 0; i < abilityButtons.length && mouseSlot != RpgAbilities.NONE;i++)
-    //     {
-    //         if(abilityButtons[i].active && abilityButtons[i].visible && GUIhelper.isPointOverAbilityButton(((AbilityButton)abilityButtons[i]),double_1,double_2))
-    //         {
-    //             mouseSlot = ((AbilityButton)abilityButtons[i]).ability;
-    //         }
-    //     }
-    //     return true;
-    // }
 
     @Override
     public void render(int mouseX, int mouseY, float float_1) {
@@ -185,42 +139,42 @@ public class StatMenu extends AbstractAbilitiesContainer {
         int int_4 = this.top;
         this.blit(int_3, int_4, 0, 0, this.containerWidth, this.containerHeight);
         super.render(mouseX, mouseY, float_1);
-        renderStats();
+        this.renderStats(rpgStatComponent);
         InventoryScreen.drawEntity(int_3 + 51-18, int_4 + 75, 30, (float)(int_3 + 51) - mouseX, (float)(int_4 + 75 - 50) - mouseY, this.minecraft.player);
         //float scale = 0.91f;
         
 
     }
 
-    public void renderStats()
-    {
-        int modX = 28;
-        GUIhelper.drawString(this.font, "Stats", xMid()-22, yGrid(0), 0x000000);
+    // public void renderStats()
+    // {
+    //     int modX = 28;
+    //     GUIhelper.drawString(this.font, "Stats", xMid()-22, yGrid(0), 0x000000);
 
-        for(int i = 0; i < 6; i++)
-        {
+    //     for(int i = 0; i < 6; i++)
+    //     {
 
-            Stats stat = Stats.values()[i];
+    //         Stats stat = Stats.values()[i];
 
             
-            modX = -28;
+    //         modX = -28;
 
-            GUIhelper.drawString(this.font, stat.toString().substring(0, 3), xMid()+modX, yGrid(i+1), 0x000000);
-            modX = -10;
+    //         GUIhelper.drawString(this.font, stat.toString().substring(0, 3), xMid()+modX, yGrid(i+1), 0x000000);
+    //         modX = -10;
 
-            GUIhelper.drawString(this.font, ":", xMid()+modX, yGrid(i+1), 0x000000);
-            modX = 10;
+    //         GUIhelper.drawString(this.font, ":", xMid()+modX, yGrid(i+1), 0x000000);
+    //         modX = 10;
 
-            GUIhelper.drawCenteredString(this.font, "" + this.rpgComponent.getStat(stat), xMid()+modX, yGrid(i+1), 0x000000);
+    //         GUIhelper.drawCenteredString(this.font, "" + this.rpgStatComponent.getStat(stat), xMid()+modX, yGrid(i+1), 0x000000);
             
-        }
+    //     }
 
-        if(this.rpgComponent.remainingPoints != 0)
-        {
-            GUIhelper.drawString(this.font, "Points: ", xMid()-28, yGrid(7), 0x000000);
-            GUIhelper.drawCenteredString(this.font, "" + this.rpgComponent.remainingPoints, xMid()+12, yGrid(7), 0x000000);
-        }
-    }
+    //     if(this.rpgStatComponent.remainingPoints != 0)
+    //     {
+    //         GUIhelper.drawString(this.font, "Points: ", xMid()-28, yGrid(7), 0x000000);
+    //         GUIhelper.drawCenteredString(this.font, "" + this.rpgStatComponent.remainingPoints, xMid()+12, yGrid(7), 0x000000);
+    //     }
+    // }
 
     private int xMid()
     {

@@ -13,7 +13,8 @@
     "VanillaInventory",
     "MinecraftClientMixin",
     "InGameHudMixin",
-    "CreateClientPlayerMixin"
+    "CreateClientPlayerMixin",
+    "ClientPlayNetworkHandlerMixin"
   ],
   "injectors": {
     "defaultRequire": 1
