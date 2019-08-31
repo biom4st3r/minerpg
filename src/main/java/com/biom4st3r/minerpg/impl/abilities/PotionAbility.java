@@ -14,12 +14,11 @@ public class PotionAbility extends EmulatePotionAbility {
 
     public PotionAbility(Identifier name,int coolDownDuration, StatusEffect se, int duration, int amplifier) {
         super(name, coolDownDuration, se, duration, amplifier);
-        this.coolDownDuration = coolDownDuration;
     }
 
 	@Override
     public boolean doAbility(RPGPlayer player) {
-        if(!player.getRPGAbilityComponent().timeouts.containsKey(id))
+        if(!player.getRPGAbilityComponent().cooldowns.containsKey(id))
         {
             player.getPlayer().addPotionEffect(this.getEffect());
             //player.getRPGAbilityComponent().timeouts.put(name, coolDownDuration);

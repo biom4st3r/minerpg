@@ -2,7 +2,6 @@ package com.biom4st3r.minerpg.impl.abilities;
 
 import java.util.List;
 
-import com.biom4st3r.minerpg.MineRPG;
 import com.biom4st3r.minerpg.api.RPGAbility;
 import com.biom4st3r.minerpg.entities.Fireball;
 import com.biom4st3r.minerpg.util.RPGPlayer;
@@ -31,9 +30,7 @@ public class FireballAbility extends RPGAbility {
             World world = player.getPlayer().getEntityWorld();
             PlayerEntity pe = player.getPlayer();
             //FireballEntity fbe = new FireballEntity(EntityType.FIREBALL, world);
-            Fireball fbe = new Fireball(MineRPG.FIREBALL, pe.world);
-            fbe.init(pe);
-            
+            Fireball fbe = new Fireball(pe);
             //method_19207(fbe, player.getPlayer(), player.getPlayer().yaw, player.getPlayer().pitch, 0,0,0);
 
             // fbe.prevPitch = pe.pitch;

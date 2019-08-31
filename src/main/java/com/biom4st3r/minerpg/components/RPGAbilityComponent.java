@@ -6,6 +6,7 @@ import java.util.Map;
 
 import com.biom4st3r.minerpg.api.RPGAbility;
 import com.biom4st3r.minerpg.registery.RPG_Registry;
+import com.biom4st3r.minerpg.util.RPGPlayer;
 import com.biom4st3r.minerpg.util.RpgAbilityContext;
 import com.biom4st3r.minerpg.util.Util;
 import com.google.common.collect.Maps;
@@ -19,20 +20,83 @@ import net.minecraft.util.PacketByteBuf;
 
 public class RPGAbilityComponent implements AbstractComponent {
 
-    public  List<RPGAbility> specialAbilities;
+    public List<RPGAbility> specialAbilities;
 
     public DefaultedList<RpgAbilityContext> abilityBar;
 
-    public Map<Identifier,Integer> timeouts;
+    public Map<Identifier,Integer> cooldowns; //TODO: lower visiblity
+
+    protected Map<Identifier,Integer> tokens;
+
+    public boolean hasToken(RPGAbility ability)
+    {
+        return hasToken(ability.id);
+    }
+
+    public boolean hasToken(Identifier i)
+    {
+        return tokens.containsKey(i);
+    }
+
+    public void putToken(RPGPlayer player, RPGAbility ability)
+    {
+        putToken(player, ability.id,ability.getMaxTokens(player));
+    }
+
+    public void putToken(RPGPlayer player, Identifier i,int quantity)
+    {
+        if(!hasToken(i))
+        {
+            tokens.put(i, quantity);
+        }
+        else
+        {
+            int temp = tokens.get(i).intValue()+quantity;
+            tokens.remove(i);
+            tokens.put(i, temp);
+        }
+    }
+
+    public boolean subtractToken(RPGAbility ability, int quantity)
+    {
+        return subtractToken(ability.id, quantity);
+    }
+
+    public boolean subtractToken(Identifier i, int quantity)
+    {
+        if(hasToken(i) && tokens.get(i).intValue() >= quantity)
+        {
+            int temp = tokens.get(i).intValue()-quantity;
+            tokens.remove(i);
+            tokens.put(i,temp);
+            return true;
+        }
+        return false;
+    }
 
     public void addCooldown(RPGAbility ability)
     {
-        timeouts.put(ability.id, ability.getCoolDown());
+        //cooldowns.put(ability.id, ability.getCoolDown());
+        addCooldown(ability.id, ability.getCoolDown());
     }
 
     public void addCooldown(Identifier i, int coolDown)
     {
-        timeouts.put(i,coolDown);
+        cooldowns.put(i,coolDown);
+    }
+
+    public int checkCooldown(RPGAbility ability)
+    {
+        return checkCooldown(ability.id);
+    }
+
+    public int checkCooldown(Identifier i)
+    {
+        if(cooldowns.containsKey(i))
+        {
+            return cooldowns.get(i).intValue();
+        }
+        return -1;
     }
 
     public static final String ABILITY_LIST = "rpgAbilList";
@@ -48,7 +112,8 @@ public class RPGAbilityComponent implements AbstractComponent {
     {
         specialAbilities = new ArrayList<RPGAbility>();
         abilityBar = DefaultedList.ofSize(9, RpgAbilityContext.EMPTY);
-        timeouts = Maps.newHashMap();
+        cooldowns = Maps.newHashMap();
+        tokens = Maps.newHashMap();
         //MinecraftServer
     }
 
@@ -63,6 +128,7 @@ public class RPGAbilityComponent implements AbstractComponent {
         {
             this.abilityBar.set(i, original.abilityBar.get(i));
         }
+        //TODO: add cooldowns and tokens here
     }
 
     @Override

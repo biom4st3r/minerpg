@@ -2,6 +2,7 @@ package com.biom4st3r.minerpg.util;
 
 import net.minecraft.inventory.BasicInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.PacketByteBuf;
 
 public interface BasicInventoryHelper
 {
@@ -9,6 +10,6 @@ public interface BasicInventoryHelper
 
     public void copy(BasicInventory original);
 
-    // public void serializeBuffer(PacketByteBuf pbb);
-    // public void deserializeBuffer(PacketByteBuf pbb);
+    public void serializeBuffer(PacketByteBuf pbb);
+    public void deserializeBuffer(PacketByteBuf pbb);
 }

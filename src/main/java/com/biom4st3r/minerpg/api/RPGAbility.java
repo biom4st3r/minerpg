@@ -18,7 +18,12 @@ public abstract class RPGAbility
         this.coolDownDuration = coolDownDuration;
     }
 
-    protected int coolDownDuration;
+    protected final int coolDownDuration;
+
+    public int getMaxTokens(RPGPlayer player)
+    {
+        return -1;
+    }
 
     public int getCoolDown()
     {
@@ -48,7 +53,7 @@ public abstract class RPGAbility
 
     public boolean isCooledDown(RPGPlayer player)
     {
-        return !player.getRPGAbilityComponent().timeouts.containsKey(id);
+        return !player.getRPGAbilityComponent().cooldowns.containsKey(id);
     }
 
     public abstract boolean doAbility(RPGPlayer player);

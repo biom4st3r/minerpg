@@ -3,7 +3,6 @@ package com.biom4st3r.minerpg;
 import com.biom4st3r.minerpg.entities.Fireball;
 import com.biom4st3r.minerpg.gui.ComponentMenu;
 import com.biom4st3r.minerpg.networking.Packets;
-import com.biom4st3r.minerpg.util.Util;
 
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.keybinding.FabricKeyBinding;
@@ -25,7 +24,7 @@ public class ClientInit implements ClientModInitializer
         EntityRendererRegistry.INSTANCE.register(Fireball.class, (entityRenderDispatcher, context) ->
         {
             
-            return new FlyingItemEntityRenderer<Fireball>(entityRenderDispatcher, context.getItemRenderer(), 5F);
+            return new FlyingItemEntityRenderer<Fireball>(entityRenderDispatcher, context.getItemRenderer(), 1F);
         });
 
 

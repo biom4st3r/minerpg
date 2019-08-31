@@ -12,9 +12,12 @@ import net.minecraft.entity.projectile.AbstractFireballEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.particle.ParticleEffect;
+import net.minecraft.particle.ParticleTypes;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
 import net.minecraft.world.explosion.Explosion.DestructionType;
@@ -26,12 +29,20 @@ public class Fireball extends AbstractFireballEntity {
 
     public Fireball(EntityType<? extends AbstractFireballEntity> entityType_1, World world_1) {
         super(entityType_1, world_1);
-		// TODO Auto-generated constructor stub
     }
     public Fireball(World world, EntityType<? extends AbstractFireballEntity> entityType)
     {
-        super(entityType,world);
+        this(entityType,world);
     }
+
+    public Fireball(LivingEntity owner)
+    {
+        super(MineRPG.FIREBALL,owner.world);
+        //Util.debug(String.format("%s,%s,%s", this.x,this.y,this.z));
+        init(owner);
+        //Util.debug(String.format("%s,%s,%s", this.x,this.y,this.z));
+    }
+
     @Environment(EnvType.CLIENT)
     public Fireball(World world, double x,double y, double z, double xVelo, double yVelo, double zVelo)
     {
@@ -40,18 +51,27 @@ public class Fireball extends AbstractFireballEntity {
     }
 
     @Override
+    protected ParticleEffect getParticleType() {
+        return ParticleTypes.POOF;
+    }
+
+    @Override
     public void tick() {
+        Vec3d velo =  this.getVelocity();
         super.tick();
+        this.setVelocity(velo);
     }
 
     public void init(LivingEntity e)
     {
         this.owner = e;
-        this.copyPositionAndRotation(e);
-        this.y += e.getStandingEyeHeight();
-        float xVelo = -MathHelper.sin(e.yaw * 0.017453292F) * MathHelper.cos(e.pitch * 0.017453292F);
-        float yVelo = -MathHelper.sin((e.pitch) * 0.017453292F);
-        float zVelo = MathHelper.cos(e.yaw * 0.017453292F) * MathHelper.cos(e.pitch * 0.017453292F);
+        this.setPositionAndAngles(e.x, e.y+e.getStandingEyeHeight(), e.z, e.yaw, e.pitch);
+        //this.y += e.getStandingEyeHeight();
+        //pi/180
+        float radToDegree = 0.0174532925199F;//0.01745329251994329576923690768489‬
+        float xVelo = -MathHelper.sin(e.yaw * radToDegree) * MathHelper.cos(e.pitch * radToDegree);
+        float yVelo = -MathHelper.sin((e.pitch) * radToDegree);
+        float zVelo = MathHelper.cos(e.yaw * radToDegree) * MathHelper.cos(e.pitch * radToDegree);
         this.setItem(new ItemStack(Items.FIRE_CHARGE,1));
         this.setVelocity(xVelo, yVelo, zVelo);
     }

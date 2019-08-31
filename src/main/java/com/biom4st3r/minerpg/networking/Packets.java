@@ -6,6 +6,7 @@ import com.biom4st3r.minerpg.components.RPGStatsComponent;
 import com.biom4st3r.minerpg.registery.RPG_Registry;
 import com.biom4st3r.minerpg.registery.RpgAbilities;
 import com.biom4st3r.minerpg.registery.RpgClasses;
+import com.biom4st3r.minerpg.util.BasicInventoryHelper;
 import com.biom4st3r.minerpg.util.RPGPlayer;
 import com.biom4st3r.minerpg.util.RpgAbilityContext;
 import com.biom4st3r.minerpg.util.RpgClassContext;
@@ -19,6 +20,7 @@ import net.fabricmc.fabric.api.network.ClientSidePacketRegistry;
 import net.fabricmc.fabric.api.network.ServerSidePacketRegistry;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.packet.CustomPayloadS2CPacket;
+import net.minecraft.inventory.BasicInventory;
 import net.minecraft.server.network.packet.CustomPayloadC2SPacket;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.PacketByteBuf;
@@ -28,6 +30,7 @@ public class Packets
     public static final Identifier SEND_STAT_UPDATE = new Identifier(MineRPG.MODID,"sndstats");
     public static final Identifier SEND_RPG_CLASS_COMPONENT = new Identifier(MineRPG.MODID, "sndrpgcomp");
     public static final Identifier SEND_ABILITY_COMPONENT = new Identifier(MineRPG.MODID,"sndabicomp");
+    public static final Identifier SEND_COMPONENT_BAG = new Identifier(MineRPG.MODID,"sndcompbag");
 
     public static final Identifier REQ_RPG_CLASS_COMPONENT = new Identifier(MineRPG.MODID, "reqrpgcomp");
     public static final Identifier REQ_CHANGE_STAT = new Identifier(MineRPG.MODID,"changestat");
@@ -36,6 +39,7 @@ public class Packets
     public static final Identifier REQ_ABILITY_COMPONENT = new Identifier(MineRPG.MODID,"reqabicomp");
     public static final Identifier REQ_ABILITY_BAR_CHANGE = new Identifier(MineRPG.MODID,"reqabarchng");
     public static final Identifier USE_ABILITY = new Identifier(MineRPG.MODID,"useabi");
+    public static final Identifier REQ_COMP_BAG = new Identifier(MineRPG.MODID, "reqbag");
 
     @Environment(EnvType.CLIENT)
     public static void clientPacketReg()
@@ -56,6 +60,10 @@ public class Packets
         {
             RPGPlayer player = ((RPGPlayer)context.getPlayer());
             player.getRPGAbilityComponent().deserializeBuffer(buffer);
+        });
+        ClientSidePacketRegistry.INSTANCE.register(SEND_COMPONENT_BAG, (context,buffer)->
+        {
+            ((BasicInventoryHelper)((RPGPlayer)context.getPlayer()).getComponentContainer().bag).deserializeBuffer(buffer);
         });
     }
 
@@ -135,6 +143,11 @@ public class Packets
             RPGPlayer player = (RPGPlayer)context.getPlayer();
             player.getRPGAbilityComponent().abilityBar.get(buff.readByte()).ability.doAbility(player);
         });
+        ServerSidePacketRegistry.INSTANCE.register(REQ_COMP_BAG, (context,buff)->
+        {
+            RPGPlayer player = ((RPGPlayer)context.getPlayer());
+            player.getNetworkHandlerS().sendPacket(SERVER.sendComponentBag(player));
+        });
     }
     
     @Environment(EnvType.CLIENT)
@@ -189,6 +202,10 @@ public class Packets
             return new CustomPayloadC2SPacket(USE_ABILITY,pbb);
         }
 
+        public static CustomPayloadC2SPacket requestComponentBag()
+        {
+            return new CustomPayloadC2SPacket(REQ_COMP_BAG,new PacketByteBuf(Unpooled.buffer()));
+        }
     }
 
     //@Environment(EnvType.SERVER)
@@ -214,6 +231,12 @@ public class Packets
             player.getRPGAbilityComponent().serializeBuffer(pbb);
             return new CustomPayloadS2CPacket(Packets.SEND_ABILITY_COMPONENT, pbb);
         }
+        public static CustomPayloadS2CPacket sendComponentBag(RPGPlayer player)
+        {
+            PacketByteBuf pbb =  new PacketByteBuf(Unpooled.buffer());
+            BasicInventory bag = player.getComponentContainer().bag;
+            ((BasicInventoryHelper)bag).serializeBuffer(pbb);
+            return new CustomPayloadS2CPacket(SEND_COMPONENT_BAG, pbb);
+        }
     }
-
 }

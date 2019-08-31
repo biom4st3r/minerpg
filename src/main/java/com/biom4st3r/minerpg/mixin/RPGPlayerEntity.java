@@ -87,14 +87,14 @@ public abstract class RPGPlayerEntity extends LivingEntity implements RPGPlayer 
     public void tick(CallbackInfo ci)
     {
         RPGAbilityComponent abC = this.rpgAbilityComponent;
-        if(abC.timeouts.size() != 0)
+        if(abC.cooldowns.size() != 0)
         {
-            for(Identifier i : abC.timeouts.keySet())
+            for(Identifier i : abC.cooldowns.keySet())
             {
-                abC.timeouts.put(i, abC.timeouts.get(i).intValue()-1);
-                if(abC.timeouts.get(i) <= 0)
+                abC.cooldowns.put(i, abC.cooldowns.get(i).intValue()-1);
+                if(abC.cooldowns.get(i) <= 0)
                 {
-                    abC.timeouts.remove(i); 
+                    abC.cooldowns.remove(i); 
                 }
             }
         }
