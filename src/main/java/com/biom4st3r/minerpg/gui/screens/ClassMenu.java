@@ -4,7 +4,6 @@ import com.biom4st3r.minerpg.MineRPG;
 import com.biom4st3r.minerpg.gui.GUIhelper;
 import com.biom4st3r.minerpg.gui.buttons.ClassButton;
 import com.biom4st3r.minerpg.util.RPGPlayer;
-import com.mojang.blaze3d.platform.GlStateManager;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.InventoryScreen;
@@ -75,16 +74,17 @@ public class ClassMenu extends AbstractAbilitiesContainer {
     @Override
     public void render(int mouseX, int mouseY, float float_1) {
         this.renderBackground();
-        GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
+        
         this.minecraft.getTextureManager().bindTexture(BG_Texture);
         int left = this.left;
         int top = this.top;
         this.blit(left, top, 0, 0, 176, 166);
+        super.render(mouseX, mouseY, float_1);
         InventoryScreen.drawEntity(left + 51-18, top + 75, 30, (float)(left + 51) - mouseX, (float)(top + 75 - 50) - mouseY, this.minecraft.player);
         super.render(mouseX, mouseY, float_1);
         GUIhelper.drawString(this.font, cb.rpgClass.getDisplayName().asFormattedString(), xMid()-(28-22), yGrid(1)+3, 0x000000);
-        super.render(mouseX, mouseY, float_1);
-        renderStats(player.getStatsComponent());
+        
+        //renderStats(player.getStatsComponent());
         // for(ButtonWidget bw : abilityButtons)
         // {
         //     if(GUIhelper.isPointOverAbilityButton((AbilityButton)bw, mouseX, mouseY))

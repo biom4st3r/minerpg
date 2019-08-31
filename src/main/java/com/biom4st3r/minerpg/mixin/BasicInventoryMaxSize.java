@@ -3,6 +3,7 @@ package com.biom4st3r.minerpg.mixin;
 import java.util.List;
 
 import com.biom4st3r.minerpg.util.BasicInventoryHelper;
+import com.biom4st3r.minerpg.util.Util;
 
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -12,6 +13,7 @@ import net.minecraft.inventory.BasicInventory;
 import net.minecraft.inventory.InventoryListener;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.DefaultedList;
+import net.minecraft.util.PacketByteBuf;
 
 @Mixin(BasicInventory.class)
 public abstract class BasicInventoryMaxSize implements BasicInventoryHelper {
@@ -43,22 +45,21 @@ public abstract class BasicInventoryMaxSize implements BasicInventoryHelper {
     }
 
     // public static final String SLOT = "slot";
-    // @Override
-    // public void serializeBuffer(PacketByteBuf pbb) {
-    //     ListTag lt = new ListTag();
-    //     CompoundTag ct;
-    //     for(int i = 0; i < stackList.size(); i++)
-    //     {
-    //         if(!stackList.get(i).isEmpty())
-    //         {
-    //             ct = new CompoundTag();
-    //             ct.putByte(SLOT, (byte)i);
-    //             Util.ShortItemStackToTag(stackList.get(i), ct);
-    //             lt.add(ct);
-    //         }
-    //     }
-    //     //PlayerInventory
-    // }
+    @Override
+    public void serializeBuffer(PacketByteBuf pbb) {
+        for(ItemStack iS : stackList)
+        {
+            Util.ShortitemStackToBuffer(iS, pbb);
+        }
+    }
+
+    @Override
+    public void deserializeBuffer(PacketByteBuf pbb) {
+        for(int i = 0 ;i < stackList.size(); i++)
+        {
+            stackList.set(i, Util.BufferToShortItemStack(pbb));
+        }
+    }
 
     // @Override
     // public void deserializeBuffer(PacketByteBuf pbb) {
