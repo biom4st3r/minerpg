@@ -30,7 +30,7 @@ public abstract class RPGAbility
         return coolDownDuration;
     }
 
-    public abstract void applyCost();
+    public abstract void applyCost(RPGPlayer player);
 
     public abstract boolean hasCost(RPGPlayer player);
 

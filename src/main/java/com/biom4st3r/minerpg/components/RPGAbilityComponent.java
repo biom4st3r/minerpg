@@ -28,6 +28,8 @@ public class RPGAbilityComponent implements AbstractComponent {
 
     protected Map<Identifier,Integer> tokens;
 
+    public RpgAbilityContext armorOverride = RpgAbilityContext.EMPTY;
+
     public boolean hasToken(RPGAbility ability)
     {
         return hasToken(ability.id);

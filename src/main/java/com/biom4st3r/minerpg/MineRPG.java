@@ -10,8 +10,10 @@ import com.biom4st3r.minerpg.util.RPGPlayer;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.container.ContainerProviderRegistry;
 import net.fabricmc.fabric.api.entity.FabricEntityTypeBuilder;
+import net.minecraft.entity.DamageUtil;
 import net.minecraft.entity.EntityCategory;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.PacketByteBuf;
@@ -20,8 +22,8 @@ import net.minecraft.util.registry.Registry;
 public class MineRPG implements ModInitializer
 {
     public static final String MODID = "minerpg";
-    private static final String COMPONENT_BAG = "componentbag";
-    public static final Identifier COMPONENT_BAG_ID = new Identifier(MODID, COMPONENT_BAG);
+    //private static final String COMPONENT_BAG = "componentbag";
+    public static final Identifier COMPONENT_BAG_ID = new Identifier(MODID, "componentbag");
 
     @SuppressWarnings({"unchecked"})
     public static final EntityType<Fireball> FIREBALL = (EntityType)Registry.register(
@@ -39,6 +41,8 @@ public class MineRPG implements ModInitializer
         RpgClasses.init();
         ItemReg.init();
         Packets.serverPacketReg();
+        //DamageUtil
+        //LivingEntity
         ContainerProviderRegistry.INSTANCE.registerFactory(
             COMPONENT_BAG_ID,
             (int syncId, Identifier identifier, PlayerEntity player, PacketByteBuf buf) ->

@@ -16,6 +16,7 @@ import com.biom4st3r.minerpg.util.RpgAbilityContext;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
+import net.minecraft.client.render.GuiLighting;
 import net.minecraft.text.TranslatableText;
 
 public abstract class AbstractAbilitiesContainer extends Screen {
@@ -108,6 +109,7 @@ public abstract class AbstractAbilitiesContainer extends Screen {
             }
         }
         super.render(mouseX, mouseY, float_1);
+        GuiLighting.disable();
         for(ButtonWidget bw : abilityDisplay)
         {
             if(bw.visible && GUIhelper.isPointOverAbilityButton((AbilityButton)bw, mouseX, mouseY))

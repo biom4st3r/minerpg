@@ -7,6 +7,7 @@ import com.biom4st3r.minerpg.util.RpgAbilityContext;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.widget.ButtonWidget;
+import net.minecraft.resource.NamespaceResourceManager;
 
 public class AbilitySlotButton extends ButtonWidget
 {
@@ -30,7 +31,7 @@ public class AbilitySlotButton extends ButtonWidget
     public void renderButton(int int_1, int int_2, float float_1) {
         if(abilitiesC.abilityBar.get(index).ability != RpgAbilities.NONE)
         {
-
+            //
             MinecraftClient.getInstance().getTextureManager().bindTexture(abilitiesC.abilityBar.get(index).ability.getIcon());
             blit(this.x,this.y ,16,16,16,16,16,16);//x y u v w h
         

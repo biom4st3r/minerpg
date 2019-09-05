@@ -21,4 +21,17 @@ public class RpgClassContext
     {
         return this.rpgclass.abilitysAvalibleAtLevel(this.Lvl);
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if(obj instanceof RpgClassContext)
+        {
+            RpgClassContext rcc = ((RpgClassContext)obj);
+            if(this.rpgclass == rcc.rpgclass && this.Lvl == rcc.Lvl)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
 }

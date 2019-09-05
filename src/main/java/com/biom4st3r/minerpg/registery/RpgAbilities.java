@@ -6,6 +6,7 @@ import com.biom4st3r.minerpg.MineRPG;
 import com.biom4st3r.minerpg.api.RPGAbility;
 import com.biom4st3r.minerpg.impl.abilities.FireballAbility;
 import com.biom4st3r.minerpg.impl.abilities.PotionAbility;
+import com.biom4st3r.minerpg.impl.abilities.barbarian.UnarmoredDefenceAbility;
 import com.biom4st3r.minerpg.util.RPGPlayer;
 import com.google.common.collect.Lists;
 
@@ -16,8 +17,8 @@ import net.minecraft.util.registry.MutableRegistry;
 public class RpgAbilities {
     public static final RPGAbility RAGE_ABILITY = new PotionAbility(new Identifier(MineRPG.MODID, "rage"), 600, StatusEffects.REGENERATION, 1000, 1);//new RageAbility(new Identifier(MineRPG.MODID, "rage"));
     public static final RPGAbility NONE = new No_Ability();
-    public static final RPGAbility FIREBALL_ABILITY = new FireballAbility(new Identifier(MineRPG.MODID, "fireball"),20);
-    
+    public static final RPGAbility FIREBALL_ABILITY = new FireballAbility(new Identifier(MineRPG.MODID, "fireball"), 20);
+    public static final RPGAbility UNARMORED_DEFENCE = new UnarmoredDefenceAbility(new Identifier(MineRPG.MODID,"unarmereddefencebarb"));
 
     public static RPGAbility register(RPGAbility rpgability)
     {
@@ -34,6 +35,7 @@ public class RpgAbilities {
         register(NONE);
         register(RAGE_ABILITY);
         register(FIREBALL_ABILITY);
+        register(UNARMORED_DEFENCE);
     }
 }
 class No_Ability extends RPGAbility {
@@ -60,7 +62,7 @@ class No_Ability extends RPGAbility {
     }
 
     @Override
-    public void applyCost() {
+    public void applyCost(RPGPlayer player) {
 
     }
 

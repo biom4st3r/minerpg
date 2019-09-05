@@ -2,6 +2,7 @@ package com.biom4st3r.minerpg.components;
 
 import java.util.HashMap;
 
+import com.biom4st3r.minerpg.api.Stat;
 import com.biom4st3r.minerpg.api.Stat.Stats;
 
 import com.biom4st3r.minerpg.util.Util;
@@ -132,6 +133,11 @@ public class RPGStatsComponent implements AbstractComponent
         return this.remainingPoints;
     }
 
+    public int getModifier(Stat.Stats s)
+    {
+        return (int)Math.floor((this.getStat(s)-10)/2);
+    }
+
     public void deserializeBuffer(PacketByteBuf pbb)
     {
         for(Stats s :Stats.values())
@@ -144,8 +150,6 @@ public class RPGStatsComponent implements AbstractComponent
 
     public void initStats()
     {
-        
-        Util.debug("Init Stats");
         for(Stats stat : Stats.values())
         {
             this.stats.put(stat, 8);

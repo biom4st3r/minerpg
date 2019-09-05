@@ -46,7 +46,6 @@ public class Packets
     {
         ClientSidePacketRegistry.INSTANCE.register(Packets.SEND_RPG_CLASS_COMPONENT, (context,buffer) ->
         {
-
             RPGPlayer player = ((RPGPlayer)MinecraftClient.getInstance().player);
             player.getRPGClassComponent().deserializeBuffer(buffer);
 
@@ -140,8 +139,13 @@ public class Packets
         });
         ServerSidePacketRegistry.INSTANCE.register(USE_ABILITY, (context,buff)->
         {
+            //NetworkThreadUtils
             RPGPlayer player = (RPGPlayer)context.getPlayer();
-            player.getRPGAbilityComponent().abilityBar.get(buff.readByte()).ability.doAbility(player);
+            int index = buff.readByte();
+            //RpgAbilityContext rac = player.getRPGAbilityComponent().abilityBar.get(index);
+            //RpgClassContext rcc = player.getRPGClassComponent().getRpgClassContext(rac.classContext.rpgclass);
+
+            player.getRPGAbilityComponent().abilityBar.get(index).ability.doAbility(player);
         });
         ServerSidePacketRegistry.INSTANCE.register(REQ_COMP_BAG, (context,buff)->
         {
