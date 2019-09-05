@@ -81,7 +81,7 @@ public class FireballAbility extends RPGAbility {
 	}
 
     @Override
-    public void applyCost() {
+    public void applyCost(RPGPlayer player) {
 
     }
 

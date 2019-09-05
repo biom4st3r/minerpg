@@ -25,7 +25,7 @@ public abstract class PlayerManagerRespawn
     @Inject(at = @At("HEAD"),method = "method_14594")
     public void updateInventory(ServerPlayerEntity spe,CallbackInfo ci)
     {
-        spe.openContainer(((RPGPlayer)spe).getComponentContainer());
-        Util.debugV("updateInventory", 10);
+        //spe.openContainer(((RPGPlayer)spe).getComponentContainer());
+        //Util.debugV("updateInventory", 10);
     }
 }

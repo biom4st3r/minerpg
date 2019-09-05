@@ -65,7 +65,7 @@ public abstract class InGameHudMixin extends DrawableHelper implements InGameHud
     // }
 
     @Inject(at = @At("HEAD"),method="renderHotbar",cancellable = true)
-    protected void renderHotbarr(float float_1,CallbackInfo ci)
+    protected void renderHotbar(float float_1,CallbackInfo ci)
     {
         PlayerEntity player = this.getCameraPlayer();
         if(abilityBar)
@@ -101,16 +101,6 @@ public abstract class InGameHudMixin extends DrawableHelper implements InGameHud
                 yPos = this.scaledHeight - 16 - 3;
                 this.renderAbilitySlot(xPos, yPos, ((RPGPlayer)player).getRPGAbilityComponent().abilityBar.get(i).ability);
             }
-
-            // if (!offHandStack.isEmpty()) 
-            // {
-            //     i = this.scaledHeight - 16 - 3;
-            //     if (nonMainHand == Arm.LEFT) {
-            //         //this.renderHotbarItem(width - 91 - 26, i, float_1, playerEntity_1, offHandStack);
-            //     } else {
-            //         //this.renderHotbarItem(width + 91 + 10, i, float_1, playerEntity_1, offHandStack);
-            //     }
-            // }
             GuiLighting.disable();
             GlStateManager.disableRescaleNormal();
             GlStateManager.disableBlend();
@@ -128,10 +118,4 @@ public abstract class InGameHudMixin extends DrawableHelper implements InGameHud
 
         }
     }
-
-    // @Inject(at = @At("HEAD"), method="renderHotBar",cancellable = true)
-    // protected void renderHotbar(float float_1, CallbackInfo ci)
-    // {
-    //     
-    // }
 }

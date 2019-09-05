@@ -44,7 +44,7 @@ public class PotionAbility extends EmulatePotionAbility {
 	}
 
     @Override
-    public void applyCost() {
+    public void applyCost(RPGPlayer player) {
 
     }
 

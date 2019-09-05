@@ -1,16 +1,20 @@
 package com.biom4st3r.minerpg.mixin;
 
+import com.biom4st3r.minerpg.api.abilities.ArmorOverrideAbility;
 import com.biom4st3r.minerpg.components.RPGAbilityComponent;
 import com.biom4st3r.minerpg.components.RPGClassComponent;
 import com.biom4st3r.minerpg.components.RPGStatsComponent;
 import com.biom4st3r.minerpg.gui.ComponentContainer;
 import com.biom4st3r.minerpg.util.BasicInventoryHelper;
 import com.biom4st3r.minerpg.util.RPGPlayer;
+import com.biom4st3r.minerpg.util.RpgAbilityContext;
 import com.biom4st3r.minerpg.util.Util;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.entity.EntityType;
@@ -46,6 +50,8 @@ public abstract class RPGPlayerEntity extends LivingEntity implements RPGPlayer 
             bag = new BasicInventory(componentInvSize);
         }
         this.componentInventory = new ComponentContainer(2834671, ((PlayerEntity) (Object) this).inventory, bag);
+        //TODO: Change Component to map for custom Components
+        //TODO: Maybe registery for Components
         this.statsComponent = new RPGStatsComponent();
         this.rpgClassComponent = new RPGClassComponent();
         this.rpgAbilityComponent = new RPGAbilityComponent();
@@ -161,18 +167,21 @@ public abstract class RPGPlayerEntity extends LivingEntity implements RPGPlayer 
         return bi;
     }
 
-    @Inject(at = @At("HEAD"), method = "onDeath")
-    public void onDeath(DamageSource damageSource_1,CallbackInfo ci)
+    @Override
+    public int getArmor()
     {
+        if(this.rpgAbilityComponent.armorOverride != RpgAbilityContext.EMPTY)
+        {
+            return ((ArmorOverrideAbility)this.rpgAbilityComponent.armorOverride.ability).getArmor(this);
+        }
+        return this.getArmor();
         
     }
 
     @Inject(at = @At("HEAD"), method = "jump")
     public void jump(CallbackInfo ci)
     {
-        //List<RPGAbility> a = this.rpgAbilityComponent.abilityBar;
-        //Util.debug(String.format("%s, %s, %s, %s, %s, %s, %s, %s, %s", a.get(0),a.get(1),a.get(2),a.get(3),a.get(4),a.get(5),a.get(6),a.get(7),a.get(8)));
-        
+
     }
 
     @Inject(at = @At("HEAD"), method = "readCustomDataFromTag", cancellable = false)
