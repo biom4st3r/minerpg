@@ -1,6 +1,8 @@
 package com.biom4st3r.minerpg.networking;
 
 import com.biom4st3r.minerpg.MineRPG;
+import com.biom4st3r.minerpg.api.RPGAbility;
+import com.biom4st3r.minerpg.api.RPGAbility.Type;
 import com.biom4st3r.minerpg.api.RPGClass;
 import com.biom4st3r.minerpg.components.RPGStatsComponent;
 import com.biom4st3r.minerpg.registery.RPG_Registry;
@@ -39,7 +41,10 @@ public class Packets
     public static final Identifier REQ_ABILITY_COMPONENT = new Identifier(MineRPG.MODID,"reqabicomp");
     public static final Identifier REQ_ABILITY_BAR_CHANGE = new Identifier(MineRPG.MODID,"reqabarchng");
     public static final Identifier USE_ABILITY = new Identifier(MineRPG.MODID,"useabi");
+    public static final Identifier USE_PASSIVE_ABILITY = new Identifier(MineRPG.MODID,"usepaabi");
     public static final Identifier REQ_COMP_BAG = new Identifier(MineRPG.MODID, "reqbag");
+    //ServerPlayerEntity ee;
+    //ClientPlayerEntity ee;
 
     @Environment(EnvType.CLIENT)
     public static void clientPacketReg()
@@ -141,11 +146,28 @@ public class Packets
         {
             //NetworkThreadUtils
             RPGPlayer player = (RPGPlayer)context.getPlayer();
-            int index = buff.readByte();
-            //RpgAbilityContext rac = player.getRPGAbilityComponent().abilityBar.get(index);
-            //RpgClassContext rcc = player.getRPGClassComponent().getRpgClassContext(rac.classContext.rpgclass);
-
-            player.getRPGAbilityComponent().abilityBar.get(index).ability.doAbility(player);
+            int barindex = buff.readByte();
+            RpgAbilityContext rac = player.getRPGAbilityComponent().abilityBar.get(barindex);
+            if(rac.isValid())
+            {
+                rac.ability.doAbility(player);
+            }
+            else
+            {
+                player.getRPGAbilityComponent().abilityBar.set(barindex, RpgAbilityContext.EMPTY);
+            }
+            
+        });
+        ServerSidePacketRegistry.INSTANCE.register(USE_PASSIVE_ABILITY, (context,buff) ->
+        {
+            int classIndex = buff.readByte();
+            RPGPlayer player = (RPGPlayer)context.getPlayer();
+            RPGAbility ability = player.getRPGClassComponent().getAvalibleAbilities()[classIndex];
+            if(ability.getType() == Type.PASSIVE)
+            {
+                Util.debug("success");
+                ability.doAbility(player);
+            }
         });
         ServerSidePacketRegistry.INSTANCE.register(REQ_COMP_BAG, (context,buff)->
         {
@@ -204,6 +226,13 @@ public class Packets
             PacketByteBuf pbb = new PacketByteBuf(Unpooled.buffer());
             pbb.writeByte(barIndex);
             return new CustomPayloadC2SPacket(USE_ABILITY,pbb);
+        }
+
+        public static CustomPayloadC2SPacket usePassiveAbility(int rpgClassAbilityIndex)
+        {
+            PacketByteBuf pbb = new PacketByteBuf(Unpooled.buffer());
+            pbb.writeByte(rpgClassAbilityIndex);
+            return new CustomPayloadC2SPacket(USE_PASSIVE_ABILITY,pbb);
         }
 
         public static CustomPayloadC2SPacket requestComponentBag()

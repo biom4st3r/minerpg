@@ -2,6 +2,7 @@ package com.biom4st3r.minerpg.gui.screens;
 
 import com.biom4st3r.minerpg.api.RPGAbility;
 import com.biom4st3r.minerpg.api.RPGClass;
+import com.biom4st3r.minerpg.api.RPGAbility.Type;
 import com.biom4st3r.minerpg.api.Stat.Stats;
 import com.biom4st3r.minerpg.components.RPGClassComponent;
 import com.biom4st3r.minerpg.components.RPGStatsComponent;
@@ -46,8 +47,16 @@ public abstract class AbstractAbilitiesContainer extends Screen {
         {
             this.addButton(abilityDisplay[i]);
             ((AbilityButton)abilityDisplay[i]).pressAction = bu -> {
-                this.mouseSlot = ((AbilityButton)bu).abilityContext;
-
+                RpgAbilityContext ab = ((AbilityButton)bu).abilityContext;
+                if(ab.ability.getType() != Type.PASSIVE)
+                {
+                    this.mouseSlot = ab;
+                }
+                else
+                {
+                    ab.ability.doAbility(player);
+                    player.getNetworkHandlerC().sendPacket(Packets.CLIENT.usePassiveAbility(ab.abilityIndexInClass));
+                }
             };
             if(abilities.length <= i || abilities[i] == RpgAbilities.NONE)
             {
@@ -72,7 +81,7 @@ public abstract class AbstractAbilitiesContainer extends Screen {
             //RPGAbilityComponent ac = ((RPGPlayer)this.minecraft.player).getRPGAbilityComponent();
             ((AbilitySlotButton)b).pressAction = bu -> {
                 AbilitySlotButton asb = ((AbilitySlotButton)bu);
-                if(this.mouseSlot == RpgAbilityContext.EMPTY)
+                if(this.mouseSlot.isEmpty())
                 {
                     asb.resetAbility();
                     player.getNetworkHandlerC().sendPacket(Packets.CLIENT.reqChangeAbilityBar(asb.index,RpgAbilityContext.EMPTY));
@@ -124,7 +133,7 @@ public abstract class AbstractAbilitiesContainer extends Screen {
                 this.renderTooltip(((AbilitySlotButton)bw).getAbility().getToolTips(), mouseX, mouseY);            
             }
         }
-        if(mouseSlot != RpgAbilityContext.EMPTY)
+        if(!mouseSlot.isEmpty())
         {
             //GUIhelper.drawString(this.font, mouseSlot.ability.name.getPath(), mouseX, mouseY, 0xFFBB44);
             MinecraftClient.getInstance().getTextureManager().bindTexture(mouseSlot.ability.getIcon());

@@ -50,6 +50,7 @@ public class BarbarianClass extends RPGClass {
             case 2:
             case 1:
                 //abilities.add(RpgAbilities.FIREBALL_ABILITY);
+                abilities.add(RpgAbilities.FIREBALL_ABILITY);
                 abilities.add(RpgAbilities.UNARMORED_DEFENCE);
                 abilities.add(RpgAbilities.RAGE_ABILITY);
             default:

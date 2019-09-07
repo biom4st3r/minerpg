@@ -26,6 +26,7 @@ public class Fireball extends AbstractFireballEntity {
     public int explosionPower = 1;
     public float drag = 1.0f;
     public boolean onFire = false;
+    
 
     public Fireball(EntityType<? extends AbstractFireballEntity> entityType_1, World world_1) {
         super(entityType_1, world_1);

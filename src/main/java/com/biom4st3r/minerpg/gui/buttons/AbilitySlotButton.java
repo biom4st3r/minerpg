@@ -7,7 +7,6 @@ import com.biom4st3r.minerpg.util.RpgAbilityContext;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.resource.NamespaceResourceManager;
 
 public class AbilitySlotButton extends ButtonWidget
 {

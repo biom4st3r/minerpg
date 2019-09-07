@@ -23,8 +23,7 @@ public class ClientInit implements ClientModInitializer
         //EntityRenderDispatcher
         EntityRendererRegistry.INSTANCE.register(Fireball.class, (entityRenderDispatcher, context) ->
         {
-            
-            return new FlyingItemEntityRenderer<Fireball>(entityRenderDispatcher, context.getItemRenderer(), 1F);
+            return new FlyingItemEntityRenderer<Fireball>(entityRenderDispatcher, context.getItemRenderer(), 10F);
         });
 
 

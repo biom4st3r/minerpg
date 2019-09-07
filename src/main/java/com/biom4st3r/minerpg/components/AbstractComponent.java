@@ -16,4 +16,5 @@ public interface AbstractComponent
     public void deserializeBuffer(PacketByteBuf buf);
 
     public <T extends AbstractComponent> T getCopy();
+
 }

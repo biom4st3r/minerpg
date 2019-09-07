@@ -69,11 +69,12 @@ public abstract class RPGAbility
         RIGHT_CLICK,
         LEFT_CLICK,
         USE
-        
     }
     public List<String> getToolTips()
     {
-        return Lists.newArrayList(this.getDisplayName().asFormattedString());
+        List<String> t = Lists.newArrayList(this.getDisplayName().asFormattedString());
+        t.add(this.getType().name());
+        return  t;
     }
 
     @Override
