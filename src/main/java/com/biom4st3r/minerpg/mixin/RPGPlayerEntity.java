@@ -7,19 +7,17 @@ import com.biom4st3r.minerpg.components.RPGStatsComponent;
 import com.biom4st3r.minerpg.gui.ComponentContainer;
 import com.biom4st3r.minerpg.util.BasicInventoryHelper;
 import com.biom4st3r.minerpg.util.RPGPlayer;
-import com.biom4st3r.minerpg.util.RpgAbilityContext;
 import com.biom4st3r.minerpg.util.Util;
+
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.BasicInventory;
 import net.minecraft.item.ItemStack;
@@ -35,8 +33,6 @@ public abstract class RPGPlayerEntity extends LivingEntity implements RPGPlayer 
 
     protected RPGPlayerEntity(EntityType<? extends LivingEntity> entityType_1, World world_1) {
         super(entityType_1, world_1);
-        //this.RPGContainer = new RPGComponent();
-        //MinecraftServer
     }
 
     @Override
@@ -69,15 +65,17 @@ public abstract class RPGPlayerEntity extends LivingEntity implements RPGPlayer 
         return statsComponent;
     }
 
+    public void asdf() throws InstantiationException, IllegalAccessException
+    {
+        statsComponent.getClass().newInstance();
+    }
+
     @Override
     public ClientPlayNetworkHandler getNetworkHandlerC() {
         if(this.world.isClient)
         {
             return MinecraftClient.getInstance().getNetworkHandler();
         }
-        //ClientPlayerEntity
-        //AbstractClientPlayerEntity
-        //ServerPlayerEntity
         return null;
     }
     @Override
@@ -170,13 +168,27 @@ public abstract class RPGPlayerEntity extends LivingEntity implements RPGPlayer 
     @Override
     public int getArmor()
     {
-        if(this.rpgAbilityComponent.armorOverride != RpgAbilityContext.EMPTY)
-        {
-            return ((ArmorOverrideAbility)this.rpgAbilityComponent.armorOverride.ability).getArmor(this);
-        }
-        return this.getArmor();
-        
+        //Util.debug(this.rpgAbilityComponent.armorOverride.isEmpty());
+        //DamageUtil.getDamageLeft
+        //damageAmount, ArmorRating, ArmorToughness
+        /*
+        no armor: 3f damage
+        20 20 armor: 0.78f damage
+        diamond armor: 0.69000006f damage
+
+        */
+        if(this.rpgAbilityComponent.getNamedAbilitySlot("armoroverride").isEmpty())
+            return super.getArmor();
+        return ((ArmorOverrideAbility)this.rpgAbilityComponent.getNamedAbilitySlot("armoroverride").ability).getArmor(this);
     }
+
+    // @Override
+    // protected float applyArmorToDamage(DamageSource damageSource_1, float float_1) {
+        
+    //     float f = super.applyArmorToDamage(damageSource_1, float_1);
+    //     Util.debug("Damage: " + f);
+    //     return f;
+    // }
 
     @Inject(at = @At("HEAD"), method = "jump")
     public void jump(CallbackInfo ci)

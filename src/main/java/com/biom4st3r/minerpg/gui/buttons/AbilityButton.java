@@ -54,12 +54,6 @@ public class AbilityButton extends ButtonWidget
         {
             fill(this.x+3, this.y+3, this.x+3 + 16, this.y+3 + 16, 0x80FFFFFF);
         }
-
-
-        //MinecraftClient.getInstance().getTextureManager().bindTexture(ICON);
-        //blit(this.x+3,this.y+3,this.width,this.height,0,0,128,128,256,256);
-
-        //super.renderButton(int_1, int_2, float_1);
     }
     
 }

@@ -1,12 +1,12 @@
 package com.biom4st3r.minerpg.mixin;
 
 import com.biom4st3r.minerpg.util.RPGPlayer;
-import com.biom4st3r.minerpg.util.Util;
+
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+
 import net.minecraft.server.PlayerManager;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.world.dimension.DimensionType;
@@ -20,12 +20,5 @@ public abstract class PlayerManagerRespawn
         ServerPlayerEntity playersNewEntity = ci.getReturnValue();
         ((RPGPlayer)playersNewEntity).respawn(originalPlayerEntity);
         ci.setReturnValue(playersNewEntity);
-    }
-
-    @Inject(at = @At("HEAD"),method = "method_14594")
-    public void updateInventory(ServerPlayerEntity spe,CallbackInfo ci)
-    {
-        //spe.openContainer(((RPGPlayer)spe).getComponentContainer());
-        //Util.debugV("updateInventory", 10);
     }
 }

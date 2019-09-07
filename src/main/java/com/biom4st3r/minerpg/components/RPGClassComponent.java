@@ -66,14 +66,6 @@ public class RPGClassComponent implements AbstractComponent
 
     public RpgClassContext getRpgClassContext(RPGClass rpgclass)
     {   
-        // try
-        // {
-        //     return rpgClasses.get(rpgclass).intValue();
-        // }
-        // catch(NullPointerException e)
-        // {
-        //     return 1;
-        // }
         try
         {
             return new RpgClassContext(rpgclass, rpgClasses.get(rpgclass).intValue());

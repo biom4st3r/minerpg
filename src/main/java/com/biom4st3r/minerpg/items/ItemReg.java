@@ -12,9 +12,10 @@ public class ItemReg
 {
     public static void init()
     {
-        Item.Settings s = new Item.Settings().group(ItemGroup.MISC).maxCount(64).rarity(Rarity.EPIC);
+        Item.Settings s = new Item.Settings().group(ItemGroup.MISC).maxCount(1).rarity(Rarity.EPIC);
         reg("classreset",new RpgClassResetItem(s));
         reg("statreset", new RpgStatResetItem(s));
+        reg("abilitycompreset", new RpgAbilityComponentResetItem(s));
     }
 
     private static Item reg(String name, Item i)

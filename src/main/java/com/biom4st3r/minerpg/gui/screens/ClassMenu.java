@@ -17,9 +17,6 @@ public class ClassMenu extends AbstractAbilitiesContainer {
     protected int top;
     protected int containerWidth = 176;
     protected int containerHeight = 166;
-    // ButtonWidget[] abilityButtons;
-    // ButtonWidget[] arrowbuttons;
-    // ButtonWidget[] abilitySlots;
     RPGPlayer player;
     ClassButton cb;
 

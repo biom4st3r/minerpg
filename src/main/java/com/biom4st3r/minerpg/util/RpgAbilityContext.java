@@ -71,4 +71,16 @@ public class RpgAbilityContext
         this.abilityIndexInClass = pbb.readByte();
         this.ability = RPG_Registry.ABILITY_REGISTRY.get(pbb.readIdentifier());
     }
+    public boolean isEmpty()
+    {
+        if(this == RpgAbilityContext.EMPTY)
+        {
+            return true;
+        }
+        return false;
+    }
+    public boolean isValid()
+    {
+        return this.classContext.getAbilities()[this.abilityIndexInClass] == this.ability;
+    }
 }

@@ -28,7 +28,54 @@ public class RPGAbilityComponent implements AbstractComponent {
 
     protected Map<Identifier,Integer> tokens;
 
-    public RpgAbilityContext armorOverride = RpgAbilityContext.EMPTY;
+    //public RpgAbilityContext armorOverride;
+    
+    private Map<String,RpgAbilityContext> namedAbilityBar;
+    //public NNObj<RpgAbilityContext> armorOverride2;
+
+    @Override
+    public <T extends AbstractComponent> void clone(T origin) {
+        RPGAbilityComponent original = (RPGAbilityComponent)origin;
+        for(RPGAbility a : original.specialAbilities)
+        {
+            this.specialAbilities.add(a);
+        }
+        for(int i = 0; i < 9; i++)
+        {
+            this.abilityBar.set(i, original.abilityBar.get(i));
+        }
+        this.cooldowns = Maps.newHashMap();
+        for(Identifier i : cooldowns.keySet())
+        {
+            this.cooldowns.put(i, original.cooldowns.get(i));
+        }
+        this.tokens = Maps.newHashMap();
+        for(Identifier i : tokens.keySet())
+        {
+            this.tokens.put(i, original.tokens.get(i));
+        }
+    }
+
+    public RPGAbilityComponent()
+    {
+        specialAbilities = new ArrayList<RPGAbility>();
+        abilityBar = DefaultedList.ofSize(9, RpgAbilityContext.EMPTY);
+        cooldowns = Maps.newHashMap();
+        tokens = Maps.newHashMap();
+        //armorOverride = RpgAbilityContext.EMPTY;
+        namedAbilityBar = Maps.newHashMap();
+    }
+
+    public RpgAbilityContext getNamedAbilitySlot(String s)
+    {
+        RpgAbilityContext a = namedAbilityBar.get(s);
+        return a == null ? RpgAbilityContext.EMPTY : a;
+    }
+
+    public void setNamedAbilitySlot(String s, RpgAbilityContext rac)
+    {
+        namedAbilityBar.put(s,rac);
+    }
 
     public boolean hasToken(RPGAbility ability)
     {
@@ -110,29 +157,6 @@ public class RPGAbilityComponent implements AbstractComponent {
 
     //public Hashtable<RPGAbility, Object> abilityResults;
 
-    public RPGAbilityComponent()
-    {
-        specialAbilities = new ArrayList<RPGAbility>();
-        abilityBar = DefaultedList.ofSize(9, RpgAbilityContext.EMPTY);
-        cooldowns = Maps.newHashMap();
-        tokens = Maps.newHashMap();
-        //MinecraftServer
-    }
-
-    @Override
-    public <T extends AbstractComponent> void clone(T origin) {
-        RPGAbilityComponent original = (RPGAbilityComponent)origin;
-        for(RPGAbility a : original.specialAbilities)
-        {
-            this.specialAbilities.add(a);
-        }
-        for(int i = 0; i < 9; i++)
-        {
-            this.abilityBar.set(i, original.abilityBar.get(i));
-        }
-        //TODO: add cooldowns and tokens here
-    }
-
     @Override
     public void serializeNBT(CompoundTag tag) {
         ListTag lt = new ListTag();
@@ -152,6 +176,7 @@ public class RPGAbilityComponent implements AbstractComponent {
         }
         tag.put(ABILITY_BAR, lt);
         //Util.debug(tag.getType(ABILITY_BAR));
+        //TODO: add tokens, cooldowns, and armorOverride
     }
 
     @Override
@@ -172,6 +197,7 @@ public class RPGAbilityComponent implements AbstractComponent {
             rac.deserializeNbt(lt.getCompoundTag(i));
             this.abilityBar.set(i, rac);
         }
+        //TODO: add tokens, cooldowns, and armorOverride
     }
 
     private static RPGAbility getAbility(Identifier i)
@@ -190,6 +216,7 @@ public class RPGAbilityComponent implements AbstractComponent {
         {
             rac.serializeBuffer(buf);
         }
+        //TODO: add tokens, cooldowns, and armorOverride
     }
 
     @Override
@@ -203,6 +230,7 @@ public class RPGAbilityComponent implements AbstractComponent {
         {
             abilityBar.set(i, new RpgAbilityContext(buf));
         }
+        //TODO: add tokens, cooldowns, and armorOverride
     }
 
     @Override

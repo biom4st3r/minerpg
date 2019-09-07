@@ -22,6 +22,21 @@ public class RpgClassContext
         return this.rpgclass.abilitysAvalibleAtLevel(this.Lvl);
     }
 
+    public RpgAbilityContext getAbilityContext(RPGAbility rpga)
+    {
+        RPGAbility[] raa =  this.getAbilities();
+        DefaultedObj<RpgAbilityContext> rax = new DefaultedObj<RpgAbilityContext>(null, RpgAbilityContext.EMPTY);
+        for(int i = 0; i < raa.length; i++)
+        {
+            if(rpga == raa[i])
+            {
+                rax.set(new RpgAbilityContext(this, i, rpga));
+                break;
+            }
+        }
+        return rax.getValue();
+    }
+
     @Override
     public boolean equals(Object obj) {
         if(obj instanceof RpgClassContext)
