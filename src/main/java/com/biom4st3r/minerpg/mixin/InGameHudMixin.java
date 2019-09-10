@@ -1,5 +1,14 @@
 package com.biom4st3r.minerpg.mixin;
 
+    /*
+    Purpose
+        Provides the AbilityBar overriding the hotbar
+
+
+
+
+    */
+
 import com.biom4st3r.minerpg.MineRPG;
 import com.biom4st3r.minerpg.api.RPGAbility;
 import com.biom4st3r.minerpg.registery.RpgAbilities;

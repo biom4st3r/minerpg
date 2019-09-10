@@ -1,5 +1,13 @@
 package com.biom4st3r.minerpg.mixin;
+    /*
+    Purpose
+        Maintains synconization between client and server for
+        all cusotm RPGPlayer data
 
+
+
+
+    */
 import com.biom4st3r.minerpg.util.Util;
 
 import org.spongepowered.asm.mixin.Mixin;

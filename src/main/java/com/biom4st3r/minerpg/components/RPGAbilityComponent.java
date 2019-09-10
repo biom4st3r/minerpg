@@ -31,6 +31,7 @@ public class RPGAbilityComponent implements AbstractComponent {
     //public RpgAbilityContext armorOverride;
     
     private Map<String,RpgAbilityContext> namedAbilityBar;
+    public static String SLOT_ARMOROVERRIDE = "armoroverride";
     //public NNObj<RpgAbilityContext> armorOverride2;
 
     @Override
@@ -134,18 +135,14 @@ public class RPGAbilityComponent implements AbstractComponent {
         cooldowns.put(i,coolDown);
     }
 
-    public int checkCooldown(RPGAbility ability)
+    public boolean isOnCooldown(Identifier i)
     {
-        return checkCooldown(ability.id);
+        return cooldowns.containsKey(i);
     }
 
-    public int checkCooldown(Identifier i)
+    public boolean isOnCooldown(RPGAbility rpga)
     {
-        if(cooldowns.containsKey(i))
-        {
-            return cooldowns.get(i).intValue();
-        }
-        return -1;
+        return isOnCooldown(rpga.id);
     }
 
     public static final String ABILITY_LIST = "rpgAbilList";
@@ -175,7 +172,6 @@ public class RPGAbilityComponent implements AbstractComponent {
             lt.add(ct);
         }
         tag.put(ABILITY_BAR, lt);
-        //Util.debug(tag.getType(ABILITY_BAR));
         //TODO: add tokens, cooldowns, and armorOverride
     }
 

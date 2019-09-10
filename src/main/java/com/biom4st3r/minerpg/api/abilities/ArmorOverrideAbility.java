@@ -3,6 +3,7 @@ package com.biom4st3r.minerpg.api.abilities;
 import java.util.List;
 
 import com.biom4st3r.minerpg.api.RPGAbility;
+import com.biom4st3r.minerpg.components.RPGAbilityComponent;
 import com.biom4st3r.minerpg.components.RPGClassComponent;
 import com.biom4st3r.minerpg.util.RPGPlayer;
 import com.biom4st3r.minerpg.util.RpgClassContext;
@@ -30,7 +31,7 @@ public abstract class ArmorOverrideAbility extends RPGAbility {
     public boolean doAbility(RPGPlayer player) {
         RPGClassComponent rcc = player.getRPGClassComponent();
         RpgClassContext rcx = rcc.getRpgClassContext(rcc.getRpgClass(0)); 
-        player.getRPGAbilityComponent().setNamedAbilitySlot("armoroverride", rcx.getAbilityContext(this)); 
+        player.getRPGAbilityComponent().setNamedAbilitySlot(RPGAbilityComponent.SLOT_ARMOROVERRIDE, rcx.getAbilityContext(this)); 
         player.getPlayer().sendMessage(new TranslatableText( this.getDisplayName().asFormattedString() + " applied as armor"));
         return true;
     }
@@ -45,7 +46,7 @@ public abstract class ArmorOverrideAbility extends RPGAbility {
     @Override
     public List<String> getToolTips() {
         List<String> t = super.getToolTips();
-        t.add("Armor Override");
+        t.add("Armor Replacement");
         return t;
     }
     

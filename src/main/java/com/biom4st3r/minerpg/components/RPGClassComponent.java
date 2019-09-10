@@ -11,6 +11,7 @@ import com.biom4st3r.minerpg.util.RpgClassContext;
 import com.biom4st3r.minerpg.util.Util;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
+import net.minecraft.stat.Stat;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.PacketByteBuf;
 
@@ -177,6 +178,12 @@ public class RPGClassComponent implements AbstractComponent
     public <T extends AbstractComponent> T getCopy() {
         return null;
     }
+	public void checkStat(Stat<?> stat) {
+        for(RPGClass rpgClass : this.rpgClasses.keySet())
+        {
+            rpgClass.provideStatAtLvl(stat,this.rpgClasses.get(rpgClass).intValue());
+        }
+	}
 
     // @Override
     // public int hashCode() {

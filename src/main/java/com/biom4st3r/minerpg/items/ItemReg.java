@@ -8,7 +8,7 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.Rarity;
 import net.minecraft.util.registry.Registry;
 
-public class ItemReg
+public final class ItemReg
 {
     public static void init()
     {

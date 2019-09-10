@@ -58,16 +58,12 @@ public abstract class RPGAbility
 
     public abstract boolean doAbility(RPGPlayer player);
 
-    //public abstract boolean applyCost(RPGPlayer player);
-
-    //public abstract boolean checkRequirements(RPGPlayer player);
-
     public abstract Type getType();
 
     public enum Type{
         PASSIVE,
         RIGHT_CLICK,
-        LEFT_CLICK,
+        LEFT_CLICK, 
         USE
     }
     public List<String> getToolTips()

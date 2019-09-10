@@ -108,7 +108,7 @@ public class GUIhelper
     }
     public static boolean isPointOverAbilityButton(ButtonWidget ab, double mouseX, double mouseY)
     {
-        return isPointWithinBounds(ab.x, ab.y, 21, 21, mouseX, mouseY);
+        return isPointWithinBounds(ab.x, ab.y, 16, 16, mouseX, mouseY);
     }
 
     public static ButtonWidget[] drawAbilitySlots(int xPos,int yPos)

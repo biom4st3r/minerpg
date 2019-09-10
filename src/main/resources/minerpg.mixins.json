@@ -6,14 +6,16 @@
     "RPGPlayerEntity",
     "BasicInventoryMaxSize",
     "PlayerManagerRespawn",
-    "ServerPEAddListener"
+    "ServerPEAddListener",
+    "PaperSkinEffectMixin"
   ],
   "client": [
     "VanillaInventory",
     "MinecraftClientMixin",
     "InGameHudMixin",
     "CreateClientPlayerMixin",
-    "ClientPlayNetworkHandlerMixin"
+    "ClientPlayNetworkHandlerMixin",
+    "EvokerAnimationMixin"
   ],
   "injectors": {
     "defaultRequire": 1
