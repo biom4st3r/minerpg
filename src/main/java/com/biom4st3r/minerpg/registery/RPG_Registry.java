@@ -9,7 +9,7 @@ import net.minecraft.util.registry.MutableRegistry;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.util.registry.SimpleRegistry;
 
-public abstract class RPG_Registry
+public final class RPG_Registry
 {
     public static Registry<RPGClass> CLASS_REGISTRY = create("rpgclasses", () -> 
     {

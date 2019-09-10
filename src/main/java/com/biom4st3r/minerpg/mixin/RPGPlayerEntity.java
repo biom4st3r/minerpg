@@ -1,4 +1,13 @@
 package com.biom4st3r.minerpg.mixin;
+    /*
+    Purpose
+        Hub for all player based mods. May switched to LivingEntity 
+        to provide for functionallity and flexiblity in the future.
+
+
+
+
+    */
 
 import com.biom4st3r.minerpg.api.abilities.ArmorOverrideAbility;
 import com.biom4st3r.minerpg.components.RPGAbilityComponent;
@@ -44,10 +53,11 @@ public abstract class RPGPlayerEntity extends LivingEntity implements RPGPlayer 
     private void onConst(CallbackInfo ci) {
         if (bag == null) {
             bag = new BasicInventory(componentInvSize);
+            //ServerPlayerEntity
         }
         this.componentInventory = new ComponentContainer(2834671, ((PlayerEntity) (Object) this).inventory, bag);
         //TODO: Change Component to map for custom Components
-        //TODO: Maybe registery for Components
+        //TODO: Maybe registery for Components ?
         this.statsComponent = new RPGStatsComponent();
         this.rpgClassComponent = new RPGClassComponent();
         this.rpgAbilityComponent = new RPGAbilityComponent();
@@ -99,6 +109,7 @@ public abstract class RPGPlayerEntity extends LivingEntity implements RPGPlayer 
                 if(abC.cooldowns.get(i) <= 0)
                 {
                     abC.cooldowns.remove(i); 
+                    break;
                 }
             }
         }
@@ -177,9 +188,9 @@ public abstract class RPGPlayerEntity extends LivingEntity implements RPGPlayer 
         diamond armor: 0.69000006f damage
 
         */
-        if(this.rpgAbilityComponent.getNamedAbilitySlot("armoroverride").isEmpty())
+        if(this.rpgAbilityComponent.getNamedAbilitySlot(RPGAbilityComponent.SLOT_ARMOROVERRIDE).isEmpty())
             return super.getArmor();
-        return ((ArmorOverrideAbility)this.rpgAbilityComponent.getNamedAbilitySlot("armoroverride").ability).getArmor(this);
+        return ((ArmorOverrideAbility)this.rpgAbilityComponent.getNamedAbilitySlot(RPGAbilityComponent.SLOT_ARMOROVERRIDE).ability).getArmor(this);
     }
 
     // @Override

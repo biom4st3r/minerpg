@@ -83,4 +83,12 @@ public class RpgAbilityContext
     {
         return this.classContext.getAbilities()[this.abilityIndexInClass] == this.ability;
     }
+
+    @Override
+    public String toString() 
+    {
+        return String.format("class: %s\nLvl: %s\nabilityIndex: %s\nabilityName: %s",
+            this.classContext.rpgclass.id.getPath(),this.classContext.Lvl,this.abilityIndexInClass,
+            this.ability.id.getPath());
+    }
 }

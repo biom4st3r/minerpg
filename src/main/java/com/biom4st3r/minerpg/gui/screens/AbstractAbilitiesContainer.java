@@ -13,6 +13,7 @@ import com.biom4st3r.minerpg.networking.Packets;
 import com.biom4st3r.minerpg.registery.RpgAbilities;
 import com.biom4st3r.minerpg.util.RPGPlayer;
 import com.biom4st3r.minerpg.util.RpgAbilityContext;
+import com.biom4st3r.minerpg.util.Util;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
@@ -51,6 +52,7 @@ public abstract class AbstractAbilitiesContainer extends Screen {
                 if(ab.ability.getType() != Type.PASSIVE)
                 {
                     this.mouseSlot = ab;
+                    Util.debug(ab.toString());
                 }
                 else
                 {
@@ -81,7 +83,7 @@ public abstract class AbstractAbilitiesContainer extends Screen {
             //RPGAbilityComponent ac = ((RPGPlayer)this.minecraft.player).getRPGAbilityComponent();
             ((AbilitySlotButton)b).pressAction = bu -> {
                 AbilitySlotButton asb = ((AbilitySlotButton)bu);
-                if(this.mouseSlot.isEmpty())
+                if(this.mouseSlot.isEmpty() && asb.index == -1)
                 {
                     asb.resetAbility();
                     player.getNetworkHandlerC().sendPacket(Packets.CLIENT.reqChangeAbilityBar(asb.index,RpgAbilityContext.EMPTY));
@@ -91,7 +93,6 @@ public abstract class AbstractAbilitiesContainer extends Screen {
                     asb.setAbiliy(mouseSlot);
                     player.getNetworkHandlerC().sendPacket(Packets.CLIENT.reqChangeAbilityBar(asb.index, mouseSlot));
                     mouseSlot = RpgAbilityContext.EMPTY;
-                    
                 }
             };
         }   
@@ -121,14 +122,14 @@ public abstract class AbstractAbilitiesContainer extends Screen {
         GuiLighting.disable();
         for(ButtonWidget bw : abilityDisplay)
         {
-            if(bw.visible && GUIhelper.isPointOverAbilityButton((AbilityButton)bw, mouseX, mouseY))
+            if(bw.visible && bw.isHovered())//GUIhelper.isPointOverAbilityButton((AbilityButton)bw, mouseX, mouseY))
             {
                 this.renderTooltip(((AbilityButton)bw).abilityContext.ability.getToolTips(), mouseX, mouseY);
             }
         }
         for(ButtonWidget bw : abilitySlots)
         {
-            if(!(((AbilitySlotButton)bw).getAbility() == RpgAbilities.NONE) && GUIhelper.isPointOverAbilityButton((AbilitySlotButton)bw, mouseX, mouseY))
+            if(!(((AbilitySlotButton)bw).getAbility() == RpgAbilities.NONE) && bw.isHovered())//GUIhelper.isPointOverAbilityButton((AbilitySlotButton)bw, mouseX, mouseY))
             {
                 this.renderTooltip(((AbilitySlotButton)bw).getAbility().getToolTips(), mouseX, mouseY);            
             }

@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.google.common.collect.Lists;
 
+import net.minecraft.stat.Stat;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
@@ -49,6 +50,8 @@ public abstract class RPGClass
     {
         return new Identifier(id.getNamespace(),"classes/icons/" + id.getPath() + ".png");
     }
+
+	public abstract void provideStatAtLvl(Stat<?> stat, int Lvl);
 
 
 

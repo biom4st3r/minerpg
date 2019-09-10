@@ -55,5 +55,6 @@ public class AbilitySlotButton extends ButtonWidget
     @Override
     public void onPress() {
         this.pressAction.onPress(this);
+        
     }
 }

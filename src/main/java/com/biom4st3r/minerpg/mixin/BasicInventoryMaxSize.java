@@ -1,5 +1,16 @@
 package com.biom4st3r.minerpg.mixin;
 
+    /*
+    Purpose
+        Allows the Very custom things done with ComponentInventory.
+        i should have just made my own Inventory Object, but
+        ¯\_(ツ)_/¯
+
+
+
+
+    */
+
 import java.util.List;
 
 import com.biom4st3r.minerpg.util.BasicInventoryHelper;

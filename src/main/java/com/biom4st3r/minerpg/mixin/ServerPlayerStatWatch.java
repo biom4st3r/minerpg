@@ -1,13 +1,6 @@
 package com.biom4st3r.minerpg.mixin;
 
-    /*
-    Purpose
-        adds the ServerPlayerEntity to the componentBag for Syncing
-
-    */
-
 import com.biom4st3r.minerpg.util.RPGPlayer;
-
 
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -15,14 +8,18 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.stat.Stat;
 
 @Mixin(ServerPlayerEntity.class)
-public abstract class ServerPEAddListener
+public abstract class ServerPlayerStatWatch
 {
-    @Inject(at = @At("TAIL"),method = "method_14235")
-    public void addListenerToInventory(CallbackInfo ci)
+
+    @Inject(at = @At("HEAD"),method="increaseStat",cancellable = false)
+    public void increaseStat(Stat<?> stat, int i, CallbackInfo ci)
     {
-        ((RPGPlayer)(Object)this).getComponentContainer().addListener((ServerPlayerEntity)(Object)this);
-        
+        RPGPlayer player = ((RPGPlayer)this);
+        player.getRPGClassComponent().checkStat(stat);
     }
+
+    
 }

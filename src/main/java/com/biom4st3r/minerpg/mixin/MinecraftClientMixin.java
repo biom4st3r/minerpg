@@ -1,5 +1,14 @@
 package com.biom4st3r.minerpg.mixin;
 
+    /*
+    Purpose
+        allows for the custom controls
+
+
+
+
+    */
+
 import com.biom4st3r.minerpg.ClientInit;
 import com.biom4st3r.minerpg.api.RPGAbility;
 import com.biom4st3r.minerpg.api.RPGAbility.Type;

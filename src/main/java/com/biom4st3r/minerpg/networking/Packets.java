@@ -27,7 +27,7 @@ import net.minecraft.server.network.packet.CustomPayloadC2SPacket;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.PacketByteBuf;
 
-public class Packets
+public final class Packets
 {
     public static final Identifier SEND_STAT_UPDATE = new Identifier(MineRPG.MODID,"sndstats");
     public static final Identifier SEND_RPG_CLASS_COMPONENT = new Identifier(MineRPG.MODID, "sndrpgcomp");
@@ -111,6 +111,7 @@ public class Packets
             RPGPlayer player = (RPGPlayer)context.getPlayer();
             int barIndex = buff.readByte();
             RpgAbilityContext rac = new RpgAbilityContext(buff);
+            System.out.println(rac.toString());
             if(rac.ability == RpgAbilities.NONE)
             {
                 player.getRPGAbilityComponent().abilityBar.set(barIndex, RpgAbilityContext.EMPTY);
@@ -125,6 +126,10 @@ public class Packets
                     Util.debug(String.format("specialSet slot %s to %s", barIndex,rac.ability.id.toString()));
                     return;
                 }
+            }
+            else if(rac.ability==null)
+            {
+                Util.errorMSG("Ability not registered. " + rac.classContext.rpgclass.id.getPath() + " index: " + rac.abilityIndexInClass);
             }
             else
             {
@@ -148,6 +153,7 @@ public class Packets
             RPGPlayer player = (RPGPlayer)context.getPlayer();
             int barindex = buff.readByte();
             RpgAbilityContext rac = player.getRPGAbilityComponent().abilityBar.get(barindex);
+            
             if(rac.isValid())
             {
                 rac.ability.doAbility(player);

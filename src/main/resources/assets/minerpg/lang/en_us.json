@@ -1,6 +1,10 @@
 {
     "item.minerpg.classreset": "Reset Class",
     "item.minerpg.statreset": "Reset Stats",
+    "item.minerpg.abilitycompreset":"Reset Ability Component",
     "rpgability.minerpg.rage": "Rage!",
-    "rpgclass.minerpg.barbarian": "Barbarian"
+    "rpgability.minerpg.fireball": "Fireball",
+    "rpgability.minerpg.unarmereddefencebarb": "Unarmered Defence",
+    "rpgclass.minerpg.barbarian": "Barbarian",
+    "effect.minerpg.paper_skin": "Paper Skin"
 }
