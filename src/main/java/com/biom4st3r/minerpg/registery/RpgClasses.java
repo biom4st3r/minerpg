@@ -48,9 +48,9 @@ class NoClass extends RPGClass {
     }
 
     @Override
-    public void provideStatAtLvl(Stat<?> stat, int Lvl) {
+    public float provideExpForStatAtLvl(Stat<?> stat, int Lvl) {
         // TODO Auto-generated method stub
-
+        return 0;
     }
 
 }

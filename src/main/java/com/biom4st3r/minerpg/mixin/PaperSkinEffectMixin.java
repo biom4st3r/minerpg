@@ -2,7 +2,7 @@ package com.biom4st3r.minerpg.mixin;
 
 import java.util.Map;
 
-import com.biom4st3r.minerpg.util.MinerpgStatusEffect;
+import com.biom4st3r.minerpg.registery.MinerpgStatusEffect;
 
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
