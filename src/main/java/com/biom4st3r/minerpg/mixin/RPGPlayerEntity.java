@@ -14,6 +14,7 @@ import com.biom4st3r.minerpg.components.RPGAbilityComponent;
 import com.biom4st3r.minerpg.components.RPGClassComponent;
 import com.biom4st3r.minerpg.components.RPGStatsComponent;
 import com.biom4st3r.minerpg.gui.ComponentContainer;
+import com.biom4st3r.minerpg.particles.RpgDamageEffect;
 import com.biom4st3r.minerpg.util.BasicInventoryHelper;
 import com.biom4st3r.minerpg.util.RPGPlayer;
 import com.biom4st3r.minerpg.util.Util;
@@ -204,7 +205,10 @@ public abstract class RPGPlayerEntity extends LivingEntity implements RPGPlayer 
     @Inject(at = @At("HEAD"), method = "jump")
     public void jump(CallbackInfo ci)
     {
-
+        if(this.world.isClient())
+        {
+            this.world.addParticle(new RpgDamageEffect(0), true, this.x, this.y, this.z, 0.09, 0.1, 0.09);
+        }
     }
 
     @Inject(at = @At("HEAD"), method = "readCustomDataFromTag", cancellable = false)

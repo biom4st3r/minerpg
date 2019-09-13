@@ -32,6 +32,8 @@ public class RPGClassComponent implements AbstractComponent
     
     //public RPGAbility[] abilityBar;
 
+    private float[] experiance;
+
     public RPGClassComponent()
     {
         init();
@@ -41,6 +43,25 @@ public class RPGClassComponent implements AbstractComponent
         rpgClasses = new Hashtable<RPGClass,Integer>(1);
         //abilities = new ArrayList<RPGAbility>(20);
         //abilityBar = new RPGAbility[9];
+    }
+
+    public float getExperiance(int index)
+    {
+        return experiance[index];
+
+    }
+
+    public void setExperiance(int index, float value)
+    {
+
+    }
+    public void addExperiance(int index, float value)
+    {
+
+    }
+    public void addExperiance(net.minecraft.stat.Stat<?> stat, Identifier i, float value)
+    {
+
     }
 
     public RPGAbility[] getAvalibleAbilities()
@@ -181,22 +202,7 @@ public class RPGClassComponent implements AbstractComponent
 	public void checkStat(Stat<?> stat) {
         for(RPGClass rpgClass : this.rpgClasses.keySet())
         {
-            rpgClass.provideStatAtLvl(stat,this.rpgClasses.get(rpgClass).intValue());
+            rpgClass.provideExpForStatAtLvl(stat, this.rpgClasses.get(rpgClass).intValue());
         }
 	}
-
-    // @Override
-    // public int hashCode() {
-    //     int i = super.hashCode();
-    //     for(RPGClass s : this.rpgClasses.keySet())
-    //     {
-    //         i ^= s.hashCode();
-    //         i ^= rpgClasses.get(s).hashCode();
-    //     }
-    //     return i;
-    // }
-
-    
-
-
 }

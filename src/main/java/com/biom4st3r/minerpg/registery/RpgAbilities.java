@@ -9,7 +9,6 @@ import com.biom4st3r.minerpg.impl.abilities.EvokerFangsAbility;
 import com.biom4st3r.minerpg.impl.abilities.FireballAbility;
 import com.biom4st3r.minerpg.impl.abilities.MultiPotionAbility;
 import com.biom4st3r.minerpg.impl.abilities.barbarian.UnarmoredDefenceAbility;
-import com.biom4st3r.minerpg.util.MinerpgStatusEffect;
 import com.biom4st3r.minerpg.util.RPGPlayer;
 import com.google.common.collect.Lists;
 

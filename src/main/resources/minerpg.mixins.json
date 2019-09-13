@@ -7,7 +7,8 @@
     "BasicInventoryMaxSize",
     "PlayerManagerRespawn",
     "ServerPEAddListener",
-    "PaperSkinEffectMixin"
+    "PaperSkinEffectMixin",
+    "ServerPlayerStatWatch"
   ],
   "client": [
     "VanillaInventory",
@@ -15,7 +16,7 @@
     "InGameHudMixin",
     "CreateClientPlayerMixin",
     "ClientPlayNetworkHandlerMixin",
-    "EvokerAnimationMixin"
+    "ParticleManagerMixin"
   ],
   "injectors": {
     "defaultRequire": 1

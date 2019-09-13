@@ -78,5 +78,7 @@ public abstract class RPGAbility
         return this.id.toString();
     }
 
+    
+
 
 }

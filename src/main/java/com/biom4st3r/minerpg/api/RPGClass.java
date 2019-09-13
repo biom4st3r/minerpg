@@ -17,6 +17,7 @@ public abstract class RPGClass
     public RPGClass(Identifier id)
     {
         this.id = id;
+        //Stats
     }
 
     public String getTranslationKey()
@@ -51,7 +52,7 @@ public abstract class RPGClass
         return new Identifier(id.getNamespace(),"classes/icons/" + id.getPath() + ".png");
     }
 
-	public abstract void provideStatAtLvl(Stat<?> stat, int Lvl);
+    public abstract float provideExpForStatAtLvl(Stat<?> stat, int Lvl);
 
 
 

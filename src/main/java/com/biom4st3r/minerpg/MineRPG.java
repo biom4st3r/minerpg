@@ -3,9 +3,10 @@ package com.biom4st3r.minerpg;
 import com.biom4st3r.minerpg.entities.Fireball;
 import com.biom4st3r.minerpg.items.ItemReg;
 import com.biom4st3r.minerpg.networking.Packets;
+import com.biom4st3r.minerpg.particles.RpgDamageEffect;
+import com.biom4st3r.minerpg.registery.MinerpgStatusEffect;
 import com.biom4st3r.minerpg.registery.RpgAbilities;
 import com.biom4st3r.minerpg.registery.RpgClasses;
-import com.biom4st3r.minerpg.util.MinerpgStatusEffect;
 import com.biom4st3r.minerpg.util.RPGPlayer;
 
 import net.fabricmc.api.ModInitializer;
@@ -30,16 +31,31 @@ public class MineRPG implements ModInitializer
         {
             return new Fireball(world,(EntityType)type);
         }).build());
-    //LivingEntity
-    //Entity
-    //StatusEffects
-    
+
+
+    //ParticleTypes
+    //DustParticleEffect
+    //MobSpawnerBlockEntity
+    //ClientWorld
+    //BlockStateParticleEffect
+    //ParticleManager
+    // NoteParticle.Factory
+
     @Override
     public void onInitialize() 
     {
-        //Stat
-        //Stats
-        //EvokerEntity
+        //ParticleTypes
+        //NamespaceResourceManager
+        //ReloadableResourceManagerImpl
+        //ResourceTexture.TextureData
+        //ParticleTypes
+        //EnchantFactory
+        //EnchantGlyphParticle
+        //Blocks
+        
+
+        Registry.register(Registry.PARTICLE_TYPE, new Identifier(MineRPG.MODID,"rpg_damage"), RpgDamageEffect.TYPE);
+
         MinerpgStatusEffect.init();
         RpgAbilities.init();
         RpgClasses.init();
@@ -54,5 +70,41 @@ public class MineRPG implements ModInitializer
             }
         );
     }
-
+    //Stats
+    //Stat
 }
+/*
+DAMAGE_RESISTED
+
+((ServerPlayerEntity)this).increaseStat(Stats.DAMAGE_BLOCKED_BY_SHIELD, Math.round(float_3 * 10.0F));
+
+this.incrementStat(Stats.KILLED_BY.getOrCreateStat(livingEntity_1.getType()));
+
+  public void onKilledOther(LivingEntity livingEntity_1) {
+      this.incrementStat(Stats.KILLED.getOrCreateStat(livingEntity_1.getType()));
+   }
+
+
+   public void incrementStat(Identifier identifier_1) {
+      this.incrementStat(Stats.CUSTOM.getOrCreateStat(identifier_1));
+   }
+
+   public void increaseStat(Identifier identifier_1, int int_1) {
+      this.increaseStat(Stats.CUSTOM.getOrCreateStat(identifier_1), int_1);
+   }
+
+   public void incrementStat(Stat<?> stat_1) {
+      this.increaseStat((Stat)stat_1, 1);
+   }
+
+   public void increaseStat(Stat<?> stat_1, int int_1) {
+   }
+
+   @Override
+   public void increaseStat(Stat<?> stat_1, int int_1) {
+      this.statHandler.increaseStat(this, stat_1, int_1);
+      this.getScoreboard().forEachScore(stat_1, this.getEntityName(), (scoreboardPlayerScore_1) -> {
+         scoreboardPlayerScore_1.incrementScore(int_1);
+      });
+   }
+*/

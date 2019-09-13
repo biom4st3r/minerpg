@@ -28,6 +28,7 @@ public class Stat {
     public static String getDisplayName(Identifier i)
     {
         return getComponent(i).asFormattedString();
+        //net.minecraft.stat.Stats;
     }
 
 }

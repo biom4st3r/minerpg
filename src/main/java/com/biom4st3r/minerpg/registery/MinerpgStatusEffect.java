@@ -1,4 +1,4 @@
-package com.biom4st3r.minerpg.util;
+package com.biom4st3r.minerpg.registery;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
