@@ -32,6 +32,7 @@ public class RPGAbilityComponent implements AbstractComponent {
     
     private Map<String,RpgAbilityContext> namedAbilityBar;
     public static String SLOT_ARMOROVERRIDE = "armoroverride";
+    public static String SLOT_BASEDAMAGE = "basedamage";
     //public NNObj<RpgAbilityContext> armorOverride2;
 
     @Override

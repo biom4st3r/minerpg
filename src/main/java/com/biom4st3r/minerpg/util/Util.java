@@ -1,6 +1,5 @@
 package com.biom4st3r.minerpg.util;
 
-
 import java.lang.reflect.Array;
 
 import com.biom4st3r.minerpg.MineRPG;
@@ -8,6 +7,9 @@ import com.biom4st3r.minerpg.api.RPGAbility;
 import com.biom4st3r.minerpg.networking.Packets;
 
 import net.minecraft.client.network.ClientPlayNetworkHandler;
+import net.minecraft.entity.EquipmentSlot;
+import net.minecraft.entity.attribute.EntityAttributeModifier;
+import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
@@ -18,6 +20,15 @@ import net.minecraft.util.registry.Registry;
 
 public class Util
 {
+
+    public static double getAttackDamage(ItemStack stack){
+        return stack.getItem().getModifiers(EquipmentSlot.MAINHAND)
+            .get(EntityAttributes.ATTACK_DAMAGE.getId())
+            .stream()
+            .mapToDouble(EntityAttributeModifier::getAmount)
+            .sum();
+    }
+
 
     public static void sendAllComponents(RPGPlayer player)
     {

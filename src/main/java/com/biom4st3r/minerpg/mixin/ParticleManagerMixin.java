@@ -37,9 +37,9 @@ public abstract class ParticleManagerMixin implements ParticleRegHelper {
 
     @Inject(method = "registerDefaultFactories", at = @At("RETURN"))
     private void registerCustomFactories(CallbackInfo cbi) {
-        registerFactory(RpgDamageEffect.TYPE, (particleEffect,world,x,y,z,vx,vy,vz) ->
+        registerFactory(RpgDamageEffect.TYPE, (pe,world,x,y,z,vx,vy,vz) ->
         {
-            return new RpgDamageParticle(world, x, y, z, vx, vy, vz);
+            return new RpgDamageParticle(world, x, y, z, pe.xv, pe.yv, pe.zv, pe.red,pe.green,pe.blue, pe.getValue());
         });
     }
 
