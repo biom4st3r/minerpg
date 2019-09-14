@@ -1,10 +1,13 @@
 package com.biom4st3r.minerpg.networking;
 
+import java.util.Random;
+
 import com.biom4st3r.minerpg.MineRPG;
 import com.biom4st3r.minerpg.api.RPGAbility;
 import com.biom4st3r.minerpg.api.RPGAbility.Type;
 import com.biom4st3r.minerpg.api.RPGClass;
 import com.biom4st3r.minerpg.components.RPGStatsComponent;
+import com.biom4st3r.minerpg.particles.RpgDamageEffect;
 import com.biom4st3r.minerpg.registery.RPG_Registry;
 import com.biom4st3r.minerpg.registery.RpgAbilities;
 import com.biom4st3r.minerpg.registery.RpgClasses;
@@ -26,6 +29,7 @@ import net.minecraft.inventory.BasicInventory;
 import net.minecraft.server.network.packet.CustomPayloadC2SPacket;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.PacketByteBuf;
+import net.minecraft.util.math.BlockPos;
 
 public final class Packets
 {
@@ -33,6 +37,7 @@ public final class Packets
     public static final Identifier SEND_RPG_CLASS_COMPONENT = new Identifier(MineRPG.MODID, "sndrpgcomp");
     public static final Identifier SEND_ABILITY_COMPONENT = new Identifier(MineRPG.MODID,"sndabicomp");
     public static final Identifier SEND_COMPONENT_BAG = new Identifier(MineRPG.MODID,"sndcompbag");
+    public static final Identifier SEND_DAMAGE_PARTICLE = new Identifier(MineRPG.MODID,"dmgprticl");
 
     public static final Identifier REQ_RPG_CLASS_COMPONENT = new Identifier(MineRPG.MODID, "reqrpgcomp");
     public static final Identifier REQ_CHANGE_STAT = new Identifier(MineRPG.MODID,"changestat");
@@ -43,8 +48,6 @@ public final class Packets
     public static final Identifier USE_ABILITY = new Identifier(MineRPG.MODID,"useabi");
     public static final Identifier USE_PASSIVE_ABILITY = new Identifier(MineRPG.MODID,"usepaabi");
     public static final Identifier REQ_COMP_BAG = new Identifier(MineRPG.MODID, "reqbag");
-    //ServerPlayerEntity ee;
-    //ClientPlayerEntity ee;
 
     @Environment(EnvType.CLIENT)
     public static void clientPacketReg()
@@ -68,6 +71,27 @@ public final class Packets
         ClientSidePacketRegistry.INSTANCE.register(SEND_COMPONENT_BAG, (context,buffer)->
         {
             ((BasicInventoryHelper)((RPGPlayer)context.getPlayer()).getComponentContainer().bag).deserializeBuffer(buffer);
+        });
+        ClientSidePacketRegistry.INSTANCE.register(SEND_DAMAGE_PARTICLE, (context,buff)->
+        {
+            BlockPos pos = buff.readBlockPos();
+            float damage = buff.readFloat();
+            String s = ""+(int)Math.floor(damage);
+            //Util.debug("Damage: " + damage);
+            float red,green,blue;
+            Random rand = context.getPlayer().getRand(); 
+            float velocityX = (rand.nextFloat()-0.5f)*0.1f; 
+            float velocityY = 0.054f;
+            float velocityZ = (rand.nextFloat()-0.5f)*.1f;
+            red = rand.nextFloat(); green = rand.nextFloat(); blue = rand.nextFloat();
+            for(int i = 0; i < s.length(); i++)
+            {
+                context.getPlayer().getEntityWorld().addParticle(new RpgDamageEffect(new Integer(s.charAt(i)+""),red,green,blue,velocityX,velocityY,velocityZ), true, 
+                pos.getX(),// + (this.random.nextFloat()-0.5f), 
+                pos.getY()+(0.38f*(s.length()-i)),//this.y+this.getStandingEyeHeight() + this.random.nextFloat(), 
+                pos.getZ(),//this.z + (this.random.nextFloat()-0.5f),
+                0,0,0);
+            }
         });
     }
 
@@ -108,6 +132,7 @@ public final class Packets
         });
         ServerSidePacketRegistry.INSTANCE.register(REQ_ABILITY_BAR_CHANGE, (context,buff)->
         {
+            //NetworkThreadUtils.forceMainThread(null, ((RPGPlayer)context.getPlayer()).getNetworkHandlerS(), ((ServerPlayerEntity)context.getPlayer()).getServerWorld());
             RPGPlayer player = (RPGPlayer)context.getPlayer();
             int barIndex = buff.readByte();
             RpgAbilityContext rac = new RpgAbilityContext(buff);
@@ -250,6 +275,14 @@ public final class Packets
     //@Environment(EnvType.SERVER)
     public static class SERVER
     {
+        public static CustomPayloadS2CPacket sendDamageParticle(BlockPos pos, float damage)
+        {
+            PacketByteBuf pbb = new PacketByteBuf(Unpooled.buffer());
+            pbb.writeBlockPos(pos);
+            pbb.writeFloat(damage);
+            return new CustomPayloadS2CPacket(SEND_DAMAGE_PARTICLE, pbb);
+        }
+
         public static CustomPayloadS2CPacket sendStats(RPGPlayer player)
         {
             PacketByteBuf pbb = new PacketByteBuf(Unpooled.buffer());

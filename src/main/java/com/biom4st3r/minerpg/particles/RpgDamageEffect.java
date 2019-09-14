@@ -14,22 +14,28 @@ public class RpgDamageEffect implements ParticleEffect
         public RpgDamageEffect read(ParticleType<RpgDamageEffect> pt, StringReader str) throws CommandSyntaxException 
         {
             str.expect(' '); 
-            return new RpgDamageEffect(7);
+            return new RpgDamageEffect(10,0,0,0,0,0,0);
         }
         public RpgDamageEffect read(ParticleType<RpgDamageEffect> pt, PacketByteBuf buf) {
-            return new RpgDamageEffect(buf.readInt()); 
+            return new RpgDamageEffect(10,0,0,0,0,0,0); 
         }
     };
 
     public static final ParticleType<RpgDamageEffect> TYPE =
         new ParticleType<RpgDamageEffect>(false, FACTORY) {};
 
-    public RpgDamageEffect(int value) {
+    public RpgDamageEffect(float value, float red, float green, float blue, float xv, float yv, float zv) {
         this.value = value;
+        this.red = red;
+        this.green = green;
+        this.blue = blue;
+        this.xv = xv; this.yv = yv; this.zv = zv;
     }
-    private final int value;
+    private final float value;
+    public final float red,green,blue;
+    public final float xv,yv,zv;
 
-    public int getValue()
+    public float getValue()
     {
         return value;
     }
@@ -39,7 +45,7 @@ public class RpgDamageEffect implements ParticleEffect
     }
 
     public void write(PacketByteBuf buf) { 
-        buf.writeInt(value);
+        buf.writeFloat(value);
     }
 
     public String asString() { 

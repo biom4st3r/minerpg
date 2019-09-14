@@ -25,16 +25,19 @@ public class ClientInit implements ClientModInitializer {
         EntityRendererRegistry.INSTANCE.register(Fireball.class, (entityRenderDispatcher, context) -> {
             return new FlyingItemEntityRenderer<Fireball>(entityRenderDispatcher, context.getItemRenderer(), 10F);
         });
-
+        //EntityRenderDispatcher
         ClientSpriteRegistryCallback.event(SpriteAtlasTexture.PARTICLE_ATLAS_TEX).register((atlasTexture, registry)->
         {
-            registry.register(new Identifier(MineRPG.MODID, "rpg_damage"));
+            for(int i = 0; i <= 9; i++)
+            {
+                registry.register(new Identifier(MineRPG.MODID, "rpg_damage"+i));
+            }
         });
 
         ScreenProviderRegistry.INSTANCE.registerFactory(
             MineRPG.COMPONENT_BAG_ID, 
             ComponentMenu::new);
-
+        //GameRenderer
         Packets.clientPacketReg();
         KeyBindingRegistry.INSTANCE.addCategory(MineRPG.MODID);
         swapHotBar = FabricKeyBinding.Builder.create(new Identifier(MineRPG.MODID,"swaphotbars"), InputUtil.Type.KEYSYM, 41/*`*/ , MineRPG.MODID).build();

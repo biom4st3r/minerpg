@@ -1,20 +1,24 @@
 package com.biom4st3r.minerpg.mixin;
-    /*
-    Purpose
-        Hub for all player based mods. May switched to LivingEntity 
-        to provide for functionallity and flexiblity in the future.
+/*
+Purpose
+    Hub for all player based mods. May switched to LivingEntity 
+    to provide for functionallity and flexiblity in the future.
 
 
 
 
-    */
+*/
 
+import java.util.Iterator;
+import java.util.List;
+
+import com.biom4st3r.minerpg.api.Stat.Stats;
 import com.biom4st3r.minerpg.api.abilities.ArmorOverrideAbility;
 import com.biom4st3r.minerpg.components.RPGAbilityComponent;
 import com.biom4st3r.minerpg.components.RPGClassComponent;
 import com.biom4st3r.minerpg.components.RPGStatsComponent;
 import com.biom4st3r.minerpg.gui.ComponentContainer;
-import com.biom4st3r.minerpg.particles.RpgDamageEffect;
+import com.biom4st3r.minerpg.networking.Packets.SERVER;
 import com.biom4st3r.minerpg.util.BasicInventoryHelper;
 import com.biom4st3r.minerpg.util.RPGPlayer;
 import com.biom4st3r.minerpg.util.Util;
@@ -26,8 +30,18 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
+import net.minecraft.client.network.packet.EntityVelocityUpdateS2CPacket;
+import net.minecraft.enchantment.EnchantmentHelper;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityGroup;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.attribute.EntityAttribute;
+import net.minecraft.entity.attribute.EntityAttributeModifier;
+import net.minecraft.entity.attribute.EntityAttributes;
+import net.minecraft.entity.boss.dragon.EnderDragonPart;
+import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.BasicInventory;
 import net.minecraft.item.ItemStack;
@@ -35,7 +49,11 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.server.network.ServerPlayNetworkHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.world.ServerWorld;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 @Mixin(PlayerEntity.class)
@@ -48,6 +66,158 @@ public abstract class RPGPlayerEntity extends LivingEntity implements RPGPlayer 
     @Override
     public PlayerEntity getPlayer() {
         return (PlayerEntity)(Object)this;
+    }
+
+    @Inject(at = @At("HEAD"),method = "attack",cancellable = true)
+    public void attack(Entity target, CallbackInfo ci)
+    {
+        if(this.rpgClassComponent.hasRpgClass() )
+        {
+            if(target.isAttackable())
+            {
+                if(!target.handleAttack(this))
+                {                    
+                    float weaponDamage = (float)Util.getAttackDamage(this.getMainHandStack());
+                    float baseDamage = (float)this.getAttributeInstance(EntityAttributes.ATTACK_DAMAGE).getValue()-weaponDamage;
+                    float strDamage = this.statsComponent.getModifier(Stats.STRENGTH);
+                    float coolDownNerf = this.getPlayer().getAttackCooldownProgress(0.5f);
+                    LivingEntity livingTarget = target instanceof LivingEntity ? ((LivingEntity)target) : null; 
+                    boolean isLiving = livingTarget != null;
+                    float magicDamage = (float)EnchantmentHelper.getAttackDamage(this.getMainHandStack(), isLiving ? livingTarget.getGroup() : EntityGroup.DEFAULT);
+                    int roll = this.random.nextInt(20)+1;
+                    float totaldamage = 0;
+                    coolDownNerf = 0.2F + coolDownNerf * coolDownNerf * 0.8F;
+                    totaldamage = totaldamage + strDamage + baseDamage + magicDamage + (weaponDamage > 0 ? this.random.nextInt((int)weaponDamage) + 1 : 0);
+                    totaldamage *= coolDownNerf;
+                    if(roll == 20 && weaponDamage > 0)
+                    {
+                        totaldamage+=this.random.nextInt((int)weaponDamage)+1;
+                    }
+                    
+                    Util.debug(totaldamage);
+                    if(totaldamage > 0.0f)
+                    {
+                        boolean cooledDown = coolDownNerf > 0.9f;
+                        boolean fallingCrit = cooledDown && this.fallDistance > 0.0f && !this.onGround && !this.isClimbing() && !this.isInWater() && !this.hasVehicle();
+                        boolean hasFireAspect = false;
+
+                        float targetHealth = isLiving ? livingTarget.getHealth() : 0.0f;
+                        Vec3d targetVelo = target.getVelocity();
+
+                        int knockBack = EnchantmentHelper.getKnockback(this);
+                        if(this.isSprinting() && cooledDown)
+                        {
+                            ++knockBack;
+                        }
+                        if(fallingCrit)
+                        {
+                            totaldamage *= 1.5f;
+                        }
+                        if(EnchantmentHelper.getFireAspect(this) > 0 & isLiving && !target.isOnFire())
+                        {
+                            hasFireAspect = true;
+                            target.setOnFireFor(1);
+                        }
+                        Util.debug(String.format("\nweaponDamage: %s\nbaseDamage: %s\nstrDamage: %s\ncoolDownNerf: %s\nmagicDamage: %s\ncoolDown: %s", weaponDamage,baseDamage,strDamage,coolDownNerf,magicDamage,this.getPlayer().getAttackCooldownProgress(0.5f)));
+                        if(target.damage(DamageSource.player(this.getPlayer()),totaldamage))
+                        {
+
+                            if(knockBack > 0)
+                            {
+                                if(isLiving)
+                                {
+                                    livingTarget.takeKnockback(this, (float)knockBack * 0.5F, (double)MathHelper.sin(this.yaw * 0.017453292F), (double)(-MathHelper.cos(this.yaw * 0.017453292F)));
+                                }
+                                else
+                                {
+                                    target.addVelocity((double)(-MathHelper.sin(this.yaw * 0.017453292F) * (float)knockBack * 0.5F), 0.1D, (double)(MathHelper.cos(this.yaw * 0.017453292F) * (float)knockBack * 0.5F));
+                                }
+                                this.setVelocity(this.getVelocity().multiply(0.6D,1.0D,0.6D));
+                                this.setSprinting(false);
+                            }
+                            if(!this.getMainHandStack().isEmpty() && EnchantmentHelper.getSweepingMultiplier(this) > 0)
+                            {
+                                if((this.horizontalSpeed-this.prevHorizontalSpeed) < this.getMovementSpeed())
+                                {
+                                    Iterator<LivingEntity> nearby = this.world.getEntities(LivingEntity.class, target.getBoundingBox().expand(1.0D, 0.25D, 1.0D)).iterator();
+                                    LivingEntity next;
+                                    while(nearby.hasNext())
+                                    {
+                                        next = nearby.next();
+                                        if(next != this && next != target && !this.isTeammate(next) && this.squaredDistanceTo(next) < 9.0D)
+                                        {
+                                            next.takeKnockback(this, 0.4f, (double)MathHelper.sin(this.yaw * 0.017453292F), (double)(-MathHelper.cos(this.yaw * 0.017453292F)));
+                                            next.damage(DamageSource.player(this.getPlayer()), 1.0f + EnchantmentHelper.getSweepingMultiplier(this) * baseDamage);
+                                        }
+                                        
+                                    }
+                                    this.getPlayer().method_7263();
+                                }
+                            }
+                            if(target instanceof ServerPlayerEntity && target.velocityModified)
+                            {
+                                ((RPGPlayer)target).getNetworkHandlerS().sendPacket(new EntityVelocityUpdateS2CPacket(target));
+                                target.velocityModified = false;
+                                target.setVelocity(targetVelo);
+                            }
+                            if(fallingCrit)
+                            {
+                                this.world.playSound((PlayerEntity)null, this.x, this.y, this.z, SoundEvents.ENTITY_PLAYER_ATTACK_CRIT, this.getSoundCategory(), 1.0F, 1.0F);
+                                this.getPlayer().addCritParticles(target);
+                            }
+                            else if(/*!fallingCrit && */EnchantmentHelper.getSweepingMultiplier(this) > 0)
+                            {
+                                if(cooledDown)
+                                    this.world.playSound((PlayerEntity)null, this.x, this.y, this.z, SoundEvents.ENTITY_PLAYER_ATTACK_STRONG, this.getSoundCategory(), 1.0F, 1.0F);
+                                else
+                                    this.world.playSound((PlayerEntity)null, this.x, this.y, this.z, SoundEvents.ENTITY_PLAYER_ATTACK_WEAK, this.getSoundCategory(), 1.0F, 1.0F);
+                            }
+                            if(magicDamage> 0.0f)
+                            {
+                                this.getPlayer().addEnchantedHitParticles(target);
+                            }
+                            this.onAttacking(target);
+                            if(isLiving)
+                            {
+                                EnchantmentHelper.onUserDamaged(livingTarget,this);
+                            }
+                            EnchantmentHelper.onTargetDamaged(this, target);
+                            if(target instanceof EnderDragonPart)
+                            {
+                                target = ((EnderDragonPart)target).owner;
+                            }
+                            if(!getMainHandStack().isEmpty())
+                            {
+                                this.getMainHandStack().postHit(livingTarget, this.getPlayer());
+                            }
+                            if(isLiving)
+                            {
+                                float finalDamage = targetHealth-livingTarget.getHealth();
+                                this.getPlayer().increaseStat(net.minecraft.stat.Stats.DAMAGE_DEALT, (int)(finalDamage*10.0f));
+                                if(hasFireAspect)
+                                {
+                                    target.setOnFireFor(EnchantmentHelper.getFireAspect(this)*4);
+                                }
+                                if(this.world instanceof ServerWorld)
+                                {
+                                    this.getNetworkHandlerS().sendPacket(SERVER.sendDamageParticle(target.getBlockPos().add(0,target.getStandingEyeHeight(),0), finalDamage));
+                                }
+                            }
+                            this.getPlayer().addExhaustion(0.1f);
+                        }
+                        else
+                        {
+                            this.world.playSound((PlayerEntity)null, this.x, this.y, this.z, SoundEvents.ENTITY_PLAYER_ATTACK_NODAMAGE, this.getSoundCategory(), 1.0F, 1.0F);
+                            if (hasFireAspect) {
+                               target.extinguish();
+                            }
+                        }
+                    }
+
+                }
+            }
+            ci.cancel();
+        }
     }
 
     @Inject(at = @At("RETURN"), method = "<init>*")
@@ -205,10 +375,6 @@ public abstract class RPGPlayerEntity extends LivingEntity implements RPGPlayer 
     @Inject(at = @At("HEAD"), method = "jump")
     public void jump(CallbackInfo ci)
     {
-        if(this.world.isClient())
-        {
-            this.world.addParticle(new RpgDamageEffect(0), true, this.x, this.y, this.z, 0.09, 0.1, 0.09);
-        }
     }
 
     @Inject(at = @At("HEAD"), method = "readCustomDataFromTag", cancellable = false)

@@ -2,6 +2,7 @@ package com.biom4st3r.minerpg.particles;
 
 import com.biom4st3r.minerpg.MineRPG;
 import com.biom4st3r.minerpg.util.ParticleRegHelper;
+import com.biom4st3r.minerpg.util.Util;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -13,22 +14,26 @@ import net.minecraft.world.World;
 
 @Environment(EnvType.CLIENT)
 public class RpgDamageParticle extends SpriteBillboardParticle {
-    float drag = 1f;
+    //Particle
+    float drag = .95f;
 
-    public RpgDamageParticle(World worldIn, double xPos, double yPos, double zPos, double velocityX, double velocityY, double velocityZ) {
+    public RpgDamageParticle(World worldIn, double xPos, double yPos, double zPos, double velocityX, double velocityY, double velocityZ, float red, float green, float blue, float value) {
         super(worldIn,xPos,yPos,zPos);
+        //ServerPlayerEntity
         this.velocityX = velocityX;
         this.velocityY = velocityY;
         this.velocityZ = velocityZ;
         this.x = xPos;
         this.y = yPos;
         this.z = zPos;
-        this.setColor(1f, 0.5f, 1f);
+        this.setColor(red,green,blue);
         this.colorAlpha = 1f;
-        this.scale = 2f;
-        this.maxAge = 200;
+        this.scale = 0.35f;
+        this.maxAge = 30;
+        //Util.debug(value);
+        
         this.setSprite(((ParticleRegHelper)MinecraftClient.getInstance().particleManager)
-            .getAtlas().getSprite(new Identifier(MineRPG.MODID, "rpg_damage")));
+            .getAtlas().getSprite(new Identifier(MineRPG.MODID, "rpg_damage"+((int)Math.floor(value)) )));
     }
 
     public ParticleTextureSheet getType() { 
@@ -39,6 +44,7 @@ public class RpgDamageParticle extends SpriteBillboardParticle {
         this.setBoundingBox(this.getBoundingBox().offset(x, y, z));
         this.repositionFromBoundingBox();
     }
+    
 
     @Override
     public void tick() {
@@ -46,7 +52,10 @@ public class RpgDamageParticle extends SpriteBillboardParticle {
         {
             this.markDead();
         }
-        else {
+        else 
+        {
+            
+            //this.colorBlue += 0.01f;
             this.prevPosX = this.x;
             this.prevPosY = this.y;
             this.prevPosZ = this.z;
