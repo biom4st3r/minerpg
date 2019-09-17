@@ -1,13 +1,6 @@
 package com.biom4st3r.minerpg.mixin;
 
-    /*
-    Purpose
-        adds the ServerPlayerEntity to the componentBag for Syncing
-
-    */
-
-import com.biom4st3r.minerpg.util.RPGPlayer;
-
+    import com.biom4st3r.minerpg.mixin_interfaces.RPGPlayer;
 
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;

@@ -5,9 +5,9 @@ import com.biom4st3r.minerpg.api.RPGClass;
 import com.biom4st3r.minerpg.gui.GUIhelper;
 import com.biom4st3r.minerpg.gui.buttons.ArrowButton;
 import com.biom4st3r.minerpg.gui.buttons.ClassButton;
+import com.biom4st3r.minerpg.mixin_interfaces.RPGPlayer;
 import com.biom4st3r.minerpg.networking.Packets;
 import com.biom4st3r.minerpg.registery.RPG_Registry;
-import com.biom4st3r.minerpg.util.RPGPlayer;
 import com.biom4st3r.minerpg.util.Util;
 import com.mojang.blaze3d.platform.GlStateManager;
 

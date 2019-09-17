@@ -1,8 +1,7 @@
 package com.biom4st3r.minerpg.particles;
 
 import com.biom4st3r.minerpg.MineRPG;
-import com.biom4st3r.minerpg.util.ParticleRegHelper;
-import com.biom4st3r.minerpg.util.Util;
+import com.biom4st3r.minerpg.mixin_interfaces.ParticleRegHelper;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -15,7 +14,7 @@ import net.minecraft.world.World;
 @Environment(EnvType.CLIENT)
 public class RpgDamageParticle extends SpriteBillboardParticle {
     //Particle
-    float drag = .95f;
+    float drag = .9f;
 
     public RpgDamageParticle(World worldIn, double xPos, double yPos, double zPos, double velocityX, double velocityY, double velocityZ, float red, float green, float blue, float value) {
         super(worldIn,xPos,yPos,zPos);
@@ -28,7 +27,7 @@ public class RpgDamageParticle extends SpriteBillboardParticle {
         this.z = zPos;
         this.setColor(red,green,blue);
         this.colorAlpha = 1f;
-        this.scale = 0.35f;
+        this.scale = 0.25f;
         this.maxAge = 30;
         //Util.debug(value);
         

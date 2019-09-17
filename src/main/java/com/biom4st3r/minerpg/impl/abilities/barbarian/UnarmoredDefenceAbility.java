@@ -3,7 +3,7 @@ package com.biom4st3r.minerpg.impl.abilities.barbarian;
 import com.biom4st3r.minerpg.api.Stat;
 import com.biom4st3r.minerpg.api.abilities.ArmorOverrideAbility;
 import com.biom4st3r.minerpg.components.RPGStatsComponent;
-import com.biom4st3r.minerpg.util.RPGPlayer;
+import com.biom4st3r.minerpg.mixin_interfaces.RPGPlayer;
 
 import net.minecraft.util.Identifier;
 

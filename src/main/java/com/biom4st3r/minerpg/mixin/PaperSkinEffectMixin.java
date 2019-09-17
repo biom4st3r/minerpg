@@ -1,5 +1,12 @@
 package com.biom4st3r.minerpg.mixin;
 
+/*
+Purpose: Adds effect of paper skin
+
+
+
+*/
+
 import java.util.Map;
 
 import com.biom4st3r.minerpg.registery.MinerpgStatusEffect;

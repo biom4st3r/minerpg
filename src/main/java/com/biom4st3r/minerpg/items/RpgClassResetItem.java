@@ -1,7 +1,7 @@
 package com.biom4st3r.minerpg.items;
 
 import com.biom4st3r.minerpg.components.RPGClassComponent;
-import com.biom4st3r.minerpg.util.RPGPlayer;
+import com.biom4st3r.minerpg.mixin_interfaces.RPGPlayer;
 
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;

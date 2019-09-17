@@ -1,17 +1,17 @@
 package com.biom4st3r.minerpg.gui.screens;
 
 import com.biom4st3r.minerpg.api.RPGAbility;
-import com.biom4st3r.minerpg.api.RPGClass;
 import com.biom4st3r.minerpg.api.RPGAbility.Type;
+import com.biom4st3r.minerpg.api.RPGClass;
 import com.biom4st3r.minerpg.api.Stat.Stats;
 import com.biom4st3r.minerpg.components.RPGClassComponent;
 import com.biom4st3r.minerpg.components.RPGStatsComponent;
 import com.biom4st3r.minerpg.gui.GUIhelper;
 import com.biom4st3r.minerpg.gui.buttons.AbilityButton;
 import com.biom4st3r.minerpg.gui.buttons.AbilitySlotButton;
+import com.biom4st3r.minerpg.mixin_interfaces.RPGPlayer;
 import com.biom4st3r.minerpg.networking.Packets;
 import com.biom4st3r.minerpg.registery.RpgAbilities;
-import com.biom4st3r.minerpg.util.RPGPlayer;
 import com.biom4st3r.minerpg.util.RpgAbilityContext;
 import com.biom4st3r.minerpg.util.Util;
 

@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.biom4st3r.minerpg.api.RPGAbility;
 import com.biom4st3r.minerpg.entities.Fireball;
-import com.biom4st3r.minerpg.util.RPGPlayer;
+import com.biom4st3r.minerpg.mixin_interfaces.RPGPlayer;
 import com.biom4st3r.minerpg.util.Util;
 import com.google.common.collect.Lists;
 

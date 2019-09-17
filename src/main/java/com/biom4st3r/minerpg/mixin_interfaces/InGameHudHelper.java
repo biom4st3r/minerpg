@@ -1,4 +1,4 @@
-package com.biom4st3r.minerpg.util;
+package com.biom4st3r.minerpg.mixin_interfaces;
 
 public interface InGameHudHelper
 {

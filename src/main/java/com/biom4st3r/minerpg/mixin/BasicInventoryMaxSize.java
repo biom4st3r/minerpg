@@ -6,14 +6,11 @@ package com.biom4st3r.minerpg.mixin;
         i should have just made my own Inventory Object, but
         ¯\_(ツ)_/¯
 
-
-
-
     */
 
 import java.util.List;
 
-import com.biom4st3r.minerpg.util.BasicInventoryHelper;
+import com.biom4st3r.minerpg.mixin_interfaces.BasicInventoryHelper;
 import com.biom4st3r.minerpg.util.Util;
 
 import org.spongepowered.asm.mixin.Final;

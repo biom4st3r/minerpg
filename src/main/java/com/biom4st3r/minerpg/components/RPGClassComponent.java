@@ -32,7 +32,7 @@ public class RPGClassComponent implements AbstractComponent
     
     //public RPGAbility[] abilityBar;
 
-    private float[] experiance;
+    private float[] experience;
 
     public RPGClassComponent()
     {
@@ -47,21 +47,17 @@ public class RPGClassComponent implements AbstractComponent
 
     public float getExperiance(int index)
     {
-        return experiance[index];
+        return experience[index];
 
     }
 
-    public void setExperiance(int index, float value)
+    public void setExperience(int index, float value)
     {
-
+        this.experience[index] = value;
     }
-    public void addExperiance(int index, float value)
+    public void addExperience(int index, float value)
     {
-
-    }
-    public void addExperiance(net.minecraft.stat.Stat<?> stat, Identifier i, float value)
-    {
-
+        this.experience[index]+=value;
     }
 
     public RPGAbility[] getAvalibleAbilities()
@@ -176,10 +172,6 @@ public class RPGClassComponent implements AbstractComponent
             }
             lvl = lt.getCompoundTag(i).getInt(LEVEL);
             this.rpgClasses.put(rpgclass, lvl);
-            //ClientPlayerInteractionManager
-            //System.out.println(this.getRpgClass(0));
-            //Util.debugV(this.getRpgClass(0), 10);
-            //rpgClasses.put(lt.getCompoundTag(i)., value)
         }
     }
 
@@ -199,10 +191,38 @@ public class RPGClassComponent implements AbstractComponent
     public <T extends AbstractComponent> T getCopy() {
         return null;
     }
-	public void checkStat(Stat<?> stat) {
+	public void processStat(Stat<?> stat,int amount) {
+        
+        int i = 0;
         for(RPGClass rpgClass : this.rpgClasses.keySet())
         {
-            rpgClass.provideExpForStatAtLvl(stat, this.rpgClasses.get(rpgClass).intValue());
+            float worth = rpgClass.getStatWorthAtLevel(stat, amount, this.rpgClasses.get(rpgClass).intValue());
+            this.addExperience(i, worth);
+
+
+
+
+
+
+            i++;
         }
-	}
+    }
+    
+    public void processExperience(int amount)
+    {
+        int i =0;
+        for(RPGClass rpgClass : this.rpgClasses.keySet())
+        {
+            float worth = rpgClass.getExperienceWorthAtLevel(amount,this.rpgClasses.get(rpgClass).intValue());
+            this.addExperience(i, worth);
+            //TODO: add particlies here
+
+
+
+
+
+
+            i++;
+        }
+    }
 }

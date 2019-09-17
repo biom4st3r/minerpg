@@ -13,6 +13,16 @@ import net.minecraft.util.SystemUtil;
 
 public abstract class RPGClass
 {
+    //ServerPlayerEntity
+
+    public enum ExpType
+    {
+        VANILLA_EXP,
+        VANILLA_STAT,
+        CUSTOM
+    };
+
+    public abstract ExpType getExpType();
 
     public RPGClass(Identifier id)
     {
@@ -52,7 +62,14 @@ public abstract class RPGClass
         return new Identifier(id.getNamespace(),"classes/icons/" + id.getPath() + ".png");
     }
 
-    public abstract float provideExpForStatAtLvl(Stat<?> stat, int Lvl);
+    public float getStatWorthAtLevel(Stat<?> stat, int amount, int Lvl)
+    {
+        return 0;
+    }
+
+	public float getExperienceWorthAtLevel(int amount, int intValue) {
+		return 0;
+	}
 
 
 
