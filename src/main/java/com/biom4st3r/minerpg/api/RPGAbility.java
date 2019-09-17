@@ -2,7 +2,7 @@ package com.biom4st3r.minerpg.api;
 
 import java.util.List;
 
-import com.biom4st3r.minerpg.util.RPGPlayer;
+import com.biom4st3r.minerpg.mixin_interfaces.RPGPlayer;
 import com.google.common.collect.Lists;
 
 import net.minecraft.text.Text;

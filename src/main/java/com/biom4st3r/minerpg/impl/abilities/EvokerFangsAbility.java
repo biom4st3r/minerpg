@@ -1,7 +1,7 @@
 package com.biom4st3r.minerpg.impl.abilities;
 
 import com.biom4st3r.minerpg.api.RPGAbility;
-import com.biom4st3r.minerpg.util.RPGPlayer;
+import com.biom4st3r.minerpg.mixin_interfaces.RPGPlayer;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.LivingEntity;

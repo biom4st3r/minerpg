@@ -5,8 +5,8 @@ import java.util.List;
 import java.util.Map;
 
 import com.biom4st3r.minerpg.api.RPGAbility;
+import com.biom4st3r.minerpg.mixin_interfaces.RPGPlayer;
 import com.biom4st3r.minerpg.registery.RPG_Registry;
-import com.biom4st3r.minerpg.util.RPGPlayer;
 import com.biom4st3r.minerpg.util.RpgAbilityContext;
 import com.biom4st3r.minerpg.util.Util;
 import com.google.common.collect.Maps;

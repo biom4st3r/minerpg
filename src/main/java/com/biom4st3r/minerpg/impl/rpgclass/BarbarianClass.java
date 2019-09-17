@@ -10,8 +10,6 @@ import com.biom4st3r.minerpg.api.RPGClass;
 import com.biom4st3r.minerpg.registery.RpgAbilities;
 import com.biom4st3r.minerpg.util.Util;
 
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.mob.ZombieEntity;
 import net.minecraft.stat.Stat;
 import net.minecraft.stat.Stats;
 import net.minecraft.util.Identifier;
@@ -66,12 +64,16 @@ public class BarbarianClass extends RPGClass {
     }
 
     @Override
-    public float provideExpForStatAtLvl(Stat<?> stat, int Lvl) {
+    public ExpType getExpType() {
+        return ExpType.VANILLA_STAT;
+    }
+
+    @Override
+    public float getStatWorthAtLevel(Stat<?> stat, int amount, int Lvl) {
         if(stat.getType() == Stats.KILLED)
         {
-            EntityType<?> f = (EntityType<?>) stat.getValue();
-            Util.debug(f.getName().asFormattedString());
-            return 0;
+            
+            return 5;
         }
         return 0;
     }

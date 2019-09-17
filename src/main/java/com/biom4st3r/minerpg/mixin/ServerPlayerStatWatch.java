@@ -1,6 +1,6 @@
 package com.biom4st3r.minerpg.mixin;
 
-import com.biom4st3r.minerpg.util.RPGPlayer;
+import com.biom4st3r.minerpg.mixin_interfaces.RPGPlayer;
 
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -18,7 +18,7 @@ public abstract class ServerPlayerStatWatch
     public void increaseStat(Stat<?> stat, int i, CallbackInfo ci)
     {
         RPGPlayer player = ((RPGPlayer)this);
-        player.getRPGClassComponent().checkStat(stat);
+        player.getRPGClassComponent().processStat(stat,i);
     }
 
     

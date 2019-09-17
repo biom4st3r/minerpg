@@ -12,10 +12,10 @@ package com.biom4st3r.minerpg.mixin;
 import com.biom4st3r.minerpg.ClientInit;
 import com.biom4st3r.minerpg.api.RPGAbility;
 import com.biom4st3r.minerpg.api.RPGAbility.Type;
+import com.biom4st3r.minerpg.mixin_interfaces.InGameHudHelper;
+import com.biom4st3r.minerpg.mixin_interfaces.RPGPlayer;
 import com.biom4st3r.minerpg.networking.Packets;
 import com.biom4st3r.minerpg.registery.RpgAbilities;
-import com.biom4st3r.minerpg.util.InGameHudHelper;
-import com.biom4st3r.minerpg.util.RPGPlayer;
 import com.biom4st3r.minerpg.util.Util;
 
 import org.spongepowered.asm.mixin.Mixin;
@@ -31,16 +31,12 @@ import net.minecraft.client.network.ClientPlayerEntity;
 @Mixin(MinecraftClient.class)
 public abstract class MinecraftClientMixin
 {
-
-    
-
     @Shadow
     public InGameHud inGameHud;
 
     @Shadow
     public ClientPlayerEntity player;
 
-    //RPGPlayer rpgPlayer = (RPGPlayer)player;
 
     @Shadow
     protected int attackCooldown;

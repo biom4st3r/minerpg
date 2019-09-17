@@ -8,7 +8,6 @@ import com.biom4st3r.minerpg.api.RPGClass;
 import com.biom4st3r.minerpg.impl.rpgclass.BarbarianClass;
 import com.google.common.collect.Lists;
 
-import net.minecraft.stat.Stat;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.MutableRegistry;
 
@@ -21,11 +20,6 @@ public final class RpgClasses {
     }
 
     public static void init() {
-        // Registry.register(
-        // RPG_Registry.CLASS_REGISTRY,
-        // barbarianClass.name,
-        // barbarianClass
-        // );
         register(NONE);
         register(BARBARIAN_CLASS);
     }
@@ -48,9 +42,7 @@ class NoClass extends RPGClass {
     }
 
     @Override
-    public float provideExpForStatAtLvl(Stat<?> stat, int Lvl) {
-        // TODO Auto-generated method stub
-        return 0;
+    public ExpType getExpType() {
+        return ExpType.CUSTOM;
     }
-
 }

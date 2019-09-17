@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.biom4st3r.minerpg.api.abilities.EmulatePotionAbility;
-import com.biom4st3r.minerpg.util.RPGPlayer;
+import com.biom4st3r.minerpg.mixin_interfaces.RPGPlayer;
 
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.text.TranslatableText;

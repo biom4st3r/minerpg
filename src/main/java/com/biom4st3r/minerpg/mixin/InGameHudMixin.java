@@ -11,9 +11,9 @@ package com.biom4st3r.minerpg.mixin;
 
 import com.biom4st3r.minerpg.MineRPG;
 import com.biom4st3r.minerpg.api.RPGAbility;
+import com.biom4st3r.minerpg.mixin_interfaces.InGameHudHelper;
+import com.biom4st3r.minerpg.mixin_interfaces.RPGPlayer;
 import com.biom4st3r.minerpg.registery.RpgAbilities;
-import com.biom4st3r.minerpg.util.InGameHudHelper;
-import com.biom4st3r.minerpg.util.RPGPlayer;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.platform.GlStateManager.DestFactor;
 import com.mojang.blaze3d.platform.GlStateManager.SourceFactor;

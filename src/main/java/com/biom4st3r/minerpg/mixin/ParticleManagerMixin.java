@@ -1,8 +1,18 @@
 package com.biom4st3r.minerpg.mixin;
 
+import com.biom4st3r.minerpg.mixin_interfaces.ParticleRegHelper;
+
+/*
+Purpose: Allow Registration of Particles and setting spirit on particle
+TODO: example to be usable in api
+
+
+
+
+*/
+
 import com.biom4st3r.minerpg.particles.RpgDamageEffect;
 import com.biom4st3r.minerpg.particles.RpgDamageParticle;
-import com.biom4st3r.minerpg.util.ParticleRegHelper;
 
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -27,7 +37,6 @@ public abstract class ParticleManagerMixin implements ParticleRegHelper {
     @Shadow
     private <T extends ParticleEffect> void registerFactory(ParticleType<T> particleType_1,
             ParticleFactory<T> particleFactory_1) {
-
     }
 
     @Override

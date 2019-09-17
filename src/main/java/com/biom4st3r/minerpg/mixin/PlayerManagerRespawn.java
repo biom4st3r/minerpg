@@ -1,14 +1,6 @@
 package com.biom4st3r.minerpg.mixin;
 
-    /*
-    Purpose
-        Protects/maintains all custom data provided from RPGPlayer
-        on death. Without this ComponentBag, Stats, Abilities
-        , and class are all wiped on death
-
-    */
-
-import com.biom4st3r.minerpg.util.RPGPlayer;
+    import com.biom4st3r.minerpg.mixin_interfaces.RPGPlayer;
 
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;

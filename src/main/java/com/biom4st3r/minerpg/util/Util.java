@@ -4,6 +4,7 @@ import java.lang.reflect.Array;
 
 import com.biom4st3r.minerpg.MineRPG;
 import com.biom4st3r.minerpg.api.RPGAbility;
+import com.biom4st3r.minerpg.mixin_interfaces.RPGPlayer;
 import com.biom4st3r.minerpg.networking.Packets;
 
 import net.minecraft.client.network.ClientPlayNetworkHandler;

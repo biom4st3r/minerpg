@@ -25,6 +25,7 @@ public class DefaultedObj<T> {
         this.value = value;
     }
 
+    @SuppressWarnings("unchecked")
     private T getDefault() throws InstantiationException, IllegalAccessException {
         if (defaultValue == null) {
             defaultValue = (T) defaultValue.getClass().newInstance();
@@ -44,6 +45,7 @@ public class DefaultedObj<T> {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public boolean equals(Object obj) {
         try
         {

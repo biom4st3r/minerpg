@@ -8,8 +8,8 @@ import com.biom4st3r.minerpg.gui.buttons.InventoryTab;
 import com.biom4st3r.minerpg.gui.screens.ClassMenu;
 import com.biom4st3r.minerpg.gui.screens.InitClassMenu;
 import com.biom4st3r.minerpg.gui.screens.StatMenu;
+import com.biom4st3r.minerpg.mixin_interfaces.RPGPlayer;
 import com.biom4st3r.minerpg.networking.Packets;
-import com.biom4st3r.minerpg.util.RPGPlayer;
 import com.biom4st3r.minerpg.util.RpgAbilityContext;
 
 import net.fabricmc.api.EnvType;

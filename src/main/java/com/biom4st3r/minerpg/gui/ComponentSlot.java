@@ -1,6 +1,6 @@
 package com.biom4st3r.minerpg.gui;
 
-import com.biom4st3r.minerpg.util.BasicInventoryHelper;
+import com.biom4st3r.minerpg.mixin_interfaces.BasicInventoryHelper;
 
 import net.minecraft.container.Slot;
 import net.minecraft.inventory.Inventory;
