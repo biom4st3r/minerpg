@@ -43,7 +43,7 @@ public class ClassMenu extends AbstractAbilitiesContainer {
         cb.active = false;
 
         int yPos = this.yMid()-96;
-        for(ButtonWidget button : GUIhelper.drawTabs(this.xMid()-70, yPos, this.minecraft, false,false,false,true))
+        for(ButtonWidget button : GUIhelper.drawTabs(this.xMid()+GUIhelper.drawTabOffset, yPos, this.minecraft, false,false,false,true))
         {
             this.addButton(button);
         }

@@ -4,6 +4,7 @@ import com.biom4st3r.minerpg.MineRPG;
 import com.biom4st3r.minerpg.api.Stat.Stats;
 import com.biom4st3r.minerpg.components.RPGStatsComponent;
 import com.biom4st3r.minerpg.gui.GUIhelper;
+import com.biom4st3r.minerpg.gui.buttons.AcceptanceButton;
 import com.biom4st3r.minerpg.gui.buttons.StatButton;
 import com.biom4st3r.minerpg.mixin_interfaces.RPGPlayer;
 import com.biom4st3r.minerpg.networking.Packets;
@@ -20,6 +21,7 @@ public class StatMenu extends AbstractAbilitiesContainer {
     public Identifier BG_Texture = new Identifier(MineRPG.MODID, "textures/gui/statsmenu.png");
     private StatButton[] statButtons;
     ButtonWidget confirmButton;
+    ButtonWidget denyButton;
     //private int modY[];
 
     private RPGStatsComponent rpgStatComponent;
@@ -43,17 +45,46 @@ public class StatMenu extends AbstractAbilitiesContainer {
     @Override
     public void tick() {
         super.tick();
-        if(this.rpgStatComponent.remainingPoints > 0 && !this.statButtons[0].visible)
+        Stats[] stats = Stats.values();
+        if(this.rpgStatComponent.remainingPoints > 0)
         {
-            for(StatButton button : statButtons)
+            for(int i = 0, j = 0; i < stats.length; i++, j+=2)
             {
-                button.visible = true;
+                int statValue = rpgStatComponent.getStat(stats[i]);
+
+                if(statValue == this.backupComponent.getStat(stats[i]))
+                {
+                    statButtons[j].visible = false;
+                }
+                else
+                {
+                    statButtons[j].visible = true;
+                }
+                if(statValue == 20 || this.rpgStatComponent.remainingPoints == 0)
+                {
+                    statButtons[j+1].visible = false;
+                    //ServerTickScheduler
+                }
+                else
+                {
+                    statButtons[j+1].visible = true;
+                }
+                
+
             }
         }
+        // if(this.rpgStatComponent.remainingPoints > 0)
+        // {
+        //     for(int i = 0; i < statButtons.length && !statButtons[i].visible; i++)
+        //     {
+        //         statButtons[i].visible = true;
+        //     }
+        // }
         if(backupComponent.getStat(Stats.CONSTITUTION) == -1)
         {
             this.backupComponent = this.rpgStatComponent.copyOfStats();
         }
+        
         // else if(this.rpgComponent.remainingPoints <= 0 && this.statButtons[0].visible)
         // {
 
@@ -80,24 +111,49 @@ public class StatMenu extends AbstractAbilitiesContainer {
         this.backupComponent = this.rpgStatComponent.copyOfStats();
         statButtons =  new StatButton[12];
 
+        denyButton = this.addButton(new AcceptanceButton(xMid()+47, yGrid(0), 15, 15, true, (button)->
+        {
+            this.rpgStatComponent = backupComponent.copyOfStats();
+            confirmButton.visible = false;
+            denyButton.visible = false;
+        }));
+        denyButton.visible = false;
+        confirmButton = this.addButton(new AcceptanceButton(xMid()+47+15+6, yGrid(0), 15, 15, false, (button)->
+        {
+            for(StatButton statbuttons : statButtons)
+            {
+                statbuttons.visible = false;
+            }
+            backupComponent = this.rpgStatComponent.copyOfStats();
+            MinecraftClient
+                .getInstance()
+                .getNetworkHandler()
+                .sendPacket(Packets.CLIENT.statChange(rpgStatComponent));
+            Util.debug("Checking rpgComponent 1");
+            confirmButton.visible = false;
+            denyButton.visible = false;
+        }));
+        confirmButton.visible = false;
         for(int i = 0, j = 0; i < 6; i++, j+=2)
         {
             int xMod = xMid()-7;
-            statButtons[j] = this.addButton(new StatButton(xMod, yGrid(i+1)-1, (button) ->
+            statButtons[j] = this.addButton(new StatButton(xMod, yGrid(i)-1, (button) ->
             { // minus
                 Stats s = ((StatButton)button).stat;
                 Util.debug(s + " " + this.backupComponent.getStat(s));
                 if(this.rpgStatComponent.getStat(s) > this.backupComponent.getStat(s))
                 {
-                    this.confirmButton.active = true;
+                    this.confirmButton.visible = true;
+                    this.denyButton.visible    = true;
                     this.rpgStatComponent.decreaseStatUnProtected(s);
                 }
             }, false,Stats.values()[i]));
 
 
-            statButtons[j+1] = this.addButton(new StatButton(xMod+25 , yGrid(i+1)-1, (button) ->
+            statButtons[j+1] = this.addButton(new StatButton(xMod+25 , yGrid(i)-1, (button) ->
             { //plus
-                this.confirmButton.active = true;
+                this.confirmButton.visible = true;
+                this.denyButton.visible    = true;
                 this.rpgStatComponent.increaseStatProtected(((StatButton)button).stat);
             }, true,Stats.values()[i]));
 
@@ -106,27 +162,27 @@ public class StatMenu extends AbstractAbilitiesContainer {
         }
         //int buttonWidth = 26+5;
         int yPos = this.yMid()-96;
-        for(ButtonWidget button : GUIhelper.drawTabs(this.xMid()-70, yPos, this.minecraft, false,false,true,false))
+        for(ButtonWidget button : GUIhelper.drawTabs(this.xMid()+GUIhelper.drawTabOffset, yPos, this.minecraft, false,false,true,false))
         {
             this.addButton(button);
         }
-        confirmButton = this.addButton(new ButtonWidget(xMid()+31, yMid()-50, 50, 20, "Confirm", button -> {
-            for(StatButton statbuttons : statButtons)
-            {
-                statbuttons.active = false;
-            }
-            backupComponent = this.rpgStatComponent.copyOfStats();
-            MinecraftClient
-                .getInstance()
-                .getNetworkHandler()
-                .sendPacket(Packets.CLIENT.statChange(rpgStatComponent));
-            Util.debug("Checking rpgComponent 1");
-            button.visible = false;
-        }));
-        if(this.rpgStatComponent.remainingPoints > 0)
-            this.confirmButton.active = false;
-        else
-            this.confirmButton.visible = false;
+        // confirmButton = this.addButton(new ButtonWidget(xMid()+31, yMid()-50, 50, 20, "Confirm", button -> {
+        //     for(StatButton statbuttons : statButtons)
+        //     {
+        //         statbuttons.active = false;
+        //     }
+        //     backupComponent = this.rpgStatComponent.copyOfStats();
+        //     MinecraftClient
+        //         .getInstance()
+        //         .getNetworkHandler()
+        //         .sendPacket(Packets.CLIENT.statChange(rpgStatComponent));
+        //     Util.debug("Checking rpgComponent 1");
+        //     button.visible = false;
+        // }));
+        // if(this.rpgStatComponent.remainingPoints > 0)
+        //     this.confirmButton.active = false;
+        // else
+        //     this.confirmButton.visible = false;
 
     }
 
@@ -142,8 +198,6 @@ public class StatMenu extends AbstractAbilitiesContainer {
         this.renderStats(rpgStatComponent);
         InventoryScreen.drawEntity(int_3 + 51-18, int_4 + 75, 30, (float)(int_3 + 51) - mouseX, (float)(int_4 + 75 - 50) - mouseY, this.minecraft.player);
         //float scale = 0.91f;
-        
-
     }
 
     // public void renderStats()

@@ -16,6 +16,7 @@ public final class ItemReg
         reg("classreset",new RpgClassResetItem(s));
         reg("statreset", new RpgStatResetItem(s));
         reg("abilitycompreset", new RpgAbilityComponentResetItem(s));
+        reg("statpointprovider", new RpgStatPointProvider(s));
     }
 
     private static Item reg(String name, Item i)

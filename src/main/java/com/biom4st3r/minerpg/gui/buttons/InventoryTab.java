@@ -25,6 +25,12 @@ public class InventoryTab extends ButtonWidget
         this.pallet = pallet;
     }
 
+
+    public void setHeight(int height)
+    {
+        this.height = height;
+    }
+
     int u = 256-14;
     int v = 0;
     int sideWidth = 6;

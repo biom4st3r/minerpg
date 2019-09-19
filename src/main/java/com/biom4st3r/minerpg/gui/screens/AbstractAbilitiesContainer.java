@@ -159,7 +159,7 @@ public abstract class AbstractAbilitiesContainer extends Screen {
     public void renderStats(RPGStatsComponent rpgStatsComponent)
     {
         int modX = 28;
-        GUIhelper.drawString(this.font, "Stats", xMid()-22, yGrid(0), 0x000000);
+        //GUIhelper.drawString(this.font, "Stats", xMid()-22, yGrid(0), 0x000000);
 
         for(int i = 0; i < 6; i++)
         {
@@ -169,13 +169,13 @@ public abstract class AbstractAbilitiesContainer extends Screen {
             
             modX = -28;
 
-            GUIhelper.drawString(this.font, stat.toString().substring(0, 3), xMid()+modX, yGrid(i+1), 0x000000);
+            GUIhelper.drawString(this.font, stat.toString().substring(0, 3), xMid()+modX, yGrid(i), 0x000000);
             modX = -10;
 
-            GUIhelper.drawString(this.font, ":", xMid()+modX, yGrid(i+1), 0x000000);
+            GUIhelper.drawString(this.font, ":", xMid()+modX, yGrid(i), 0x000000);
             modX = 10;
 
-            GUIhelper.drawCenteredString(this.font, "" + rpgStatsComponent.getStat(stat), xMid()+modX, yGrid(i+1), 0x000000);
+            GUIhelper.drawCenteredString(this.font, "" + rpgStatsComponent.getStat(stat), xMid()+modX, yGrid(i), 0x000000);
             
         }
 

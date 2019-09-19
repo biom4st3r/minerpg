@@ -1,6 +1,12 @@
 package com.biom4st3r.minerpg.mixin;
 
-    import com.biom4st3r.minerpg.mixin_interfaces.RPGPlayer;
+/*
+Provides synconization for the ComponentBag
+
+
+*/
+
+import com.biom4st3r.minerpg.mixin_interfaces.RPGPlayer;
 
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;

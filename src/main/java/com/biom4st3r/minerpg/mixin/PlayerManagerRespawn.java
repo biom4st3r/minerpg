@@ -1,6 +1,11 @@
 package com.biom4st3r.minerpg.mixin;
 
-    import com.biom4st3r.minerpg.mixin_interfaces.RPGPlayer;
+/*
+Purpose: Properly transfers component to new PlayerEntity on death
+
+*/
+
+import com.biom4st3r.minerpg.mixin_interfaces.RPGPlayer;
 
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;

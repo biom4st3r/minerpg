@@ -4,9 +4,6 @@ Purpose
     Hub for all player based mods. May switched to LivingEntity 
     to provide for functionallity and flexiblity in the future.
 
-
-
-
 */
 
 import com.biom4st3r.minerpg.api.abilities.ArmorOverrideAbility;
@@ -32,6 +29,10 @@ import net.minecraft.inventory.BasicInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.dedicated.DedicatedServer;
+import net.minecraft.server.dedicated.MinecraftDedicatedServer;
+import net.minecraft.server.dedicated.gui.DedicatedServerGui;
 import net.minecraft.server.network.ServerPlayNetworkHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
@@ -62,6 +63,10 @@ public abstract class RPGPlayerEntity extends LivingEntity implements RPGPlayer 
         this.statsComponent = new RPGStatsComponent();
         this.rpgClassComponent = new RPGClassComponent();
         this.rpgAbilityComponent = new RPGAbilityComponent();
+        //MinecraftServer
+        //DedicatedServer
+        //DedicatedServerGui
+        //MinecraftDedicatedServer
     }
 
     private final String COMPONENT_BAG = "compInv";

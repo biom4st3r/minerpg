@@ -63,7 +63,7 @@ public class ComponentMenu extends AbstractContainerScreen<ComponentContainer> {
             modY[5] = modY[4]+ySpacing;
         }
         int yPos = this.yMid()-96;
-        for(ButtonWidget button : GUIhelper.drawTabs(this.xMid()-70, yPos, this.minecraft, false,true,false,false))
+        for(ButtonWidget button : GUIhelper.drawTabs(this.xMid()+GUIhelper.drawTabOffset, yPos, this.minecraft, false,true,false,false))
         {
             this.addButton(button);
         }

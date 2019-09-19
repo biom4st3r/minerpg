@@ -38,7 +38,12 @@ public abstract class ArmorOverrideAbility extends RPGAbility {
 
     @Override
     public Type getType() {
-        return Type.PASSIVE;
+        return Type.PASSIVE_NAMED;
+    }
+
+    @Override
+    public String getPassiveName() {
+        return "armoroverride";
     }
     
     public abstract int getArmor(RPGPlayer player);
