@@ -64,13 +64,19 @@ public abstract class RPGAbility
         PASSIVE,
         RIGHT_CLICK,
         LEFT_CLICK, 
-        USE
+        USE,
+        PASSIVE_NAMED
     }
     public List<String> getToolTips()
     {
         List<String> t = Lists.newArrayList(this.getDisplayName().asFormattedString());
         t.add(this.getType().name());
         return  t;
+    }
+
+    public String getPassiveName()
+    {
+        return "";
     }
 
     @Override

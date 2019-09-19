@@ -81,7 +81,7 @@ public class InitClassMenu extends Screen
         this.left = (this.width - this.containerWidth) / 2;
         this.top = (this.height - this.containerHeight) / 2;
         int yPos = this.yMid()-96;
-        for(ButtonWidget button : GUIhelper.drawTabs(this.xMid()-70, yPos, this.minecraft, false,false,false,true))
+        for(ButtonWidget button : GUIhelper.drawTabs(this.xMid()+GUIhelper.drawTabOffset, yPos, this.minecraft, false,false,false,true))
         {
             this.addButton(button);
         }

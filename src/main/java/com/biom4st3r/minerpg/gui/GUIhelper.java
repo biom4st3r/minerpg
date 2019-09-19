@@ -22,6 +22,8 @@ import net.minecraft.client.gui.widget.ButtonWidget;
 @Environment(EnvType.CLIENT)
 public class GUIhelper
 {
+    public static int drawTabOffset = -88;
+
     public static void drawString(TextRenderer textRenderer, String string_1, int xPos, int yPos, int color) {
         textRenderer.drawStringBounded(string_1, xPos, yPos, 160,color);
         // textRenderer.drawWithShadow(string_1, (float)(int_1 -
@@ -37,13 +39,14 @@ public class GUIhelper
 
     public static ButtonWidget[] drawTabs(int xPos, int yPos, MinecraftClient mc,Boolean... bools)//vararg
     {        
-        int buttonWidth = 26+5;
+        int buttonWidth = 26+5+5;
         ButtonWidget[] buttons = new ButtonWidget[4];
 
         buttons[0] = new InventoryTab(xPos, yPos, buttonWidth, "Main", button ->
         {
             mc.openScreen(new InventoryScreen(mc.player));
         }, bools[0], 0);
+        
 
         buttons[1] = new InventoryTab(xPos+buttonWidth-1, yPos, buttonWidth, "Bag", (ButtonWidget) ->
         {
@@ -121,3 +124,50 @@ public class GUIhelper
         return abilitySlotButtons;
     }
 }
+/*
+	METHOD blit (IIFFIIII)V
+		ARG 0 x
+		ARG 1 y
+		ARG 2 u
+		ARG 3 v
+		ARG 4 width
+		ARG 5 height
+		ARG 6 texWidth
+		ARG 7 texHeight
+	METHOD blit (IIIFFIIII)V
+		ARG 0 x
+		ARG 1 y
+		ARG 2 z
+		ARG 3 u
+		ARG 4 v
+		ARG 5 width
+		ARG 6 height
+		ARG 7 texHeight
+		ARG 8 texWidth
+	METHOD blit (IIIIFFIIII)V
+		ARG 0 x
+		ARG 1 y
+		ARG 2 width
+		ARG 3 height
+		ARG 4 u
+		ARG 5 v
+		ARG 6 uWidth
+		ARG 7 vHeight
+		ARG 8 texWidth
+		ARG 9 texHeight
+	METHOD blit (IIIIII)V
+		ARG 1 x
+		ARG 2 y
+		ARG 3 u
+		ARG 4 v
+		ARG 5 width
+		ARG 6 height
+	METHOD blit (IIIIILnet/minecraft/class_1058;)V
+		ARG 0 x
+		ARG 1 y
+		ARG 2 z
+		ARG 3 width
+		ARG 4 height
+		ARG 5 sprite
+
+*/

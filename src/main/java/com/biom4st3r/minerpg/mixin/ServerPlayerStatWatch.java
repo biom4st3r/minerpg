@@ -1,5 +1,11 @@
 package com.biom4st3r.minerpg.mixin;
 
+/*
+Hook for listening to stats for Class levelup
+
+
+*/
+
 import com.biom4st3r.minerpg.mixin_interfaces.RPGPlayer;
 
 import org.spongepowered.asm.mixin.Mixin;

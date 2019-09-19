@@ -3,6 +3,7 @@ package com.biom4st3r.minerpg.mixin;
     Purpose
         Provides custom tabs for the the mods menus 
     */
+    
 import com.biom4st3r.minerpg.gui.GUIhelper;
 
 import org.spongepowered.asm.mixin.Mixin;
@@ -39,7 +40,7 @@ public abstract class VanillaInventory extends AbstractInventoryScreen<PlayerCon
     protected void init(CallbackInfo ci)
     {
         int yPos = this.yMid()-96;
-        for(ButtonWidget button : GUIhelper.drawTabs(this.xMid()-70, yPos, this.minecraft, true,false,false,false))
+        for(ButtonWidget button : GUIhelper.drawTabs(this.xMid()+GUIhelper.drawTabOffset, yPos, this.minecraft, true,false,false,false))
         {
             this.addButton(button);
         }

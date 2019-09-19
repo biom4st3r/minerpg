@@ -3,12 +3,14 @@ package com.biom4st3r.minerpg.components;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Iterator;
+
 import com.biom4st3r.minerpg.api.RPGAbility;
 import com.biom4st3r.minerpg.api.RPGClass;
 import com.biom4st3r.minerpg.registery.RPG_Registry;
 import com.biom4st3r.minerpg.registery.RpgAbilities;
 import com.biom4st3r.minerpg.util.RpgClassContext;
 import com.biom4st3r.minerpg.util.Util;
+
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.stat.Stat;
@@ -26,6 +28,7 @@ public class RPGClassComponent implements AbstractComponent
 
     private int maxClasses = 1;
 
+    public static final String EXPERIENCE = "exp";
     public static final String RPG_COMPONENT = "rpgclasscomponent";
     public static final String CLASS_ID = "id";
     public static final String LEVEL = "lvl";
@@ -41,6 +44,7 @@ public class RPGClassComponent implements AbstractComponent
     private void init()
     {
         rpgClasses = new Hashtable<RPGClass,Integer>(1);
+        experience = new float[1];
         //abilities = new ArrayList<RPGAbility>(20);
         //abilityBar = new RPGAbility[9];
     }
@@ -48,6 +52,7 @@ public class RPGClassComponent implements AbstractComponent
     public float getExperiance(int index)
     {
         return experience[index];
+        //ServerChunkManager
 
     }
 
@@ -57,6 +62,7 @@ public class RPGClassComponent implements AbstractComponent
     }
     public void addExperience(int index, float value)
     {
+        Util.debug(value);
         this.experience[index]+=value;
     }
 
@@ -123,20 +129,25 @@ public class RPGClassComponent implements AbstractComponent
         Enumeration<RPGClass> classes = rpgClasses.keys();
         RPGClass rpgclass;
         pbb.writeInt(rpgClasses.size());
+        int i = 0;
         while(classes.hasMoreElements())
         {
             rpgclass = classes.nextElement();
             pbb.writeIdentifier(rpgclass.id);
             pbb.writeInt(rpgClasses.get(rpgclass));
+            pbb.writeFloat(experience[i]);
+            i++;
         }
 
     }
     public void deserializeBuffer(PacketByteBuf pbb)
     {
         int size = pbb.readInt();
+        experience = new float[size];
         for(int i = 0; i < size; i++)
         {
             rpgClasses.put(RPG_Registry.CLASS_REGISTRY.get(pbb.readIdentifier()), pbb.readInt());
+            experience[i] = pbb.readFloat();
         }
     }
 
@@ -145,13 +156,16 @@ public class RPGClassComponent implements AbstractComponent
         ListTag lt = new ListTag();
         Enumeration<RPGClass> e = this.rpgClasses.keys();
         RPGClass rpgclass;
+        int i = 0;
         while(e.hasMoreElements())
         {
             rpgclass = e.nextElement();
             CompoundTag set = new CompoundTag();
             set.putString(CLASS_ID, rpgclass.id.toString());
             set.putInt(LEVEL, this.rpgClasses.get(rpgclass));
+            set.putFloat(EXPERIENCE, experience[i]);
             lt.add(set);
+            i++;
         }
         ct.put(RPG_COMPONENT, lt);
         
@@ -162,7 +176,7 @@ public class RPGClassComponent implements AbstractComponent
         ListTag lt = ct.getList(RPG_COMPONENT, 10);
         RPGClass rpgclass;
         int lvl;
-
+        experience = new float[lt.size()];
         for(int i = 0; i < lt.size(); i++)
         {
             rpgclass = RPG_Registry.CLASS_REGISTRY.get(new Identifier(lt.getCompoundTag(i).getString(CLASS_ID)));
@@ -170,6 +184,7 @@ public class RPGClassComponent implements AbstractComponent
             {
                 continue;
             }
+            experience[i] = lt.getCompoundTag(i).getFloat(EXPERIENCE);
             lvl = lt.getCompoundTag(i).getInt(LEVEL);
             this.rpgClasses.put(rpgclass, lvl);
         }
@@ -191,37 +206,28 @@ public class RPGClassComponent implements AbstractComponent
     public <T extends AbstractComponent> T getCopy() {
         return null;
     }
-	public void processStat(Stat<?> stat,int amount) {
-        
+
+    public void processStat(Stat<?> stat,int amount) 
+    {    
         int i = 0;
+        
         for(RPGClass rpgClass : this.rpgClasses.keySet())
         {
             float worth = rpgClass.getStatWorthAtLevel(stat, amount, this.rpgClasses.get(rpgClass).intValue());
-            this.addExperience(i, worth);
-
-
-
-
-
-
+            if(worth > 0.0)
+                this.addExperience(i, worth);
             i++;
         }
     }
     
     public void processExperience(int amount)
     {
-        int i =0;
+        int i = 0;
         for(RPGClass rpgClass : this.rpgClasses.keySet())
         {
             float worth = rpgClass.getExperienceWorthAtLevel(amount,this.rpgClasses.get(rpgClass).intValue());
-            this.addExperience(i, worth);
-            //TODO: add particlies here
-
-
-
-
-
-
+            if(worth > 0.0f)
+                this.addExperience(i, worth);
             i++;
         }
     }
