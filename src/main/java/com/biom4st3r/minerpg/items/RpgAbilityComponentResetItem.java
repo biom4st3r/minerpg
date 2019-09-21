@@ -24,7 +24,7 @@ public class RpgAbilityComponentResetItem extends Item
         // if(!world_1.isClient)
         // {
         RPGPlayer rpgPe = (RPGPlayer)pe;
-        rpgPe.getRPGAbilityComponent().clone(new RPGAbilityComponent());
+        rpgPe.getRPGAbilityComponent().clone(new RPGAbilityComponent(pe));
         
         //rpgPe.getNetworkHandlerS().sendPacket(Packets.SERVER.sendRPGClassComponent(rpgPe));
         //}StatusEffect

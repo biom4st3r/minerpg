@@ -6,6 +6,7 @@ Purpose
 
 */
 
+import com.biom4st3r.minerpg.api.RPGAbility;
 import com.biom4st3r.minerpg.api.abilities.ArmorOverrideAbility;
 import com.biom4st3r.minerpg.components.RPGAbilityComponent;
 import com.biom4st3r.minerpg.components.RPGClassComponent;
@@ -22,6 +23,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -29,13 +31,8 @@ import net.minecraft.inventory.BasicInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.dedicated.DedicatedServer;
-import net.minecraft.server.dedicated.MinecraftDedicatedServer;
-import net.minecraft.server.dedicated.gui.DedicatedServerGui;
 import net.minecraft.server.network.ServerPlayNetworkHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.util.Identifier;
 import net.minecraft.world.World;
 
 @Mixin(PlayerEntity.class)
@@ -49,7 +46,11 @@ public abstract class RPGPlayerEntity extends LivingEntity implements RPGPlayer 
         return (PlayerEntity)(Object)this;
     }
 
+    // @Inject(at = @At(value = "FIELD",target="float_1:F"),method="attack")
+    // public void attackk(Entity e,CallbackInfo ci,float baseDamage)
+    // {
 
+    // }
 
     @Inject(at = @At("RETURN"), method = "<init>*")
     private void onConst(CallbackInfo ci) {
@@ -62,7 +63,7 @@ public abstract class RPGPlayerEntity extends LivingEntity implements RPGPlayer 
         //TODO: Maybe registery for Components ?
         this.statsComponent = new RPGStatsComponent();
         this.rpgClassComponent = new RPGClassComponent();
-        this.rpgAbilityComponent = new RPGAbilityComponent();
+        this.rpgAbilityComponent = new RPGAbilityComponent(this);
         //MinecraftServer
         //DedicatedServer
         //DedicatedServerGui
@@ -101,19 +102,7 @@ public abstract class RPGPlayerEntity extends LivingEntity implements RPGPlayer 
     @Inject(at = @At("HEAD"),method="tick")
     public void tick(CallbackInfo ci)
     {
-        RPGAbilityComponent abC = this.rpgAbilityComponent;
-        if(abC.cooldowns.size() != 0)
-        {
-            for(Identifier i : abC.cooldowns.keySet())
-            {
-                abC.cooldowns.put(i, abC.cooldowns.get(i).intValue()-1);
-                if(abC.cooldowns.get(i) <= 0)
-                {
-                    abC.cooldowns.remove(i); 
-                    break;
-                }
-            }
-        }
+        this.rpgAbilityComponent.tick();
     }
 
     @Inject(at = @At("HEAD"),method = "addExperience")
@@ -186,9 +175,9 @@ public abstract class RPGPlayerEntity extends LivingEntity implements RPGPlayer 
     @Override
     public int getArmor()
     {
-        if(this.rpgAbilityComponent.getNamedAbilitySlot(RPGAbilityComponent.SLOT_ARMOROVERRIDE).isEmpty())
+        if(this.rpgAbilityComponent.getNamedAbilitySlot(RPGAbility.PASSIVE_NAMES.ARMOR_OVERRIDE).isEmpty())
             return super.getArmor();
-        return ((ArmorOverrideAbility)this.rpgAbilityComponent.getNamedAbilitySlot(RPGAbilityComponent.SLOT_ARMOROVERRIDE).ability).getArmor(this);
+        return ((ArmorOverrideAbility)this.rpgAbilityComponent.getNamedAbilitySlot(RPGAbility.PASSIVE_NAMES.ARMOR_OVERRIDE).ability).getArmor(this);
     }
 
     @Inject(at = @At("HEAD"), method = "jump")

@@ -26,7 +26,7 @@ public class EvokerFangsAOEAbility extends EvokerFangsAbility {
             Box area = new Box(pe.getBlockPos().add(-10, -3, -10), pe.getBlockPos().add(10,3,10));
             List<Entity> eList = pe.world.getEntities(pe , area);
             Util.debug(eList.size());
-            for(Entity e : eList.subList(0, eList.size() > 7 ? eList.size() : 7))
+            for(Entity e : eList.subList(0, eList.size() >= 7 ? 7 : 0))
             {
                 if(e instanceof LivingEntity)
                 {

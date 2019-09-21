@@ -9,7 +9,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.PacketByteBuf;
 
-public class RpgAbilityContext
+public class RpgAbilityContext implements NbtSerializable, BufferSerializable
 {
     //public static final String CONTEXT = "cntxt";
 
@@ -43,7 +43,7 @@ public class RpgAbilityContext
         this.ability = RPG_Registry.ABILITY_REGISTRY.get(pbb.readIdentifier());
     }
 
-    public void serializeNbt(CompoundTag tag)
+    public void serializeNBT(CompoundTag tag)
     {
         tag.putString(RPG_CLASS, classContext.rpgclass.id.toString());
         tag.putByte(RPG_CLASS_LVL, (byte)classContext.Lvl);
@@ -52,7 +52,7 @@ public class RpgAbilityContext
         //tag.put(CONTEXT, ct);
 
     }
-    public void deserializeNbt(CompoundTag tag)
+    public void deserializeNBT(CompoundTag tag)
     {
         this.classContext = new RpgClassContext(RPG_Registry.CLASS_REGISTRY.get(new Identifier(tag.getString(RPG_CLASS))), tag.getByte(RPG_CLASS_LVL));
         this.abilityIndexInClass = tag.getByte(ABILITY_INDEX);
@@ -65,7 +65,7 @@ public class RpgAbilityContext
         pbb.writeByte((byte)abilityIndexInClass);
         pbb.writeIdentifier(ability.id);
     }
-    public void deserializebuffer(PacketByteBuf pbb)
+    public void deserializeBuffer(PacketByteBuf pbb)
     {
         this.classContext = new RpgClassContext(RPG_Registry.CLASS_REGISTRY.get( pbb.readIdentifier()),pbb.readByte());
         this.abilityIndexInClass = pbb.readByte();

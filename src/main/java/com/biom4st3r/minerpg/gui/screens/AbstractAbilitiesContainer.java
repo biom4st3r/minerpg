@@ -54,10 +54,14 @@ public abstract class AbstractAbilitiesContainer extends Screen {
                     this.mouseSlot = ab;
                     Util.debug(ab.toString());
                 }
-                else
+                else if(ab.ability.getType() == Type.PASSIVE)
                 {
                     ab.ability.doAbility(player);
                     player.getNetworkHandlerC().sendPacket(Packets.CLIENT.usePassiveAbility(ab.abilityIndexInClass));
+                }
+                else if(ab.ability.getType() == Type.PASSIVE_NAMED)
+                {
+                    
                 }
             };
             if(abilities.length <= i || abilities[i] == RpgAbilities.NONE)
