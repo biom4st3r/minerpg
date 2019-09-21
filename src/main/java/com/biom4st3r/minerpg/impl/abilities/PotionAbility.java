@@ -18,7 +18,7 @@ public class PotionAbility extends EmulatePotionAbility {
 
 	@Override
     public boolean doAbility(RPGPlayer player) {
-        if(!player.getRPGAbilityComponent().cooldowns.containsKey(id))
+        if(!player.getRPGAbilityComponent().isOnCooldown(id))
         {
             player.getPlayer().addPotionEffect(this.getEffect());
             //player.getRPGAbilityComponent().timeouts.put(name, coolDownDuration);

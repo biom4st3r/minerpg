@@ -8,6 +8,8 @@ import com.biom4st3r.minerpg.api.RPGAbility;
 import com.biom4st3r.minerpg.api.RPGClass;
 import com.biom4st3r.minerpg.registery.RPG_Registry;
 import com.biom4st3r.minerpg.registery.RpgAbilities;
+import com.biom4st3r.minerpg.util.BufferSerializable;
+import com.biom4st3r.minerpg.util.NbtSerializable;
 import com.biom4st3r.minerpg.util.RpgClassContext;
 import com.biom4st3r.minerpg.util.Util;
 
@@ -17,23 +19,18 @@ import net.minecraft.stat.Stat;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.PacketByteBuf;
 
-public class RPGClassComponent implements AbstractComponent
+public class RPGClassComponent implements AbstractComponent, BufferSerializable, NbtSerializable
 {
 
     //private List<RPGClass> rpgclasses;
     public Hashtable<RPGClass,Integer> rpgClasses;
 
-    //private List<RPGAbility> abilities;
-    //ServerPlayerEntity
-
     private int maxClasses = 1;
 
-    public static final String EXPERIENCE = "exp";
-    public static final String RPG_COMPONENT = "rpgclasscomponent";
-    public static final String CLASS_ID = "id";
-    public static final String LEVEL = "lvl";
-    
-    //public RPGAbility[] abilityBar;
+    public static final String EXPERIENCE = "exp",
+    RPG_COMPONENT = "rpgclasscomponent",
+    CLASS_ID = "id",
+    LEVEL = "lvl";
 
     private float[] experience;
 
@@ -52,8 +49,6 @@ public class RPGClassComponent implements AbstractComponent
     public float getExperiance(int index)
     {
         return experience[index];
-        //ServerChunkManager
-
     }
 
     public void setExperience(int index, float value)

@@ -4,14 +4,15 @@ import java.util.HashMap;
 
 import com.biom4st3r.minerpg.api.Stat;
 import com.biom4st3r.minerpg.api.Stat.Stats;
-
+import com.biom4st3r.minerpg.util.BufferSerializable;
+import com.biom4st3r.minerpg.util.NbtSerializable;
 import com.biom4st3r.minerpg.util.Util;
 import com.google.common.collect.Maps;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.PacketByteBuf;
 
-public class RPGStatsComponent implements AbstractComponent
+public class RPGStatsComponent implements AbstractComponent, BufferSerializable, NbtSerializable
 {
     HashMap<Stats, Integer> stats;
 

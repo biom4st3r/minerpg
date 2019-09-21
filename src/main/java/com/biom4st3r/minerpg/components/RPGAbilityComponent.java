@@ -7,10 +7,13 @@ import java.util.Map;
 import com.biom4st3r.minerpg.api.RPGAbility;
 import com.biom4st3r.minerpg.mixin_interfaces.RPGPlayer;
 import com.biom4st3r.minerpg.registery.RPG_Registry;
+import com.biom4st3r.minerpg.util.BufferSerializable;
+import com.biom4st3r.minerpg.util.NbtSerializable;
 import com.biom4st3r.minerpg.util.RpgAbilityContext;
 import com.biom4st3r.minerpg.util.Util;
 import com.google.common.collect.Maps;
 
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.StringTag;
@@ -18,22 +21,21 @@ import net.minecraft.util.DefaultedList;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.PacketByteBuf;
 
-public class RPGAbilityComponent implements AbstractComponent {
+public class RPGAbilityComponent implements AbstractComponent,NbtSerializable,BufferSerializable {
 
     public List<RPGAbility> specialAbilities;
 
     public DefaultedList<RpgAbilityContext> abilityBar;
 
-    public Map<Identifier,Integer> cooldowns; //TODO: lower visiblity
+    private Map<Identifier,Integer> cooldowns; 
 
-    protected Map<Identifier,Integer> tokens;
-
-    //public RpgAbilityContext armorOverride;
+    private Map<Identifier,Integer> tokens;
     
-    private Map<String,RpgAbilityContext> namedAbilityBar;
-    public static String SLOT_ARMOROVERRIDE = "armoroverride";
-    public static String SLOT_BASEDAMAGE = "basedamage";
-    //public NNObj<RpgAbilityContext> armorOverride2;
+    private Map<String,RpgAbilityContext> activePassiveNamedAbilities;
+
+    private Map<Identifier,RpgAbilityContext> activePassiveAbilities;
+    
+    RPGPlayer owner;
 
     @Override
     public <T extends AbstractComponent> void clone(T origin) {
@@ -56,78 +58,126 @@ public class RPGAbilityComponent implements AbstractComponent {
         {
             this.tokens.put(i, original.tokens.get(i));
         }
+        this.activePassiveNamedAbilities = Maps.newHashMap();
+        for(String s : original.activePassiveNamedAbilities.keySet())
+        {
+            this.activePassiveNamedAbilities.put(s,original.activePassiveNamedAbilities.get(s));
+        }
+        this.activePassiveAbilities = Maps.newHashMap();
+        for(Identifier i : original.activePassiveAbilities.keySet())
+        {
+            this.activePassiveAbilities.put(i,original.activePassiveAbilities.get(i));
+        }
     }
 
-    public RPGAbilityComponent()
+    public void tick()
+    {
+        if(this.cooldowns.size() != 0)
+        {
+            for(Identifier i : this.cooldowns.keySet())
+            {
+                //this.cooldowns.put(i, this.cooldowns.get(i).intValue()-1);
+                this.cooldowns.replace(i, this.cooldowns.get(i)-1);
+                if(this.cooldowns.get(i) <= 0)
+                {
+                    if(this.activePassiveAbilities.containsKey(i))
+                    {
+                        RpgAbilityContext rac = this.activePassiveAbilities.get(i);
+                        rac.ability.onCooledDown(owner);
+                    }
+                    this.cooldowns.remove(i); 
+                    break;
+                }
+            }
+        }
+    }
+
+    public RPGAbilityComponent(RPGPlayer player)
     {
         specialAbilities = new ArrayList<RPGAbility>();
         abilityBar = DefaultedList.ofSize(9, RpgAbilityContext.EMPTY);
         cooldowns = Maps.newHashMap();
         tokens = Maps.newHashMap();
-        //armorOverride = RpgAbilityContext.EMPTY;
-        namedAbilityBar = Maps.newHashMap();
+        activePassiveNamedAbilities = Maps.newHashMap();
+        activePassiveAbilities = Maps.newHashMap();
+        this.owner = player;
+    }
+    public RPGAbilityComponent(PlayerEntity pe)
+    {
+        this((RPGPlayer)pe);
     }
 
     public RpgAbilityContext getNamedAbilitySlot(String s)
     {
-        RpgAbilityContext a = namedAbilityBar.get(s);
+        RpgAbilityContext a = activePassiveNamedAbilities.get(s);
         return a == null ? RpgAbilityContext.EMPTY : a;
     }
 
     public void setNamedAbilitySlot(String s, RpgAbilityContext rac)
     {
-        namedAbilityBar.put(s,rac);
+        activePassiveNamedAbilities.put(s,rac);
     }
 
-    public boolean hasToken(RPGAbility ability)
+    public void addPassiveAbility(RpgAbilityContext rac)
     {
-        return hasToken(ability.id);
-    }
-
-    public boolean hasToken(Identifier i)
-    {
-        return tokens.containsKey(i);
-    }
-
-    public void putToken(RPGPlayer player, RPGAbility ability)
-    {
-        putToken(player, ability.id,ability.getMaxTokens(player));
-    }
-
-    public void putToken(RPGPlayer player, Identifier i,int quantity)
-    {
-        if(!hasToken(i))
+        if(!this.activePassiveAbilities.containsKey(rac.ability.id))
         {
-            tokens.put(i, quantity);
-        }
-        else
-        {
-            int temp = tokens.get(i).intValue()+quantity;
-            tokens.remove(i);
-            tokens.put(i, temp);
+            activePassiveAbilities.put(rac.ability.id, rac);
         }
     }
 
-    public boolean subtractToken(RPGAbility ability, int quantity)
+    public void removePassiveAbility(Identifier id)
     {
-        return subtractToken(ability.id, quantity);
+        activePassiveAbilities.remove(id);
     }
 
-    public boolean subtractToken(Identifier i, int quantity)
-    {
-        if(hasToken(i) && tokens.get(i).intValue() >= quantity)
-        {
-            int temp = tokens.get(i).intValue()-quantity;
-            tokens.remove(i);
-            tokens.put(i,temp);
-            return true;
-        }
-        return false;
-    }
+    // public boolean hasToken(RPGAbility ability)
+    // {
+    //     return hasToken(ability.id);    
+    // }
+
+    // public boolean hasToken(Identifier i)
+    // {
+    //     return tokens.containsKey(i);
+    // }
+
+    // public void putToken(RPGPlayer player, RPGAbility ability)
+    // {
+    //     putToken(player, ability.id,ability.getMaxTokens(player));
+    // }
+
+    // public void putToken(RPGPlayer player, Identifier i,int quantity)
+    // {
+    //     if(!hasToken(i))
+    //     {
+    //         tokens.put(i, quantity);
+    //     }
+    //     else
+    //     {
+    //         int temp = tokens.get(i).intValue()+quantity;
+    //         tokens.replace(i, temp);
+ 
+    //     }
+    // }
+
+    // public boolean subtractToken(RPGAbility ability, int quantity)
+    // {
+    //     return subtractToken(ability.id, quantity);
+    // }
+
+    // public boolean subtractToken(Identifier i, int quantity)
+    // {
+    //     if(hasToken(i) && tokens.get(i).intValue() >= quantity)
+    //     {
+    //         int temp = tokens.get(i).intValue()-quantity;
+    //         tokens.replace(i, temp);
+    //         return true;
+    //     }
+    //     return false;
+    // }
 
     public void addCooldown(RPGAbility ability)
     {
-        //cooldowns.put(ability.id, ability.getCoolDown());
         addCooldown(ability.id, ability.getCoolDown());
     }
 
@@ -146,34 +196,66 @@ public class RPGAbilityComponent implements AbstractComponent {
         return isOnCooldown(rpga.id);
     }
 
-    public static final String ABILITY_LIST = "rpgAbilList";
-    public static final String ABILITY_LIST_SIZE = "rpgAbLSize";
-    public static final String SLOT_ID = "slotid";
-    public static final String ABILITY_ID = "abilid";
-    public static final String ABILITY_BAR = "abilibar";
+    public static final String 
+        ABILITY_LIST = "rpgAbilList",
+        ABILITY_LIST_SIZE = "rpgAbLSize",
+        SLOT_ID = "slotid",
+        ABILITY_ID = "abilid",
+        ABILITY_BAR = "abilibar",
+        TOKEN_LIST = "toknlist",
+        TOKEN_NAME = "toknnm",
+        TOKEN_AMOUNT = "toknamt",
+        COOLDOWN_LIST = "cooldowns",
+        COOLDOWN_NAME = "cdnm",
+        COOLDOWN_DURATION = "cdtm";
 
 
-    //public Hashtable<RPGAbility, Object> abilityResults;
+    private static RPGAbility getAbility(Identifier i)
+    {
+        return RPG_Registry.ABILITY_REGISTRY.get(i);
+    }
 
     @Override
     public void serializeNBT(CompoundTag tag) {
         ListTag lt = new ListTag();
+        //Special Ability List
         for(RPGAbility a : specialAbilities)
         {
             lt.add(new StringTag(a.id.toString()));
         }
         tag.put(ABILITY_LIST, lt);
         lt = new ListTag();
-        //CompoundTag ct;
+        // Ability Hotbar
         for(int i = 0; i < 9; i++)
         {
             RpgAbilityContext rac = abilityBar.get(i);
             CompoundTag ct = new CompoundTag();
-            rac.serializeNbt(ct);
+            rac.serializeNBT(ct);
             lt.add(ct);
         }
         tag.put(ABILITY_BAR, lt);
-        //TODO: add tokens, cooldowns, and armorOverride
+        lt = new ListTag();
+        // Tokens
+        for(Identifier i : tokens.keySet())
+        {
+            CompoundTag ct = new CompoundTag();
+            ct.putString(TOKEN_NAME, i.toString());
+            ct.putInt(TOKEN_AMOUNT, tokens.get(i));
+            lt.add(ct);
+        }
+        tag.put(TOKEN_LIST, lt);
+        lt = new ListTag();
+        //Cooldowns
+        for(Identifier i : cooldowns.keySet())
+        {
+            CompoundTag ct = new CompoundTag();
+            ct.putString(COOLDOWN_NAME,i.toString());
+            ct.putInt(COOLDOWN_DURATION, cooldowns.get(i));
+            lt.add(ct);
+        }
+        tag.put(COOLDOWN_LIST,lt);
+
+        //TODO: add Passive/Named abilities
     }
 
     @Override
@@ -191,15 +273,23 @@ public class RPGAbilityComponent implements AbstractComponent {
         for(i = 0; i < 9 && lt.size() > 0 ; i++)
         {
             RpgAbilityContext rac = new RpgAbilityContext(null, -1, null);
-            rac.deserializeNbt(lt.getCompoundTag(i));
+            rac.deserializeNBT(lt.getCompoundTag(i));
             this.abilityBar.set(i, rac);
         }
-        //TODO: add tokens, cooldowns, and armorOverride
-    }
-
-    private static RPGAbility getAbility(Identifier i)
-    {
-        return RPG_Registry.ABILITY_REGISTRY.get(i);
+        lt = tag.getList(TOKEN_LIST, 10);
+        for(i = 0; i < lt.size();i++)
+        {
+            CompoundTag ct = lt.getCompoundTag(i);
+            tokens.put(new Identifier(ct.getString(TOKEN_NAME)), ct.getInt(TOKEN_AMOUNT));
+        }
+        lt = tag.getList(COOLDOWN_LIST, 10);
+        for(i = 0; i < lt.size();i++)
+        {
+            CompoundTag ct = lt.getCompoundTag(i);
+            cooldowns.put(new Identifier(ct.getString(COOLDOWN_NAME)), ct.getInt(COOLDOWN_DURATION));
+        }
+        //TODO: add Passive/Named abilities
+        
     }
 
     @Override
@@ -213,7 +303,20 @@ public class RPGAbilityComponent implements AbstractComponent {
         {
             rac.serializeBuffer(buf);
         }
-        //TODO: add tokens, cooldowns, and armorOverride
+        buf.writeShort(tokens.size());
+        for(Identifier i : tokens.keySet())
+        {
+            buf.writeIdentifier(i);
+            buf.writeInt(tokens.get(i));
+        }
+        buf.writeShort(cooldowns.size());
+        for(Identifier i : cooldowns.keySet())
+        {
+            buf.writeIdentifier(i);
+            buf.writeInt(cooldowns.get(i));
+        }
+        //TODO: add Passive/Named abilities
+        
     }
 
     @Override
@@ -227,12 +330,25 @@ public class RPGAbilityComponent implements AbstractComponent {
         {
             abilityBar.set(i, new RpgAbilityContext(buf));
         }
-        //TODO: add tokens, cooldowns, and armorOverride
+        size = buf.readShort();
+        for(int i = 0; i < size; i++)
+        {
+            tokens.put(buf.readIdentifier(), buf.readInt());
+        }
+        size = buf.readShort();
+        for(int i = 0; i < size; i++)
+        {
+            cooldowns.put(buf.readIdentifier(), buf.readInt());
+        }
+        //TODO: add Passive/Named abilities
+        
     }
 
     @Override
-    public <T extends AbstractComponent> T getCopy() {
-        return null;
+    public RPGAbilityComponent getCopy() {
+        RPGAbilityComponent newrac = new RPGAbilityComponent(this.owner);
+        newrac.clone(this);
+        return newrac;
     }
 
 }

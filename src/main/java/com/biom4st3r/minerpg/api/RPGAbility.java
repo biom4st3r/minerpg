@@ -12,6 +12,15 @@ import net.minecraft.util.SystemUtil;
 
 public abstract class RPGAbility
 {
+    public final class PASSIVE_NAMES
+    {
+        public static final String ARMOR_OVERRIDE = "armoroverride";
+
+    }
+
+    public void onCooledDown(RPGPlayer player) {}
+
+
     protected RPGAbility(Identifier id,int coolDownDuration)
     {
         this.id = id;
@@ -53,7 +62,7 @@ public abstract class RPGAbility
 
     public boolean isCooledDown(RPGPlayer player)
     {
-        return !player.getRPGAbilityComponent().cooldowns.containsKey(id);
+        return !player.getRPGAbilityComponent().isOnCooldown(id);
     }
 
     public abstract boolean doAbility(RPGPlayer player);
@@ -62,10 +71,10 @@ public abstract class RPGAbility
 
     public enum Type{
         PASSIVE,
+        PASSIVE_NAMED,
         RIGHT_CLICK,
         LEFT_CLICK, 
-        USE,
-        PASSIVE_NAMED
+        USE
     }
     public List<String> getToolTips()
     {
@@ -78,6 +87,8 @@ public abstract class RPGAbility
     {
         return "";
     }
+
+
 
     @Override
     public String toString() {
