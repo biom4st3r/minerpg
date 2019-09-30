@@ -343,7 +343,7 @@ public class RPGAbilityComponent implements AbstractComponent,NbtSerializable,Bu
         //TODO: add Passive/Named abilities
         
     }
-
+    @SuppressWarnings("unchecked")
     @Override
     public RPGAbilityComponent getCopy() {
         RPGAbilityComponent newrac = new RPGAbilityComponent(this.owner);

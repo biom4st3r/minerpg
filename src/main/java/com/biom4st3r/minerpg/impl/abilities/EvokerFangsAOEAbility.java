@@ -15,7 +15,6 @@ public class EvokerFangsAOEAbility extends EvokerFangsAbility {
 
     public EvokerFangsAOEAbility(Identifier id, int coolDownDuration) {
         super(id, coolDownDuration);
-        // TODO Auto-generated constructor stub
     }
 
     @Override

@@ -10,6 +10,7 @@ import com.biom4st3r.minerpg.impl.abilities.FireballAbility;
 import com.biom4st3r.minerpg.impl.abilities.MultiPotionAbility;
 import com.biom4st3r.minerpg.impl.abilities.barbarian.UnarmoredDefenceAbility;
 import com.biom4st3r.minerpg.mixin_interfaces.RPGPlayer;
+import com.biom4st3r.minerpg.util.Util;
 import com.google.common.collect.Lists;
 
 import net.minecraft.entity.effect.StatusEffect;
@@ -28,6 +29,7 @@ public final class RpgAbilities {
     
     public static RPGAbility register(RPGAbility rpgability)
     {
+        Util.errorMSG("Adding RPGAbility: " + rpgability.toString());
         return (RPGAbility)((MutableRegistry<RPGAbility>)RPG_Registry.ABILITY_REGISTRY).add(rpgability.id, rpgability);
     }
 

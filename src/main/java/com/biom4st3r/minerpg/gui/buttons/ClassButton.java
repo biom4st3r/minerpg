@@ -2,6 +2,7 @@ package com.biom4st3r.minerpg.gui.buttons;
 
 import com.biom4st3r.minerpg.MineRPG;
 import com.biom4st3r.minerpg.api.RPGClass;
+import com.biom4st3r.minerpg.registery.RpgClasses;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.widget.ButtonWidget;
@@ -9,7 +10,7 @@ import net.minecraft.util.Identifier;
 
 public class ClassButton extends ButtonWidget {
 
-    public RPGClass rpgClass;
+    public RPGClass rpgClass = RpgClasses.NONE;
     private Identifier BG_Texture = new Identifier(MineRPG.MODID, "textures/gui/classmenu.png");
     public final int index;
 

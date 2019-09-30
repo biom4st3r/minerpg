@@ -20,7 +20,6 @@ public abstract class RPGAbility
 
     public void onCooledDown(RPGPlayer player) {}
 
-
     protected RPGAbility(Identifier id,int coolDownDuration)
     {
         this.id = id;
@@ -29,10 +28,10 @@ public abstract class RPGAbility
 
     protected final int coolDownDuration;
 
-    public int getMaxTokens(RPGPlayer player)
-    {
-        return -1;
-    }
+    // public int getMaxTokens(RPGPlayer player)
+    // {
+    //     return -1;
+    // }
 
     public int getCoolDown()
     {

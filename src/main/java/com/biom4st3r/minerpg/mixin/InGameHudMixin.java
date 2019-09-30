@@ -2,7 +2,9 @@ package com.biom4st3r.minerpg.mixin;
 
     /*
     Purpose
-        Provides the AbilityBar overriding the hotbar
+        Provides the hotbar overriding for the Ability Bar
+        
+
 
 
 
@@ -11,6 +13,8 @@ package com.biom4st3r.minerpg.mixin;
 
 import com.biom4st3r.minerpg.MineRPG;
 import com.biom4st3r.minerpg.api.RPGAbility;
+import com.biom4st3r.minerpg.components.RPGClassComponent;
+import com.biom4st3r.minerpg.gui.GUIhelper;
 import com.biom4st3r.minerpg.mixin_interfaces.InGameHudHelper;
 import com.biom4st3r.minerpg.mixin_interfaces.RPGPlayer;
 import com.biom4st3r.minerpg.registery.RpgAbilities;
@@ -31,6 +35,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.gui.hud.InGameHud;
 import net.minecraft.client.render.GuiLighting;
@@ -81,28 +86,30 @@ public abstract class InGameHudMixin extends DrawableHelper implements InGameHud
     @Inject(at = @At(opcode = Opcodes.INVOKESTATIC, value = "INVOKE",
         target = "net/minecraft/client/gui/hud/InGameHud.fill(IIIII)V"),
     method = "renderHeldItemTooltip",locals = LocalCapture.CAPTURE_FAILHARD)
-    public void rhit(CallbackInfo ci,Text itemName,String itemNameText, int xPos, int yPos, int fadeDuration)
+    public void renderAbilitybarToolTipsNonEmpty(CallbackInfo ci,Text itemName,String itemNameText, int xPos, int yPos, int fadeDuration)
     {
         if(this.abilityBar)
         {
             RPGPlayer pe = (RPGPlayer)this.client.player;
             RPGAbility selectedAbility = pe.getRPGAbilityComponent().abilityBar.get(pe.getPlayer().inventory.selectedSlot).ability;
-            Text name = new TranslatableText(selectedAbility.getTranslationKey());
-            int xPos2 = (this.scaledWidth - this.client.textRenderer.getStringWidth(name.asFormattedString()))/2;
-            int yPos2 = this.scaledHeight - 49;
-            if(!this.client.interactionManager.hasStatusBars())
+            if(selectedAbility != RpgAbilities.NONE)
             {
-                yPos2+=14;
+                Text name = new TranslatableText(selectedAbility.getTranslationKey());
+                int xPos2 = (this.scaledWidth - this.client.textRenderer.getStringWidth(name.asFormattedString()))/2;
+                int yPos2 = this.scaledHeight - 49;
+                if(!this.client.interactionManager.hasStatusBars())
+                {
+                    yPos2+=14;
+                }
+                if(fadeDuration > 0)
+                {
+                    //this.client.textRenderer.getClass();
+                    fill(xPos2-2,yPos2-2,xPos2+this.client.textRenderer.getStringWidth(name.asFormattedString())+2,
+                    yPos2+9+2,this.client.options.getTextBackgroundColor(0));
+                    this.client.textRenderer.drawWithShadow(name.asFormattedString(),(float) xPos2, (float)yPos2, 16777215 + (fadeDuration << 24));
+                    
+                }
             }
-            if(fadeDuration > 0)
-            {
-                //this.client.textRenderer.getClass();
-                fill(xPos2-2,yPos2-2,xPos2+this.client.textRenderer.getStringWidth(name.asFormattedString())+2,
-                yPos2+9+2,this.client.options.getTextBackgroundColor(0));
-                this.client.textRenderer.drawWithShadow(name.asFormattedString(),(float) xPos2, (float)yPos2, 16777215 + (fadeDuration << 24));
-                
-            }
-            
         }
     }
 
@@ -134,17 +141,21 @@ public abstract class InGameHudMixin extends DrawableHelper implements InGameHud
         }
     }
 
-    @Inject(at = @At(value = "HEAD"),method = "renderHeldItemTooltip")
-    public void rhit2(CallbackInfo ci)
+    @Inject(at = @At(value = "HEAD"),method = "renderHeldItemTooltip",cancellable = true)
+    public void renderAbilitybarToolTipsEmpty(CallbackInfo ci)
     {
         if(this.abilityBar && this.client.player.inventory.getMainHandStack().isEmpty())
         {
-            Util.debug("Hello");
+            //Util.debug("Hello");
 
             RPGPlayer pe = (RPGPlayer)this.client.player;
             if(!(pe.getRPGAbilityComponent().abilityBar.get(this.getSelectedSlot())==RpgAbilityContext.EMPTY))
             {
                 RPGAbility selectedAbility = pe.getRPGAbilityComponent().abilityBar.get(pe.getPlayer().inventory.selectedSlot).ability;
+                if(selectedAbility == RpgAbilities.NONE)
+                {
+                    ci.cancel();
+                }
                 Text name = new TranslatableText(selectedAbility.getTranslationKey());
                 int xPos = (this.scaledWidth - this.client.textRenderer.getStringWidth(name.asFormattedString()))/2;
                 int yPos = this.scaledHeight - 49;
@@ -170,11 +181,12 @@ public abstract class InGameHudMixin extends DrawableHelper implements InGameHud
 
             }
         }
+        ci.cancel();
     }
 
 
     @Inject(at = @At("HEAD"),method="renderHotbar",cancellable = true)
-    protected void renderHotbar(float float_1,CallbackInfo ci)
+    protected void renderAbilityBar(float float_1,CallbackInfo ci)
     {
         PlayerEntity player = this.getCameraPlayer();
         if(abilityBar)
@@ -217,6 +229,52 @@ public abstract class InGameHudMixin extends DrawableHelper implements InGameHud
             GlStateManager.disableBlend();
             ci.cancel();
 
+        }
+    }
+
+    @Inject(at = @At("HEAD"),method = "renderExperienceBar",cancellable = true)
+    public void renderRPGExperienceBar(int xPos,CallbackInfo ci)
+    {
+        if(abilityBar)
+        {
+            RPGPlayer player = (RPGPlayer)this.getCameraPlayer();
+            RPGClassComponent rcc = player.getRPGClassComponent();
+
+            if(rcc.rpgClasses.size() > 0)
+            {            
+                this.client.getProfiler().push("expBar");
+                this.client.getTextureManager().bindTexture(BG_Texture);
+
+                int lvl = rcc.rpgClasses.get(rcc.getRpgClass(0));
+                float currentExp = rcc.getExperiance(0);
+                float targetExp = rcc.getRpgClass(0).getExpRequiredForLvl(lvl+1);
+                int progressWidth = (int)(182*(currentExp/targetExp));
+                Util.debug(lvl);
+                Util.debug(String.format("current: %s\ntarget: %s\ndivid: %s\nresult: %s", currentExp,targetExp,(currentExp/targetExp),progressWidth));
+                this.blit(xPos,this.scaledHeight - 32 + 3,0,46,182,5);
+                if(progressWidth > 0)
+                {
+                    this.blit(xPos,this.scaledHeight - 32 +3,0,51,progressWidth,5);
+                }
+                this.client.getProfiler().pop();
+                this.client.getProfiler().push("expLevel");
+                TextRenderer tr = MinecraftClient.getInstance().textRenderer;
+                String lvlString = "" + lvl;
+                int stringWidth = (this.scaledHeight - tr.getStringWidth(lvlString));
+                int stringHeight = this.scaledHeight - 31 - 4;
+                //tr.draw(lvlString, (float)(stringWidth + 1), (float)stringHeight, 0);
+                //tr.draw(lvlString, (float)(stringWidth - 1), (float)stringHeight, 0);
+                //tr.draw(lvlString, (float)stringWidth, (float)(stringHeight + 1), 0);
+                //tr.draw(lvlString, (float)stringWidth, (float)(stringHeight - 1), 0);
+                //tr.draw(lvlString, (float)stringWidth, (float)stringHeight, 8453920);
+                GUIhelper.drawLevel(tr, lvlString, stringWidth, stringHeight);
+                this.client.getProfiler().pop();
+
+            }
+
+        
+            ci.cancel();
+            
         }
     }
 

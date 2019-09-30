@@ -15,7 +15,6 @@ public class RpgStatPointProvider extends Item
 
     public RpgStatPointProvider(Settings item$Settings_1) {
         super(item$Settings_1);
-        // TODO Auto-generated constructor stub
     }
 
     @Override 

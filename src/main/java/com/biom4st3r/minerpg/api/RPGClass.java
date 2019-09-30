@@ -22,6 +22,18 @@ public abstract class RPGClass
         CUSTOM
     };
 
+    public float getExpRequiredForLvl(int Lvl)
+    {
+        if(Lvl < 11)
+        {
+            return Lvl*20;
+        }
+        else
+        {
+            return (float)Math.pow(2, Lvl*0.8)*0.850145f;
+        }
+    }
+
     public abstract ExpType getExpType();
 
     public RPGClass(Identifier id)

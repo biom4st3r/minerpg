@@ -1,11 +1,14 @@
 package com.biom4st3r.minerpg.components;
 
+import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Iterator;
 
 import com.biom4st3r.minerpg.api.RPGAbility;
 import com.biom4st3r.minerpg.api.RPGClass;
+import com.biom4st3r.minerpg.mixin_interfaces.RPGPlayer;
+import com.biom4st3r.minerpg.networking.Packets;
 import com.biom4st3r.minerpg.registery.RPG_Registry;
 import com.biom4st3r.minerpg.registery.RpgAbilities;
 import com.biom4st3r.minerpg.util.BufferSerializable;
@@ -21,7 +24,7 @@ import net.minecraft.util.PacketByteBuf;
 
 public class RPGClassComponent implements AbstractComponent, BufferSerializable, NbtSerializable
 {
-
+    RPGPlayer owner;
     //private List<RPGClass> rpgclasses;
     public Hashtable<RPGClass,Integer> rpgClasses;
 
@@ -34,9 +37,10 @@ public class RPGClassComponent implements AbstractComponent, BufferSerializable,
 
     private float[] experience;
 
-    public RPGClassComponent()
+    public RPGClassComponent(RPGPlayer owner)
     {
         init();
+        this.owner = owner;
     }
     private void init()
     {
@@ -54,11 +58,22 @@ public class RPGClassComponent implements AbstractComponent, BufferSerializable,
     public void setExperience(int index, float value)
     {
         this.experience[index] = value;
+        this.updateLvl(index);
     }
+
+    private void updateLvl(int index) {
+        RPGClass selectedClass = this.getRpgClass(index);
+        while(this.experience[index] > selectedClass.getExpRequiredForLvl(this.rpgClasses.get(selectedClass)+1))
+        {
+            this.rpgClasses.replace(selectedClass, this.rpgClasses.get(selectedClass)+1);
+        }
+    }
+
     public void addExperience(int index, float value)
     {
         Util.debug(value);
-        this.experience[index]+=value;
+        this.setExperience(index, this.experience[index]+value);
+        this.owner.getNetworkHandlerS().sendPacket(Packets.SERVER.sendExperience(this.experience[index]));
     }
 
     public RPGAbility[] getAvalibleAbilities()
@@ -93,7 +108,6 @@ public class RPGClassComponent implements AbstractComponent, BufferSerializable,
         {
             return RpgClassContext.EMPTY;
         }
-        
     }
 
     public boolean hasRpgClass()
@@ -110,7 +124,12 @@ public class RPGClassComponent implements AbstractComponent, BufferSerializable,
             return;
         }
         rpgClasses.put(rpgClass, 1);
-
+        float[] temp = experience.clone();
+        experience = new float[rpgClasses.size()];
+        for(int i = 0; i < temp.length; i++)
+        {
+            experience[i] = temp[i];
+        }
     }
 
     public void replaceClass(RPGClass OldrpgClass, RPGClass NewrpgClass)
@@ -195,6 +214,7 @@ public class RPGClassComponent implements AbstractComponent, BufferSerializable,
             RPGClass rpgClass = iterator.next();
             this.rpgClasses.put(rpgClass, original.rpgClasses.get(rpgClass).intValue());
         }
+        this.experience = original.experience;
     }
 
     @Override

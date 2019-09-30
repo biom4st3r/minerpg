@@ -23,7 +23,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -48,8 +47,16 @@ public abstract class RPGPlayerEntity extends LivingEntity implements RPGPlayer 
 
     // @Inject(at = @At(value = "FIELD",target="float_1:F"),method="attack")
     // public void attackk(Entity e,CallbackInfo ci,float baseDamage)
-    // {
+    // {ClientPlayerEntity
 
+    // }
+
+    // @Inject(at = @At("HEAD"),method="net/minecraft/entity/player/PlayerEntity.increaseStat(Lnet/minecraft/stat/Stat;I)V",cancellable = false)
+    // public void increaseStat(Stat<?> stat, int int_1, CallbackInfo ci)
+    // {
+    //     RPGPlayer player = ((RPGPlayer)this);
+    //     player.getRPGClassComponent().processStat(stat,i);
+    //     Util.debug("processing Stat " + stat.getName());
     // }
 
     @Inject(at = @At("RETURN"), method = "<init>*")
@@ -60,14 +67,9 @@ public abstract class RPGPlayerEntity extends LivingEntity implements RPGPlayer 
         }
         this.componentInventory = new ComponentContainer(2834671, ((PlayerEntity) (Object) this).inventory, bag);
         //TODO: Change Component to map for custom Components
-        //TODO: Maybe registery for Components ?
         this.statsComponent = new RPGStatsComponent();
-        this.rpgClassComponent = new RPGClassComponent();
+        this.rpgClassComponent = new RPGClassComponent(this);
         this.rpgAbilityComponent = new RPGAbilityComponent(this);
-        //MinecraftServer
-        //DedicatedServer
-        //DedicatedServerGui
-        //MinecraftDedicatedServer
     }
 
     private final String COMPONENT_BAG = "compInv";
@@ -99,10 +101,26 @@ public abstract class RPGPlayerEntity extends LivingEntity implements RPGPlayer 
         return null;
     }
 
+    int i = 0;
+
     @Inject(at = @At("HEAD"),method="tick")
     public void tick(CallbackInfo ci)
     {
         this.rpgAbilityComponent.tick();
+        if(i%20 == 0)
+        {
+            try
+            {
+                Util.debug(this.rpgClassComponent.getExperiance(0));
+            }
+            catch(Exception e)
+            {
+
+            }
+            
+        }
+        
+        i++;
     }
 
     @Inject(at = @At("HEAD"),method = "addExperience")

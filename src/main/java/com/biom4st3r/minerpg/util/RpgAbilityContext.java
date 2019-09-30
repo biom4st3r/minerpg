@@ -81,7 +81,14 @@ public class RpgAbilityContext implements NbtSerializable, BufferSerializable
     }
     public boolean isValid()
     {
-        return this.classContext.getAbilities()[this.abilityIndexInClass] == this.ability;
+        try
+        {
+            return this.classContext.getAbilities()[this.abilityIndexInClass] == this.ability;
+        }
+        catch(ArrayIndexOutOfBoundsException e)
+        {
+            return false;
+        }
     }
 
     @Override

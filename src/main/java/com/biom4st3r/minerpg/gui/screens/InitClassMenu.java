@@ -8,6 +8,8 @@ import com.biom4st3r.minerpg.gui.buttons.ClassButton;
 import com.biom4st3r.minerpg.mixin_interfaces.RPGPlayer;
 import com.biom4st3r.minerpg.networking.Packets;
 import com.biom4st3r.minerpg.registery.RPG_Registry;
+import com.biom4st3r.minerpg.registery.RpgAbilities;
+import com.biom4st3r.minerpg.registery.RpgClasses;
 import com.biom4st3r.minerpg.util.Util;
 import com.mojang.blaze3d.platform.GlStateManager;
 
@@ -131,6 +133,7 @@ public class InitClassMenu extends Screen
     @Override
     public void render(int mouseX, int mouseY, float float_1) 
     {
+
         if(pageIndex > 0)
         {
             arrowButtons[0].active = true;
@@ -146,23 +149,29 @@ public class InitClassMenu extends Screen
 
         GUIhelper.drawString(this.font, "Classes", this.xMid()+7, yGrid(0), 0x000000);
         super.render(mouseX, mouseY, float_1);
-
-        for(int i = 0; i < 8; i++)
+        int buttonClassIndexOffset = 0;
+        for(int buttonIndex = 0; buttonIndex < classButtons.length; buttonIndex++)
         {
-            int index = i + (8*pageIndex);
-            RPGClass r = classReg.get(index);
-            if(r != null)
-            {
-                classButtons[i].visible = true;
-                classButtons[i].rpgClass = r;
-            }
-            else
+            int registryIndex = buttonIndex + (8*pageIndex) + buttonClassIndexOffset;
+            RPGClass rClass = classReg.get(registryIndex);
+            if(rClass == null) // have to account for null because Registry will return null
             {
                 break;
             }
-            if(i == 7)
+            else if(rClass != RpgClasses.NONE)
             {
-                if(classReg.get(index+1) != null)
+                classButtons[buttonIndex].visible = true;
+                classButtons[buttonIndex].rpgClass = rClass;
+            }
+            else
+            {
+                buttonIndex--;
+                buttonClassIndexOffset++;
+                continue;
+            }
+            if(buttonIndex == 7)
+            {
+                if(classReg.get(registryIndex+1) != null)
                 {
                     arrowButtons[1].active = true;
                 }
