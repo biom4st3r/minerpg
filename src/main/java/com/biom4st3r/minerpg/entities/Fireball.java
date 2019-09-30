@@ -39,15 +39,14 @@ public class Fireball extends AbstractFireballEntity {
     public Fireball(LivingEntity owner)
     {
         super(MineRPG.FIREBALL,owner.world);
-        //Util.debug(String.format("%s,%s,%s", this.x,this.y,this.z));
+
         init(owner);
-        //Util.debug(String.format("%s,%s,%s", this.x,this.y,this.z));
+
     }
 
     @Environment(EnvType.CLIENT)
     public Fireball(World world, double x,double y, double z, double xVelo, double yVelo, double zVelo)
     {
-        //this(MineRPG.FIREBALL,world);
         super(MineRPG.FIREBALL,x,y,z,xVelo,yVelo,zVelo,world);
     }
 

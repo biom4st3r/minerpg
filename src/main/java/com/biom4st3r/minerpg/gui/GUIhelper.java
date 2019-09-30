@@ -123,6 +123,15 @@ public class GUIhelper
         }
         return abilitySlotButtons;
     }
+
+    public static void drawLevel(TextRenderer tr, String lvlString, int width, int height)
+    {
+        tr.draw(lvlString, (float)(width + 1), (float)height, 0);
+        tr.draw(lvlString, (float)(width - 1), (float)height, 0);
+        tr.draw(lvlString, (float)width, (float)(height + 1), 0);
+        tr.draw(lvlString, (float)width, (float)(height - 1), 0);
+        tr.draw(lvlString, (float)width, (float)height, 8453920);
+    }
 }
 /*
 	METHOD blit (IIFFIIII)V

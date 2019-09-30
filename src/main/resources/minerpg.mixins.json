@@ -8,14 +8,14 @@
     "PlayerManagerRespawn",
     "ServerPEAddListener",
     "PaperSkinEffectMixin",
-    "ServerPlayerStatWatch"
+    "ServerPlayerStatWatch",
+    "ClientPlayNetworkHandlerMixin"
   ],
   "client": [
     "VanillaInventory",
     "MinecraftClientMixin",
     "InGameHudMixin",
     "CreateClientPlayerMixin",
-    "ClientPlayNetworkHandlerMixin",
     "ParticleManagerMixin"
   ],
   "injectors": {

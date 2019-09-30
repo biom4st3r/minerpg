@@ -38,6 +38,7 @@ public final class Packets
     public static final Identifier SEND_ABILITY_COMPONENT = new Identifier(MineRPG.MODID,"sndabicomp");
     public static final Identifier SEND_COMPONENT_BAG = new Identifier(MineRPG.MODID,"sndcompbag");
     public static final Identifier SEND_DAMAGE_PARTICLE = new Identifier(MineRPG.MODID,"dmgprticl");
+    public static final Identifier SEND_TOTAL_EXPEREINCE = new Identifier(MineRPG.MODID,"sndexp");
 
     public static final Identifier REQ_RPG_CLASS_COMPONENT = new Identifier(MineRPG.MODID, "reqrpgcomp");
     public static final Identifier REQ_CHANGE_STAT = new Identifier(MineRPG.MODID,"changestat");
@@ -52,6 +53,10 @@ public final class Packets
     @Environment(EnvType.CLIENT)
     public static void clientPacketReg()
     {
+        ClientSidePacketRegistry.INSTANCE.register(Packets.SEND_TOTAL_EXPEREINCE,(context,buffer)->
+        {
+            ((RPGPlayer)context.getPlayer()).getRPGClassComponent().setExperience(0, buffer.readFloat());
+        });
         ClientSidePacketRegistry.INSTANCE.register(Packets.SEND_RPG_CLASS_COMPONENT, (context,buffer) ->
         {
             RPGPlayer player = ((RPGPlayer)MinecraftClient.getInstance().player);
@@ -170,15 +175,14 @@ public final class Packets
                 }
             }
             System.out.println(String.format("Warning: %s failed 1 or more checks while trying to add ability to bar", context.getPlayer().getDisplayName().asFormattedString()));
+            player.getNetworkHandlerS().sendPacket(Packets.SERVER.sendAbilityComponent(player));
             
         });
         ServerSidePacketRegistry.INSTANCE.register(USE_ABILITY, (context,buff)->
         {
-            //NetworkThreadUtils
             RPGPlayer player = (RPGPlayer)context.getPlayer();
             int barindex = buff.readByte();
-            RpgAbilityContext rac = player.getRPGAbilityComponent().abilityBar.get(barindex);
-            
+            RpgAbilityContext rac = player.getRPGAbilityComponent().abilityBar.get(barindex);            
             if(rac.isValid())
             {
                 rac.ability.doAbility(player);
@@ -275,6 +279,13 @@ public final class Packets
     //@Environment(EnvType.SERVER)
     public static class SERVER
     {
+        public static CustomPayloadS2CPacket sendExperience(float currentTotal)
+        {
+            PacketByteBuf pbb = new PacketByteBuf(Unpooled.buffer());
+            pbb.writeFloat(currentTotal);
+            return new CustomPayloadS2CPacket(SEND_TOTAL_EXPEREINCE, pbb);
+        }
+
         public static CustomPayloadS2CPacket sendDamageParticle(BlockPos pos, float damage)
         {
             PacketByteBuf pbb = new PacketByteBuf(Unpooled.buffer());

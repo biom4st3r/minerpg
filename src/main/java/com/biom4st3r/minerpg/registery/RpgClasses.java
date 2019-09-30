@@ -6,6 +6,7 @@ import com.biom4st3r.minerpg.MineRPG;
 import com.biom4st3r.minerpg.api.RPGAbility;
 import com.biom4st3r.minerpg.api.RPGClass;
 import com.biom4st3r.minerpg.impl.rpgclass.BarbarianClass;
+import com.biom4st3r.minerpg.util.Util;
 import com.google.common.collect.Lists;
 
 import net.minecraft.util.Identifier;
@@ -16,6 +17,7 @@ public final class RpgClasses {
     public static final RPGClass NONE = new NoClass();
 
     public static RPGClass register(RPGClass rpgclass) {
+        Util.errorMSG("Adding RPGClass: " + rpgclass.toString());
         return (RPGClass) ((MutableRegistry<RPGClass>) RPG_Registry.CLASS_REGISTRY).add(rpgclass.id, rpgclass);
     }
 
