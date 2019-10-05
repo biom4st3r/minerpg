@@ -53,18 +53,18 @@
 //         if(!locked)
 //         {
 //             locked = true;
-//             Util.debug(String.format("Pre-Power\n%s %s %s", enchantmentPower[0],enchantmentPower[1],enchantmentPower[2]));
+//             Biow0rks.debug(String.format("Pre-Power\n%s %s %s", enchantmentPower[0],enchantmentPower[1],enchantmentPower[2]));
             
 //             RPGStatsComponent stats = ((RPGPlayer)this.getPlayer()).getStatsComponent();
 //             int modifier = stats.getModifier(Stats.WISDOW);
 //             int score = stats.getStat(Stats.WISDOW);
 //             int addon = Math.round((score * modifier)/8);
-//             Util.debug(String.format("%s %s %s", modifier,score,addon));
+//             Biow0rks.debug(String.format("%s %s %s", modifier,score,addon));
 //             for(int i = 0; i < enchantmentPower.length && enchantmentPower.length > 0; i++)
 //             {
 //                 enchantmentPower[i] +=addon;
 //             }
-//             Util.debug(String.format("Post-Power\n%s %s %s\n", enchantmentPower[0],enchantmentPower[1],enchantmentPower[2]));
+//             Biow0rks.debug(String.format("Post-Power\n%s %s %s\n", enchantmentPower[0],enchantmentPower[1],enchantmentPower[2]));
 //         }
 //     }
 

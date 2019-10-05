@@ -9,7 +9,7 @@ Purpose: Adds effect of paper skin
 
 import java.util.Map;
 
-import com.biom4st3r.minerpg.registery.MinerpgStatusEffect;
+import com.biom4st3r.minerpg.MineRPG;
 
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -39,10 +39,10 @@ public abstract class PaperSkinEffectMixin
     @Inject(at = @At(value="INVOKE", target="net/minecraft/entity/LivingEntity.hasStatusEffect(Lnet/minecraft/entity/effect/StatusEffect;)Z",ordinal = 0),method = "applyEnchantmentsToDamage")
     public void applyMagicToDamage(DamageSource source, float damage, CallbackInfoReturnable<Float> ci)
     {
-        if(this.hasEffect(MinerpgStatusEffect.PAPER_SKIN) && source != DamageSource.DROWN && source != DamageSource.STARVE)
+        if(this.hasEffect(MineRPG.PAPER_SKIN) && source != DamageSource.DROWN && source != DamageSource.STARVE)
         {
             int modifier = 5;
-            int level = activeStatusEffects.get(MinerpgStatusEffect.PAPER_SKIN).getAmplifier()+1;
+            int level = activeStatusEffects.get(MineRPG.PAPER_SKIN).getAmplifier()+1;
             damage = Math.max(((modifier+level)*(float)damage)/modifier, 0.0f);
         }
     }

@@ -2,7 +2,6 @@ package com.biom4st3r.minerpg.util;
 
 import java.lang.reflect.Array;
 
-import com.biom4st3r.minerpg.MineRPG;
 import com.biom4st3r.minerpg.api.RPGAbility;
 import com.biom4st3r.minerpg.mixin_interfaces.RPGPlayer;
 import com.biom4st3r.minerpg.networking.Packets;
@@ -21,6 +20,8 @@ import net.minecraft.util.registry.Registry;
 
 public class Util
 {
+
+    //public static Logger logger = LogManager.getLogger();
 
     public static double getAttackDamage(ItemStack stack){
         return stack.getItem().getModifiers(EquipmentSlot.MAINHAND)
@@ -79,30 +80,30 @@ public class Util
         return count > 0 ? new ItemStack(i,count) : ItemStack.EMPTY;
     }
     static boolean  isTestBuild = true;
-    public static void debug(Object o)
-    {
-        if(isTestBuild)
-        {
-            System.out.println(o.toString());
-        }
-    }
-    public static void debugV(Object o, int depth)
-    {
-        if(isTestBuild)
-        {
-            StackTraceElement[] ste = new Exception().getStackTrace();
-            for(int i = 1; i <= depth; i++)
-            {
-                debug(ste[i].getClassName() + "." + ste[i].getMethodName());
-            }
-            debug(o);
-        }
-    }
+    // public static void debug(String string, Object... args)
+    // {   
+    //     if(isTestBuild)
+    //     {
+    //         logger.debug(String.format(string, args));
+    //     }
+    // }
+    // public static void debugV(int depth, String string, Object... args)
+    // {
+    //     if(isTestBuild)
+    //     {
+    //         StackTraceElement[] ste = new Exception().getStackTrace();
+    //         for(int i = 1; i <= depth; i++)
+    //         {
+    //             debug(ste[i].getClassName() + "." + ste[i].getMethodName());
+    //         }
+    //         debug(string, args);
+    //     }
+    // }
 
-    public static void errorMSG(Object o)
-    {
-        System.out.println(MineRPG.MODID + ": " + o.toString());
-    }
+    // public static void errorMSG(String string,Object... args)
+    // {
+    //     logger.error(String.format(string, args));
+    // }
 
     public static <T extends Object> T[] reverse(T[] array)
     {

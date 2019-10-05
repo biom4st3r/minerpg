@@ -1,9 +1,9 @@
 package com.biom4st3r.minerpg.gui.screens;
 
+import com.biom4st3r.biow0rks.Biow0rks;
 import com.biom4st3r.minerpg.api.RPGAbility;
-import com.biom4st3r.minerpg.api.RPGAbility.Type;
 import com.biom4st3r.minerpg.api.RPGClass;
-import com.biom4st3r.minerpg.api.Stat.Stats;
+import com.biom4st3r.minerpg.api.Stats;
 import com.biom4st3r.minerpg.components.RPGClassComponent;
 import com.biom4st3r.minerpg.components.RPGStatsComponent;
 import com.biom4st3r.minerpg.gui.GUIhelper;
@@ -13,7 +13,6 @@ import com.biom4st3r.minerpg.mixin_interfaces.RPGPlayer;
 import com.biom4st3r.minerpg.networking.Packets;
 import com.biom4st3r.minerpg.registery.RpgAbilities;
 import com.biom4st3r.minerpg.util.RpgAbilityContext;
-import com.biom4st3r.minerpg.util.Util;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
@@ -49,20 +48,20 @@ public abstract class AbstractAbilitiesContainer extends Screen {
             this.addButton(abilityDisplay[i]);
             ((AbilityButton)abilityDisplay[i]).pressAction = bu -> {
                 RpgAbilityContext ab = ((AbilityButton)bu).abilityContext;
-                if(ab.ability.getType() != Type.PASSIVE)
-                {
+                // if(ab.ability.getType() != Type.PASSIVE || true)
+                // {
                     this.mouseSlot = ab;
-                    Util.debug(ab.toString());
-                }
-                else if(ab.ability.getType() == Type.PASSIVE)
-                {
-                    ab.ability.doAbility(player);
-                    player.getNetworkHandlerC().sendPacket(Packets.CLIENT.usePassiveAbility(ab.abilityIndexInClass));
-                }
-                else if(ab.ability.getType() == Type.PASSIVE_NAMED)
-                {
+                    Biow0rks.debug(ab.toString());
+                // }
+                // else if(ab.ability.getType() == Type.PASSIVE)
+                // {
+                //     ab.ability.doAbility(player);
+                //     player.getNetworkHandlerC().sendPacket(Packets.CLIENT.usePassiveAbility(ab.abilityIndexInClass));
+                // }
+                // else if(ab.ability.getType() == Type.PASSIVE_NAMED)
+                // {
                     
-                }
+                // }
             };
             if(abilities.length <= i || abilities[i] == RpgAbilities.NONE)
             {

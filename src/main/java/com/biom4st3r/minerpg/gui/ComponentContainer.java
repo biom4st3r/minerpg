@@ -2,8 +2,10 @@ package com.biom4st3r.minerpg.gui;
 
 import java.util.Iterator;
 import java.util.Set;
-import com.biom4st3r.minerpg.util.Util;
+
+import com.biom4st3r.biow0rks.Biow0rks;
 import com.google.common.collect.Sets;
+
 import net.minecraft.container.Container;
 import net.minecraft.container.Slot;
 import net.minecraft.container.SlotActionType;
@@ -66,7 +68,7 @@ public class ComponentContainer extends Container {
 
     @Override
     public ItemStack transferSlot(PlayerEntity pe, int slotIndex) {
-        Util.debug("transferSlot");
+        Biow0rks.debug("transferSlot");
         ItemStack temp = ItemStack.EMPTY;
         Slot clickedSlot = (Slot)this.slotList.get(slotIndex);
         int lastIndexCBag = 12-1;
@@ -101,7 +103,7 @@ public class ComponentContainer extends Container {
     
     @Override
     protected boolean insertItem(ItemStack sourceStack, int startIndex, int endIndex, boolean inReverse) {
-        Util.debug(String.format("insertItem | %s %s", sourceStack.getCount(), sourceStack.getItem().getName().getString()));
+        Biow0rks.debug("insertItem | %s %s", sourceStack.getCount(), sourceStack.getItem().getName().getString());
 
         boolean successful = false;
         int startingIndex = startIndex;
@@ -214,7 +216,7 @@ public class ComponentContainer extends Container {
 
     @Override
     public ItemStack onSlotClick(int slotIndex, int packedBtnId, SlotActionType slotAction, PlayerEntity pe) {
-        Util.debug(String.format("onSlotClick | slot: %s | action: %s", slotIndex,slotAction.name()));
+        Biow0rks.debug(String.format("onSlotClick | slot: %s | action: %s", slotIndex,slotAction.name()));
         //new Exception().printStackTrace();
         //ClientPlayerInteractionManager
         ItemStack tempStack = ItemStack.EMPTY;
@@ -310,7 +312,7 @@ public class ComponentContainer extends Container {
                 cursorStack = currSlot.getStack();
                 if (!currStack.isEmpty() || !cursorStack.isEmpty()) 
                 {
-                    Util.debug("stack not empty or cursor not empty");
+                    Biow0rks.debug("stack not empty or cursor not empty");
                     if (currStack.isEmpty()) 
                     {
                         if (currSlot.canTakeItems(pe)) 
@@ -450,7 +452,7 @@ public class ComponentContainer extends Container {
                         cursorStackCount = packedBtnId == 0 ? cursorStack.getCount() : 1;
                         if (cursorStackCount > currSlot.getMaxStackAmount(cursorStack) || !cursorStack.isStackable()) {
                             // Items in hand more than slot can hold
-                            Util.debug("Items in hand more than slot can hold");
+                            Biow0rks.debug("Items in hand more than slot can hold");
                             cursorStackCount = 
                             cursorStack.isStackable() || currSlot instanceof ComponentSlot ? 
                                 Math.min(currSlot.getMaxStackAmount(cursorStack), cursorStack.getCount()): 
@@ -503,7 +505,7 @@ public class ComponentContainer extends Container {
                     } 
                     else if (cursorStack.getMaxCount() > 1 && canStacksCombine(currStack, cursorStack) && !currStack.isEmpty()) 
                     {
-                        Util.debug("cursorStack.getMaxCount() > 1 && canStacksCombine(currStack, cursorStack) && !currStack.isEmpty()");
+                        Biow0rks.debug("cursorStack.getMaxCount() > 1 && canStacksCombine(currStack, cursorStack) && !currStack.isEmpty()");
                         cursorStackCount = currStack.getCount();
                         if (cursorStackCount + cursorStack.getCount() <= cursorStack.getMaxCount()) {
                             cursorStack.increment(cursorStackCount);

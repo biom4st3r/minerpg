@@ -2,10 +2,10 @@ package com.biom4st3r.minerpg.impl.abilities;
 
 import java.util.List;
 
+import com.biom4st3r.biow0rks.Biow0rks;
 import com.biom4st3r.minerpg.api.RPGAbility;
 import com.biom4st3r.minerpg.entities.Fireball;
 import com.biom4st3r.minerpg.mixin_interfaces.RPGPlayer;
-import com.biom4st3r.minerpg.util.Util;
 import com.google.common.collect.Lists;
 
 import net.minecraft.entity.Entity;
@@ -37,7 +37,7 @@ public class FireballAbility extends RPGAbility {
             // fbe.prevYaw = pe.yaw;
 
             //fbe.setPositionAndAngles(fbe.x, fbe.y, fbe.z, player.getPlayer().pitch, player.getPlayer().yaw);
-            Util.debug( world.spawnEntity(fbe));
+            Biow0rks.debug("did fireball spawn: %s", world.spawnEntity(fbe));
 
             player.getRPGAbilityComponent().addCooldown(this);
             return true;

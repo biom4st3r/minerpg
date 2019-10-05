@@ -1,6 +1,8 @@
 package com.biom4st3r.minerpg.mixin;
 
-    /*
+    import com.biom4st3r.biow0rks.Biow0rks;
+
+/*
     Purpose
         Provides the hotbar overriding for the Ability Bar
         
@@ -19,7 +21,6 @@ import com.biom4st3r.minerpg.mixin_interfaces.InGameHudHelper;
 import com.biom4st3r.minerpg.mixin_interfaces.RPGPlayer;
 import com.biom4st3r.minerpg.registery.RpgAbilities;
 import com.biom4st3r.minerpg.util.RpgAbilityContext;
-import com.biom4st3r.minerpg.util.Util;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.platform.GlStateManager.DestFactor;
 import com.mojang.blaze3d.platform.GlStateManager.SourceFactor;
@@ -146,7 +147,7 @@ public abstract class InGameHudMixin extends DrawableHelper implements InGameHud
     {
         if(this.abilityBar && this.client.player.inventory.getMainHandStack().isEmpty())
         {
-            //Util.debug("Hello");
+            //Biow0rks.debug("Hello");
 
             RPGPlayer pe = (RPGPlayer)this.client.player;
             if(!(pe.getRPGAbilityComponent().abilityBar.get(this.getSelectedSlot())==RpgAbilityContext.EMPTY))
@@ -249,8 +250,8 @@ public abstract class InGameHudMixin extends DrawableHelper implements InGameHud
                 float currentExp = rcc.getExperiance(0);
                 float targetExp = rcc.getRpgClass(0).getExpRequiredForLvl(lvl+1);
                 int progressWidth = (int)(182*(currentExp/targetExp));
-                Util.debug(lvl);
-                Util.debug(String.format("current: %s\ntarget: %s\ndivid: %s\nresult: %s", currentExp,targetExp,(currentExp/targetExp),progressWidth));
+                Biow0rks.debug("currentPlayerLvl", lvl);
+                Biow0rks.debug("current: %s\ntarget: %s\ndivid: %s\nresult: %s", currentExp,targetExp,(currentExp/targetExp),progressWidth);
                 this.blit(xPos,this.scaledHeight - 32 + 3,0,46,182,5);
                 if(progressWidth > 0)
                 {

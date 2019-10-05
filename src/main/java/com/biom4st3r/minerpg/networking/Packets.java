@@ -2,9 +2,8 @@ package com.biom4st3r.minerpg.networking;
 
 import java.util.Random;
 
+import com.biom4st3r.biow0rks.Biow0rks;
 import com.biom4st3r.minerpg.MineRPG;
-import com.biom4st3r.minerpg.api.RPGAbility;
-import com.biom4st3r.minerpg.api.RPGAbility.Type;
 import com.biom4st3r.minerpg.api.RPGClass;
 import com.biom4st3r.minerpg.components.RPGStatsComponent;
 import com.biom4st3r.minerpg.mixin_interfaces.BasicInventoryHelper;
@@ -15,7 +14,6 @@ import com.biom4st3r.minerpg.registery.RpgAbilities;
 import com.biom4st3r.minerpg.registery.RpgClasses;
 import com.biom4st3r.minerpg.util.RpgAbilityContext;
 import com.biom4st3r.minerpg.util.RpgClassContext;
-import com.biom4st3r.minerpg.util.Util;
 
 import io.netty.buffer.Unpooled;
 import net.fabricmc.api.EnvType;
@@ -82,7 +80,7 @@ public final class Packets
             BlockPos pos = buff.readBlockPos();
             float damage = buff.readFloat();
             String s = ""+(int)Math.floor(damage);
-            //Util.debug("Damage: " + damage);
+            //Biow0rks.debug("Damage: " + damage);
             float red,green,blue;
             Random rand = context.getPlayer().getRand(); 
             float velocityX = (rand.nextFloat()-0.5f)*0.1f; 
@@ -145,7 +143,7 @@ public final class Packets
             if(rac.ability == RpgAbilities.NONE)
             {
                 player.getRPGAbilityComponent().abilityBar.set(barIndex, RpgAbilityContext.EMPTY);
-                Util.debug(String.format("reset slot %s", barIndex));
+                Biow0rks.debug(String.format("reset slot %s", barIndex));
                 return;
             }
             if(rac.classContext.rpgclass == RpgClasses.NONE)
@@ -153,13 +151,13 @@ public final class Packets
                 if(player.getRPGAbilityComponent().specialAbilities.contains(rac.ability))
                 {
                     player.getRPGAbilityComponent().abilityBar.set(barIndex, rac);
-                    Util.debug(String.format("specialSet slot %s to %s", barIndex,rac.ability.id.toString()));
+                    Biow0rks.debug(String.format("specialSet slot %s to %s", barIndex,rac.ability.id.toString()));
                     return;
                 }
             }
             else if(rac.ability==null)
             {
-                Util.errorMSG("Ability not registered. " + rac.classContext.rpgclass.id.getPath() + " index: " + rac.abilityIndexInClass);
+                Biow0rks.error("Ability not registered. " + rac.classContext.rpgclass.id.getPath() + " index: " + rac.abilityIndexInClass);
             }
             else
             {
@@ -169,7 +167,7 @@ public final class Packets
                     if(rac.classContext.getAbilities()[rac.abilityIndexInClass] == rac.ability)
                     {
                         player.getRPGAbilityComponent().abilityBar.set(barIndex, rac);
-                        Util.debug(String.format("set slot %s to %s", barIndex,rac.ability.id.toString()));
+                        Biow0rks.debug(String.format("set slot %s to %s", barIndex,rac.ability.id.toString()));
                         return;
                     }
                 }
@@ -193,17 +191,17 @@ public final class Packets
             }
             
         });
-        ServerSidePacketRegistry.INSTANCE.register(USE_PASSIVE_ABILITY, (context,buff) ->
-        {
-            int classIndex = buff.readByte();
-            RPGPlayer player = (RPGPlayer)context.getPlayer();
-            RPGAbility ability = player.getRPGClassComponent().getAvalibleAbilities()[classIndex];
-            if(ability.getType() == Type.PASSIVE)
-            {
-                Util.debug("success");
-                ability.doAbility(player);
-            }
-        });
+        // ServerSidePacketRegistry.INSTANCE.register(USE_PASSIVE_ABILITY, (context,buff) ->
+        // {
+        //     int classIndex = buff.readByte();
+        //     RPGPlayer player = (RPGPlayer)context.getPlayer();
+        //     RPGAbility ability = player.getRPGClassComponent().getAvalibleAbilities()[classIndex];
+        //     if(ability.getType() == Type.PASSIVE)
+        //     {
+        //         Biow0rks.debug("success");
+        //         ability.doAbility(player);
+        //     }
+        // });
         ServerSidePacketRegistry.INSTANCE.register(REQ_COMP_BAG, (context,buff)->
         {
             RPGPlayer player = ((RPGPlayer)context.getPlayer());
@@ -263,12 +261,12 @@ public final class Packets
             return new CustomPayloadC2SPacket(USE_ABILITY,pbb);
         }
 
-        public static CustomPayloadC2SPacket usePassiveAbility(int rpgClassAbilityIndex)
-        {
-            PacketByteBuf pbb = new PacketByteBuf(Unpooled.buffer());
-            pbb.writeByte(rpgClassAbilityIndex);
-            return new CustomPayloadC2SPacket(USE_PASSIVE_ABILITY,pbb);
-        }
+        // public static CustomPayloadC2SPacket usePassiveAbility(int rpgClassAbilityIndex)
+        // {
+        //     PacketByteBuf pbb = new PacketByteBuf(Unpooled.buffer());
+        //     pbb.writeByte(rpgClassAbilityIndex);
+        //     return new CustomPayloadC2SPacket(USE_PASSIVE_ABILITY,pbb);
+        // }
 
         public static CustomPayloadC2SPacket requestComponentBag()
         {
