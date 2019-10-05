@@ -4,6 +4,7 @@ import java.util.Random;
 
 import com.biom4st3r.biow0rks.Biow0rks;
 import com.biom4st3r.minerpg.MineRPG;
+import com.biom4st3r.minerpg.api.RPGAbility;
 import com.biom4st3r.minerpg.api.RPGClass;
 import com.biom4st3r.minerpg.components.RPGStatsComponent;
 import com.biom4st3r.minerpg.mixin_interfaces.BasicInventoryHelper;
@@ -11,9 +12,6 @@ import com.biom4st3r.minerpg.mixin_interfaces.RPGPlayer;
 import com.biom4st3r.minerpg.particles.RpgDamageEffect;
 import com.biom4st3r.minerpg.registery.RPG_Registry;
 import com.biom4st3r.minerpg.registery.RpgAbilities;
-import com.biom4st3r.minerpg.registery.RpgClasses;
-import com.biom4st3r.minerpg.util.RpgAbilityContext;
-import com.biom4st3r.minerpg.util.RpgClassContext;
 
 import io.netty.buffer.Unpooled;
 import net.fabricmc.api.EnvType;
@@ -138,58 +136,46 @@ public final class Packets
             //NetworkThreadUtils.forceMainThread(null, ((RPGPlayer)context.getPlayer()).getNetworkHandlerS(), ((ServerPlayerEntity)context.getPlayer()).getServerWorld());
             RPGPlayer player = (RPGPlayer)context.getPlayer();
             int barIndex = buff.readByte();
-            RpgAbilityContext rac = new RpgAbilityContext(buff);
-            System.out.println(rac.toString());
-            if(rac.ability == RpgAbilities.NONE)
+            Identifier id = buff.readIdentifier();
+            RPGAbility rac = RPG_Registry.ABILITY_REGISTRY.get(id);
+            context.getTaskQueue().execute(()->
             {
-                player.getRPGAbilityComponent().abilityBar.set(barIndex, RpgAbilityContext.EMPTY);
-                Biow0rks.debug(String.format("reset slot %s", barIndex));
-                return;
-            }
-            if(rac.classContext.rpgclass == RpgClasses.NONE)
-            {
-                if(player.getRPGAbilityComponent().specialAbilities.contains(rac.ability))
+                System.out.println(rac.toString());
+                if(rac.isNone())
                 {
-                    player.getRPGAbilityComponent().abilityBar.set(barIndex, rac);
-                    Biow0rks.debug(String.format("specialSet slot %s to %s", barIndex,rac.ability.id.toString()));
+                    player.getRPGAbilityComponent().abilityBar.set(barIndex, RpgAbilities.NONE);
+                    Biow0rks.debug(String.format("reset slot %s", barIndex));
                     return;
                 }
-            }
-            else if(rac.ability==null)
-            {
-                Biow0rks.error("Ability not registered. " + rac.classContext.rpgclass.id.getPath() + " index: " + rac.abilityIndexInClass);
-            }
-            else
-            {
-                RpgClassContext player_rcc = player.getRPGClassComponent().getRpgClassContext(rac.classContext.rpgclass);
-                if(player_rcc != RpgClassContext.EMPTY && player_rcc.Lvl == rac.classContext.Lvl)
+                else if(rac==null)
                 {
-                    if(rac.classContext.getAbilities()[rac.abilityIndexInClass] == rac.ability)
+                    Biow0rks.error("Ability %s not registered. ", id);
+                }
+                else
+                {
+                    if(player.getRPGAbilityComponent().getAbilities().contains(rac))
                     {
                         player.getRPGAbilityComponent().abilityBar.set(barIndex, rac);
-                        Biow0rks.debug(String.format("set slot %s to %s", barIndex,rac.ability.id.toString()));
+                        Biow0rks.debug(String.format("set slot %s to %s", barIndex,rac.id.toString()));
                         return;
                     }
                 }
-            }
-            System.out.println(String.format("Warning: %s failed 1 or more checks while trying to add ability to bar", context.getPlayer().getDisplayName().asFormattedString()));
-            player.getNetworkHandlerS().sendPacket(Packets.SERVER.sendAbilityComponent(player));
-            
+                System.out.println(String.format("Warning: %s failed 1 or more checks while trying to add ability to bar", context.getPlayer().getDisplayName().asFormattedString()));
+                player.getNetworkHandlerS().sendPacket(Packets.SERVER.sendAbilityComponent(player));
+            });
         });
         ServerSidePacketRegistry.INSTANCE.register(USE_ABILITY, (context,buff)->
         {
             RPGPlayer player = (RPGPlayer)context.getPlayer();
-            int barindex = buff.readByte();
-            RpgAbilityContext rac = player.getRPGAbilityComponent().abilityBar.get(barindex);            
-            if(rac.isValid())
+            int barIndex = buff.readByte();
+            context.getTaskQueue().execute(()->
             {
-                rac.ability.doAbility(player);
-            }
-            else
-            {
-                player.getRPGAbilityComponent().abilityBar.set(barindex, RpgAbilityContext.EMPTY);
-            }
-            
+                RPGAbility ability = player.getRPGAbilityComponent().abilityBar.get(barIndex);
+                if(!ability.isNone())
+                {
+                    ability.doAbility(player);
+                }
+            });
         });
         // ServerSidePacketRegistry.INSTANCE.register(USE_PASSIVE_ABILITY, (context,buff) ->
         // {
@@ -246,11 +232,11 @@ public final class Packets
             return new CustomPayloadC2SPacket(REQ_ADD_CLASS,pbb);
         }
 
-        public static CustomPayloadC2SPacket reqChangeAbilityBar(int barIndex,RpgAbilityContext rac)
+        public static CustomPayloadC2SPacket reqChangeAbilityBar(int barIndex,RPGAbility ability)
         {
             PacketByteBuf pbb = new PacketByteBuf(Unpooled.buffer());
             pbb.writeByte(barIndex);
-            rac.serializeBuffer(pbb);
+            pbb.writeIdentifier(ability.id);
             return new CustomPayloadC2SPacket(REQ_ABILITY_BAR_CHANGE,pbb);
         }
 

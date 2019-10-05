@@ -3,6 +3,7 @@ package com.biom4st3r.minerpg.api;
 import java.util.List;
 
 import com.biom4st3r.minerpg.mixin_interfaces.RPGPlayer;
+import com.biom4st3r.minerpg.registery.RpgAbilities;
 import com.google.common.collect.Lists;
 
 import net.minecraft.text.Text;
@@ -77,6 +78,11 @@ public abstract class RPGAbility
     @Override
     public String toString() {
         return this.id.toString();
+    }
+
+    public boolean isNone()
+    {
+        return this == RpgAbilities.NONE;
     }
 
     

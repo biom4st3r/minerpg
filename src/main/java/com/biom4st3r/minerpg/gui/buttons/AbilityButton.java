@@ -1,8 +1,9 @@
 package com.biom4st3r.minerpg.gui.buttons;
 
 import com.biom4st3r.minerpg.MineRPG;
+import com.biom4st3r.minerpg.api.RPGAbility;
 import com.biom4st3r.minerpg.registery.RpgAbilities;
-import com.biom4st3r.minerpg.util.RpgAbilityContext;
+import com.biom4st3r.minerpg.util.DefaultedObj;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.widget.ButtonWidget;
@@ -10,15 +11,15 @@ import net.minecraft.util.Identifier;
 
 public class AbilityButton extends ButtonWidget
 {
-    public RpgAbilityContext abilityContext = RpgAbilityContext.EMPTY;
+    public DefaultedObj<RPGAbility> ability = new DefaultedObj<RPGAbility>(null, RpgAbilities.NONE);
 
     private Identifier BG_Texture = new Identifier(MineRPG.MODID, "textures/gui/classmenu.png");
     
     public ButtonWidget.PressAction pressAction;
 
-    public AbilityButton(int xPos, int yPos, RpgAbilityContext abilityContext, PressAction buttonWidget$PressAction_1) {
+    public AbilityButton(int xPos, int yPos, RPGAbility ability, PressAction buttonWidget$PressAction_1) {
         super(xPos, yPos, 22, 22, "", buttonWidget$PressAction_1);
-        this.abilityContext = abilityContext;
+        this.ability.set(ability);
     }
 
     @Override
@@ -44,9 +45,9 @@ public class AbilityButton extends ButtonWidget
         {
             blit(this.x+3,this.y+3,bg_lightU,bg_lightV+16,16,16);
         }
-        if(abilityContext.ability != RpgAbilities.NONE)
+        if(ability.getValue() != RpgAbilities.NONE)
         {
-            MinecraftClient.getInstance().getTextureManager().bindTexture(abilityContext.ability.getIcon());
+            MinecraftClient.getInstance().getTextureManager().bindTexture(ability.getValue().getIcon());
             blit(this.x+3,this.y+3 ,16,16,16,16,16,16);//x y u v w h
 
         }

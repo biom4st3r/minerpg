@@ -1,18 +1,24 @@
 package com.biom4st3r.minerpg.components;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import com.biom4st3r.biow0rks.Biow0rks;
+import com.biom4st3r.minerpg.api.AbstractComponent;
+import com.biom4st3r.minerpg.api.BufferSerializable;
+import com.biom4st3r.minerpg.api.NbtSerializable;
 import com.biom4st3r.minerpg.api.RPGAbility;
 import com.biom4st3r.minerpg.mixin_interfaces.RPGPlayer;
 import com.biom4st3r.minerpg.registery.RPG_Registry;
-import com.biom4st3r.minerpg.util.BufferSerializable;
-import com.biom4st3r.minerpg.util.NbtSerializable;
-import com.biom4st3r.minerpg.util.RpgAbilityContext;
+import com.biom4st3r.minerpg.registery.RpgAbilities;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
+import org.apache.http.annotation.Immutable;
+
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -23,27 +29,27 @@ import net.minecraft.util.PacketByteBuf;
 
 public class RPGAbilityComponent implements AbstractComponent,NbtSerializable,BufferSerializable {
 
-    public List<RPGAbility> specialAbilities;
+    public DefaultedList<RPGAbility> abilityBar;
+    protected List<RPGAbility> abilities = Lists.newArrayList();
 
-    public DefaultedList<RpgAbilityContext> abilityBar;
+    protected Map<Identifier,Integer> cooldowns; 
 
-    private Map<Identifier,Integer> cooldowns; 
-
-    private Map<Identifier,Integer> tokens;
-    
-    //private Map<String,RpgAbilityContext> activePassiveNamedAbilities;
-
-    //private Map<Identifier,RpgAbilityContext> activePassiveAbilities;
+    //protected Map<Identifier,Integer> tokens;
     
     RPGPlayer owner;
+
+    public List<RPGAbility> getAbilities()
+    {
+        return this.abilities;
+    }
 
     @Override
     public <T extends AbstractComponent> void clone(T origin) {
         RPGAbilityComponent original = (RPGAbilityComponent)origin;
-        for(RPGAbility a : original.specialAbilities)
-        {
-            this.specialAbilities.add(a);
-        }
+        // for(RPGAbility a : original.specialAbilities)
+        // {
+        //     this.specialAbilities.add(a);
+        // }
         for(int i = 0; i < 9; i++)
         {
             this.abilityBar.set(i, original.abilityBar.get(i));
@@ -53,20 +59,10 @@ public class RPGAbilityComponent implements AbstractComponent,NbtSerializable,Bu
         {
             this.cooldowns.put(i, original.cooldowns.get(i));
         }
-        this.tokens = Maps.newHashMap();
-        for(Identifier i : tokens.keySet())
-        {
-            this.tokens.put(i, original.tokens.get(i));
-        }
-        // this.activePassiveNamedAbilities = Maps.newHashMap();
-        // for(String s : original.activePassiveNamedAbilities.keySet())
+        // this.tokens = Maps.newHashMap();
+        // for(Identifier i : tokens.keySet())
         // {
-        //     this.activePassiveNamedAbilities.put(s,original.activePassiveNamedAbilities.get(s));
-        // }
-        // this.activePassiveAbilities = Maps.newHashMap();
-        // for(Identifier i : original.activePassiveAbilities.keySet())
-        // {
-        //     this.activePassiveAbilities.put(i,original.activePassiveAbilities.get(i));
+        //     this.tokens.put(i, original.tokens.get(i));
         // }
     }
 
@@ -76,28 +72,17 @@ public class RPGAbilityComponent implements AbstractComponent,NbtSerializable,Bu
         {
             for(Identifier i : this.cooldowns.keySet())
             {
-                //this.cooldowns.put(i, this.cooldowns.get(i).intValue()-1);
                 this.cooldowns.replace(i, this.cooldowns.get(i)-1);
-                // if(this.cooldowns.get(i) <= 0)
-                // {
-                //     if(this.activePassiveAbilities.containsKey(i))
-                //     {
-                //         RpgAbilityContext rac = this.activePassiveAbilities.get(i);
-                //         rac.ability.onCooledDown(owner);
-                //     }
-                //     this.cooldowns.remove(i); 
-                //     break;
-                // }
             }
         }
     }
 
     public RPGAbilityComponent(RPGPlayer player)
     {
-        specialAbilities = new ArrayList<RPGAbility>();
-        abilityBar = DefaultedList.ofSize(9, RpgAbilityContext.EMPTY);
+        //specialAbilities = new ArrayList<RPGAbility>();
+        abilityBar = DefaultedList.ofSize(9, RpgAbilities.NONE);
         cooldowns = Maps.newHashMap();
-        tokens = Maps.newHashMap();
+        // tokens = Maps.newHashMap();
         // activePassiveNamedAbilities = Maps.newHashMap();
         // activePassiveAbilities = Maps.newHashMap();
         this.owner = player;
@@ -106,30 +91,6 @@ public class RPGAbilityComponent implements AbstractComponent,NbtSerializable,Bu
     {
         this((RPGPlayer)pe);
     }
-
-    // public RpgAbilityContext getNamedAbilitySlot(String s)
-    // {
-    //     RpgAbilityContext a = activePassiveNamedAbilities.get(s);
-    //     return a == null ? RpgAbilityContext.EMPTY : a;
-    // }
-
-    // public void setNamedAbilitySlot(String s, RpgAbilityContext rac)
-    // {
-    //     activePassiveNamedAbilities.put(s,rac);
-    // }
-
-    // public void addPassiveAbility(RpgAbilityContext rac)
-    // {
-    //     if(!this.activePassiveAbilities.containsKey(rac.ability.id))
-    //     {
-    //         activePassiveAbilities.put(rac.ability.id, rac);
-    //     }
-    // }
-
-    // public void removePassiveAbility(Identifier id)
-    // {
-    //     activePassiveAbilities.remove(id);
-    // }
 
     // public boolean hasToken(RPGAbility ability)
     // {
@@ -218,33 +179,25 @@ public class RPGAbilityComponent implements AbstractComponent,NbtSerializable,Bu
     @Override
     public void serializeNBT(CompoundTag tag) {
         ListTag lt = new ListTag();
-        //Special Ability List
-        for(RPGAbility a : specialAbilities)
-        {
-            lt.add(new StringTag(a.id.toString()));
-        }
-        tag.put(ABILITY_LIST, lt);
         lt = new ListTag();
         // Ability Hotbar
         for(int i = 0; i < 9; i++)
         {
-            RpgAbilityContext rac = abilityBar.get(i);
-            CompoundTag ct = new CompoundTag();
-            rac.serializeNBT(ct);
-            lt.add(ct);
+            RPGAbility ability = abilityBar.get(i);
+            lt.add(new StringTag(ability.id.toString()));   
         }
         tag.put(ABILITY_BAR, lt);
         lt = new ListTag();
         // Tokens
-        for(Identifier i : tokens.keySet())
-        {
-            CompoundTag ct = new CompoundTag();
-            ct.putString(TOKEN_NAME, i.toString());
-            ct.putInt(TOKEN_AMOUNT, tokens.get(i));
-            lt.add(ct);
-        }
-        tag.put(TOKEN_LIST, lt);
-        lt = new ListTag();
+        // for(Identifier i : tokens.keySet())
+        // {
+        //     CompoundTag ct = new CompoundTag();
+        //     ct.putString(TOKEN_NAME, i.toString());
+        //     ct.putInt(TOKEN_AMOUNT, tokens.get(i));
+        //     lt.add(ct);
+        // }
+        // tag.put(TOKEN_LIST, lt);
+        // lt = new ListTag();
         //Cooldowns
         for(Identifier i : cooldowns.keySet())
         {
@@ -259,27 +212,22 @@ public class RPGAbilityComponent implements AbstractComponent,NbtSerializable,Bu
     }
 
     @Override
+    @Environment(EnvType.CLIENT)
     public void deserializeNBT(CompoundTag tag) {
         ListTag lt = tag.getList(ABILITY_LIST,10);
         int i;
-        for(i = 0; i < lt.size(); i++)
-        {
-            specialAbilities.add( getAbility(new Identifier(lt.getString(i))));
-        }
-        lt = tag.getList(ABILITY_BAR, 10);
         Biow0rks.debug("listtagSize %s",lt.size());
         for(i = 0; i < 9 && lt.size() > 0 ; i++)
         {
-            RpgAbilityContext rac = new RpgAbilityContext(null, -1, null);
-            rac.deserializeNBT(lt.getCompoundTag(i));
-            this.abilityBar.set(i, rac);
+            RPGAbility ability = RPG_Registry.ABILITY_REGISTRY.get(new Identifier(((StringTag)lt.get(i)).asString()));
+            this.abilityBar.set(i, ability);
         }
-        lt = tag.getList(TOKEN_LIST, 10);
-        for(i = 0; i < lt.size();i++)
-        {
-            CompoundTag ct = lt.getCompoundTag(i);
-            tokens.put(new Identifier(ct.getString(TOKEN_NAME)), ct.getInt(TOKEN_AMOUNT));
-        }
+        // lt = tag.getList(TOKEN_LIST, 10);
+        // for(i = 0; i < lt.size();i++)
+        // {
+        //     CompoundTag ct = lt.getCompoundTag(i);
+        //     tokens.put(new Identifier(ct.getString(TOKEN_NAME)), ct.getInt(TOKEN_AMOUNT));
+        // }
         lt = tag.getList(COOLDOWN_LIST, 10);
         for(i = 0; i < lt.size();i++)
         {
@@ -290,21 +238,21 @@ public class RPGAbilityComponent implements AbstractComponent,NbtSerializable,Bu
 
     @Override
     public void serializeBuffer(PacketByteBuf buf) {
-        buf.writeByte(specialAbilities.size());
-        for(RPGAbility a : specialAbilities)
+        // buf.writeByte(specialAbilities.size());
+        // for(RPGAbility a : specialAbilities)
+        // {
+        //     buf.writeString(a.id.toString());
+        // }
+        for(RPGAbility ability : abilityBar)
         {
-            buf.writeString(a.id.toString());
+            buf.writeIdentifier(ability.id);
         }
-        for(RpgAbilityContext rac : abilityBar)
-        {
-            rac.serializeBuffer(buf);
-        }
-        buf.writeShort(tokens.size());
-        for(Identifier i : tokens.keySet())
-        {
-            buf.writeIdentifier(i);
-            buf.writeInt(tokens.get(i));
-        }
+        // buf.writeShort(tokens.size());
+        // for(Identifier i : tokens.keySet())
+        // {
+        //     buf.writeIdentifier(i);
+        //     buf.writeInt(tokens.get(i));
+        // }
         buf.writeShort(cooldowns.size());
         for(Identifier i : cooldowns.keySet())
         {
@@ -318,19 +266,19 @@ public class RPGAbilityComponent implements AbstractComponent,NbtSerializable,Bu
     @Override
     public void deserializeBuffer(PacketByteBuf buf) {
         int size = buf.readByte();
-        for(int i = 0; i< size; i++)
-        {
-            specialAbilities.add(getAbility(new Identifier(buf.readString(32767))));
-        }
+        // for(int i = 0; i< size; i++)
+        // {
+        //     specialAbilities.add(getAbility(new Identifier(buf.readString(32767))));
+        // }
         for(int i = 0; i < 9; i++)
         {
-            abilityBar.set(i, new RpgAbilityContext(buf));
+            abilityBar.set(i, RPG_Registry.ABILITY_REGISTRY.get(buf.readIdentifier()));
         }
-        size = buf.readShort();
-        for(int i = 0; i < size; i++)
-        {
-            tokens.put(buf.readIdentifier(), buf.readInt());
-        }
+        // size = buf.readShort();
+        // for(int i = 0; i < size; i++)
+        // {
+        //     tokens.put(buf.readIdentifier(), buf.readInt());
+        // }
         size = buf.readShort();
         for(int i = 0; i < size; i++)
         {

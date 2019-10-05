@@ -1,27 +1,27 @@
-// package com.biom4st3r.minerpg.api;
+package com.biom4st3r.minerpg.api;
 
-// import com.biom4st3r.minerpg.interfaces.ITrait;
+import java.util.Optional;
 
-// import net.minecraft.util.Identifier;
+import net.minecraft.util.Identifier;
 
-// public abstract class RPGTrait
-// {
-//     public final Identifier id;
-//     public final TraitCatagory tc;
+public abstract class RPGTrait<T>
+{
+    public final Identifier id;
+    public final TraitCatagory tc;
 
-//     protected RPGTrait(Identifier id, TraitCatagory tc)
-//     {
-//         this.id = id;
-//         this.tc = tc;
-//     }
+    protected RPGTrait(Identifier id, TraitCatagory tc)
+    {
+        this.id = id;
+        this.tc = tc;
+    }
 
-//     public TraitCatagory getCatagory()
-//     {
-//         return this.tc;
-//     }
+    public TraitCatagory getCatagory()
+    {
+        return this.tc;
+    }
 
-//     public void tick(){}
+    public void tick(){}
 
-//     public abstract <T extends ITrait> T doTrait();
+    public abstract Optional<T> getEffect();
 
-// }
+}

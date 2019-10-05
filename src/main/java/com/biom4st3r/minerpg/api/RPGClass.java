@@ -56,9 +56,6 @@ public abstract class RPGClass
 
     public int maxLvl;
 
-    
-    public abstract RPGAbility[] abilitysAvalibleAtLevel(int Lvl);
-
     @Override
     public int hashCode() {
         return id.hashCode();

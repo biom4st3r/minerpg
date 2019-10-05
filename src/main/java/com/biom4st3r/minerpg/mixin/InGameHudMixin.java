@@ -20,7 +20,6 @@ import com.biom4st3r.minerpg.gui.GUIhelper;
 import com.biom4st3r.minerpg.mixin_interfaces.InGameHudHelper;
 import com.biom4st3r.minerpg.mixin_interfaces.RPGPlayer;
 import com.biom4st3r.minerpg.registery.RpgAbilities;
-import com.biom4st3r.minerpg.util.RpgAbilityContext;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.platform.GlStateManager.DestFactor;
 import com.mojang.blaze3d.platform.GlStateManager.SourceFactor;
@@ -92,7 +91,7 @@ public abstract class InGameHudMixin extends DrawableHelper implements InGameHud
         if(this.abilityBar)
         {
             RPGPlayer pe = (RPGPlayer)this.client.player;
-            RPGAbility selectedAbility = pe.getRPGAbilityComponent().abilityBar.get(pe.getPlayer().inventory.selectedSlot).ability;
+            RPGAbility selectedAbility = pe.getRPGAbilityComponent().abilityBar.get(pe.getPlayer().inventory.selectedSlot);
             if(selectedAbility != RpgAbilities.NONE)
             {
                 Text name = new TranslatableText(selectedAbility.getTranslationKey());
@@ -124,7 +123,7 @@ public abstract class InGameHudMixin extends DrawableHelper implements InGameHud
     public void tick(CallbackInfo ci)
     {
         RPGPlayer pe = (RPGPlayer)this.client.player;
-        if(pe != null && !pe.getRPGAbilityComponent().abilityBar.get(this.getSelectedSlot()).isEmpty())
+        if(pe != null && !pe.getRPGAbilityComponent().abilityBar.get(this.getSelectedSlot()).isNone())
         {
                 if(this.custom_heldItemTooltipFade > 0)
                 {
@@ -150,10 +149,10 @@ public abstract class InGameHudMixin extends DrawableHelper implements InGameHud
             //Biow0rks.debug("Hello");
 
             RPGPlayer pe = (RPGPlayer)this.client.player;
-            if(!(pe.getRPGAbilityComponent().abilityBar.get(this.getSelectedSlot())==RpgAbilityContext.EMPTY))
+            if(!(pe.getRPGAbilityComponent().abilityBar.get(this.getSelectedSlot()).isNone()))
             {
-                RPGAbility selectedAbility = pe.getRPGAbilityComponent().abilityBar.get(pe.getPlayer().inventory.selectedSlot).ability;
-                if(selectedAbility == RpgAbilities.NONE)
+                RPGAbility selectedAbility = pe.getRPGAbilityComponent().abilityBar.get(pe.getPlayer().inventory.selectedSlot);
+                if(selectedAbility.isNone())
                 {
                     ci.cancel();
                 }
@@ -223,7 +222,7 @@ public abstract class InGameHudMixin extends DrawableHelper implements InGameHud
             {
                 xPos = width - 90 + i * 20 + 2;
                 yPos = this.scaledHeight - 16 - 3;
-                this.renderAbilitySlot(xPos, yPos, ((RPGPlayer)player).getRPGAbilityComponent().abilityBar.get(i).ability);
+                this.renderAbilitySlot(xPos, yPos, ((RPGPlayer)player).getRPGAbilityComponent().abilityBar.get(i));
             }
             GuiLighting.disable();
             GlStateManager.disableRescaleNormal();

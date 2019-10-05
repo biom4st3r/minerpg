@@ -2,7 +2,7 @@ package com.biom4st3r.minerpg.api;
 
 import com.biom4st3r.minerpg.MineRPG;
 
-public enum Stats {
+public enum Stat {
 
     
 
@@ -16,7 +16,7 @@ public enum Stats {
     
     public final String text;
 
-    Stats(final String text) {
+    Stat(final String text) {
         this.text = text;
     }
 }

@@ -1,4 +1,4 @@
-package com.biom4st3r.minerpg.components;
+package com.biom4st3r.minerpg.api;
 
 public interface AbstractComponent 
 {
