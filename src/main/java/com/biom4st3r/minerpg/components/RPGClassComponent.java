@@ -1,27 +1,28 @@
 package com.biom4st3r.minerpg.components;
 
-import java.util.Enumeration;
-import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
+import java.util.List;
 
 import com.biom4st3r.biow0rks.Biow0rks;
-import com.biom4st3r.minerpg.api.AbstractComponent;
 import com.biom4st3r.minerpg.api.BufferSerializable;
+import com.biom4st3r.minerpg.api.IComponent;
 import com.biom4st3r.minerpg.api.NbtSerializable;
 import com.biom4st3r.minerpg.api.RPGClass;
 import com.biom4st3r.minerpg.mixin_interfaces.RPGPlayer;
 import com.biom4st3r.minerpg.networking.Packets;
 import com.biom4st3r.minerpg.registery.RPG_Registry;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.stat.Stat;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.PacketByteBuf;
 
-public class RPGClassComponent implements AbstractComponent, BufferSerializable, NbtSerializable
+public class RPGClassComponent implements IComponent, BufferSerializable, NbtSerializable
 {
     RPGPlayer owner;
 
@@ -64,7 +65,10 @@ public class RPGClassComponent implements AbstractComponent, BufferSerializable,
         RPGClass selectedClass = this.getRpgClass(index);
         while(this.experience[index] > selectedClass.getExpRequiredForLvl(this.rpgClasses.get(selectedClass)+1))
         {
-            this.rpgClasses.replace(selectedClass, this.rpgClasses.get(selectedClass)+1);
+            int newLevel = this.rpgClasses.get(selectedClass)+1;
+            List<ItemStack> items = Lists.newArrayList();
+            selectedClass.givePlayerRewards(newLevel).give(this.owner, items);
+            this.rpgClasses.replace(selectedClass, newLevel);
         }
     }
 
@@ -191,7 +195,7 @@ public class RPGClassComponent implements AbstractComponent, BufferSerializable,
     }
 
     @Override
-    public <T extends AbstractComponent> void clone(T origin) {
+    public <T extends IComponent> void clone(T origin) {
         this.init();
         RPGClassComponent original = (RPGClassComponent)origin;
         Iterator<RPGClass> iterator = original.rpgClasses.keySet().iterator();
@@ -204,7 +208,7 @@ public class RPGClassComponent implements AbstractComponent, BufferSerializable,
     }
 
     @Override
-    public <T extends AbstractComponent> T getCopy() {
+    public <T extends IComponent> T getCopy() {
         return null;
     }
 

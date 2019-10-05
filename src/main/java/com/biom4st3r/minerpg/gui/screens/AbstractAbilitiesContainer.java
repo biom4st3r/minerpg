@@ -4,9 +4,7 @@ import java.util.List;
 
 import com.biom4st3r.biow0rks.Biow0rks;
 import com.biom4st3r.minerpg.api.RPGAbility;
-import com.biom4st3r.minerpg.api.RPGClass;
 import com.biom4st3r.minerpg.api.Stat;
-import com.biom4st3r.minerpg.components.RPGClassComponent;
 import com.biom4st3r.minerpg.components.RPGStatsComponent;
 import com.biom4st3r.minerpg.gui.GUIhelper;
 import com.biom4st3r.minerpg.gui.buttons.AbilityButton;
@@ -73,8 +71,8 @@ public abstract class AbstractAbilitiesContainer extends Screen {
             }
             else
             {
-                RPGClassComponent classComp = player.getRPGClassComponent();
-                RPGClass rpgClass = classComp.getRpgClass(0);
+                // RPGClassComponent classComp = player.getRPGClassComponent();
+                // RPGClass rpgClass = classComp.getRpgClass(0);
                 ((AbilityButton) abilityDisplay[i]).ability.set(abilities.get(i));// = new RpgAbilityContext(classComp.getRpgClassContext(rpgClass),i,abilities[i]);
             }
         }

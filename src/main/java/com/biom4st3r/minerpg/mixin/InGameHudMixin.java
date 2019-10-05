@@ -248,7 +248,8 @@ public abstract class InGameHudMixin extends DrawableHelper implements InGameHud
                 int lvl = rcc.rpgClasses.get(rcc.getRpgClass(0));
                 float currentExp = rcc.getExperiance(0);
                 float targetExp = rcc.getRpgClass(0).getExpRequiredForLvl(lvl+1);
-                int progressWidth = (int)(182*(currentExp/targetExp));
+                int progressWidth = //(int)(182*(currentExp/targetExp));
+                (int)(182*(targetExp-currentExp)/(targetExp-rcc.getRpgClass(0).getExpRequiredForLvl(lvl)));
                 Biow0rks.debug("currentPlayerLvl", lvl);
                 Biow0rks.debug("current: %s\ntarget: %s\ndivid: %s\nresult: %s", currentExp,targetExp,(currentExp/targetExp),progressWidth);
                 this.blit(xPos,this.scaledHeight - 32 + 3,0,46,182,5);
@@ -260,7 +261,7 @@ public abstract class InGameHudMixin extends DrawableHelper implements InGameHud
                 this.client.getProfiler().push("expLevel");
                 TextRenderer tr = MinecraftClient.getInstance().textRenderer;
                 String lvlString = "" + lvl;
-                int stringWidth = (this.scaledHeight - tr.getStringWidth(lvlString));
+                int stringWidth = (this.scaledWidth - tr.getStringWidth(lvlString))/2;
                 int stringHeight = this.scaledHeight - 31 - 4;
                 //tr.draw(lvlString, (float)(stringWidth + 1), (float)stringHeight, 0);
                 //tr.draw(lvlString, (float)(stringWidth - 1), (float)stringHeight, 0);

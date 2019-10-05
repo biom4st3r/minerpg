@@ -4,11 +4,8 @@ package com.biom4st3r.minerpg.impl.rpgclass;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.biom4st3r.minerpg.api.RPGAbility;
 import com.biom4st3r.minerpg.api.RPGClass;
-import com.biom4st3r.minerpg.interfaces.*;
-import com.biom4st3r.minerpg.registery.RpgAbilities;
-import com.biom4st3r.minerpg.util.Util;
+import com.biom4st3r.minerpg.interfaces.Reward;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -22,6 +19,7 @@ public class BarbarianClass extends RPGClass {
         super(name);
     }
 
+    @Override
     public Reward givePlayerRewards(int level)
     {
         switch (level) {
