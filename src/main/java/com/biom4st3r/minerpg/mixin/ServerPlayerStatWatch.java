@@ -7,7 +7,6 @@ Hook for listening to stats for Class levelup
 */
 
 import com.biom4st3r.minerpg.mixin_interfaces.RPGPlayer;
-import com.biom4st3r.minerpg.util.Util;
 
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;

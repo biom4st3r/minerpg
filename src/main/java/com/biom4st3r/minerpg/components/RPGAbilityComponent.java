@@ -4,13 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import com.biom4st3r.biow0rks.Biow0rks;
 import com.biom4st3r.minerpg.api.RPGAbility;
 import com.biom4st3r.minerpg.mixin_interfaces.RPGPlayer;
 import com.biom4st3r.minerpg.registery.RPG_Registry;
 import com.biom4st3r.minerpg.util.BufferSerializable;
 import com.biom4st3r.minerpg.util.NbtSerializable;
 import com.biom4st3r.minerpg.util.RpgAbilityContext;
-import com.biom4st3r.minerpg.util.Util;
 import com.google.common.collect.Maps;
 
 import net.minecraft.entity.player.PlayerEntity;
@@ -31,9 +31,9 @@ public class RPGAbilityComponent implements AbstractComponent,NbtSerializable,Bu
 
     private Map<Identifier,Integer> tokens;
     
-    private Map<String,RpgAbilityContext> activePassiveNamedAbilities;
+    //private Map<String,RpgAbilityContext> activePassiveNamedAbilities;
 
-    private Map<Identifier,RpgAbilityContext> activePassiveAbilities;
+    //private Map<Identifier,RpgAbilityContext> activePassiveAbilities;
     
     RPGPlayer owner;
 
@@ -58,16 +58,16 @@ public class RPGAbilityComponent implements AbstractComponent,NbtSerializable,Bu
         {
             this.tokens.put(i, original.tokens.get(i));
         }
-        this.activePassiveNamedAbilities = Maps.newHashMap();
-        for(String s : original.activePassiveNamedAbilities.keySet())
-        {
-            this.activePassiveNamedAbilities.put(s,original.activePassiveNamedAbilities.get(s));
-        }
-        this.activePassiveAbilities = Maps.newHashMap();
-        for(Identifier i : original.activePassiveAbilities.keySet())
-        {
-            this.activePassiveAbilities.put(i,original.activePassiveAbilities.get(i));
-        }
+        // this.activePassiveNamedAbilities = Maps.newHashMap();
+        // for(String s : original.activePassiveNamedAbilities.keySet())
+        // {
+        //     this.activePassiveNamedAbilities.put(s,original.activePassiveNamedAbilities.get(s));
+        // }
+        // this.activePassiveAbilities = Maps.newHashMap();
+        // for(Identifier i : original.activePassiveAbilities.keySet())
+        // {
+        //     this.activePassiveAbilities.put(i,original.activePassiveAbilities.get(i));
+        // }
     }
 
     public void tick()
@@ -78,16 +78,16 @@ public class RPGAbilityComponent implements AbstractComponent,NbtSerializable,Bu
             {
                 //this.cooldowns.put(i, this.cooldowns.get(i).intValue()-1);
                 this.cooldowns.replace(i, this.cooldowns.get(i)-1);
-                if(this.cooldowns.get(i) <= 0)
-                {
-                    if(this.activePassiveAbilities.containsKey(i))
-                    {
-                        RpgAbilityContext rac = this.activePassiveAbilities.get(i);
-                        rac.ability.onCooledDown(owner);
-                    }
-                    this.cooldowns.remove(i); 
-                    break;
-                }
+                // if(this.cooldowns.get(i) <= 0)
+                // {
+                //     if(this.activePassiveAbilities.containsKey(i))
+                //     {
+                //         RpgAbilityContext rac = this.activePassiveAbilities.get(i);
+                //         rac.ability.onCooledDown(owner);
+                //     }
+                //     this.cooldowns.remove(i); 
+                //     break;
+                // }
             }
         }
     }
@@ -98,8 +98,8 @@ public class RPGAbilityComponent implements AbstractComponent,NbtSerializable,Bu
         abilityBar = DefaultedList.ofSize(9, RpgAbilityContext.EMPTY);
         cooldowns = Maps.newHashMap();
         tokens = Maps.newHashMap();
-        activePassiveNamedAbilities = Maps.newHashMap();
-        activePassiveAbilities = Maps.newHashMap();
+        // activePassiveNamedAbilities = Maps.newHashMap();
+        // activePassiveAbilities = Maps.newHashMap();
         this.owner = player;
     }
     public RPGAbilityComponent(PlayerEntity pe)
@@ -107,29 +107,29 @@ public class RPGAbilityComponent implements AbstractComponent,NbtSerializable,Bu
         this((RPGPlayer)pe);
     }
 
-    public RpgAbilityContext getNamedAbilitySlot(String s)
-    {
-        RpgAbilityContext a = activePassiveNamedAbilities.get(s);
-        return a == null ? RpgAbilityContext.EMPTY : a;
-    }
+    // public RpgAbilityContext getNamedAbilitySlot(String s)
+    // {
+    //     RpgAbilityContext a = activePassiveNamedAbilities.get(s);
+    //     return a == null ? RpgAbilityContext.EMPTY : a;
+    // }
 
-    public void setNamedAbilitySlot(String s, RpgAbilityContext rac)
-    {
-        activePassiveNamedAbilities.put(s,rac);
-    }
+    // public void setNamedAbilitySlot(String s, RpgAbilityContext rac)
+    // {
+    //     activePassiveNamedAbilities.put(s,rac);
+    // }
 
-    public void addPassiveAbility(RpgAbilityContext rac)
-    {
-        if(!this.activePassiveAbilities.containsKey(rac.ability.id))
-        {
-            activePassiveAbilities.put(rac.ability.id, rac);
-        }
-    }
+    // public void addPassiveAbility(RpgAbilityContext rac)
+    // {
+    //     if(!this.activePassiveAbilities.containsKey(rac.ability.id))
+    //     {
+    //         activePassiveAbilities.put(rac.ability.id, rac);
+    //     }
+    // }
 
-    public void removePassiveAbility(Identifier id)
-    {
-        activePassiveAbilities.remove(id);
-    }
+    // public void removePassiveAbility(Identifier id)
+    // {
+    //     activePassiveAbilities.remove(id);
+    // }
 
     // public boolean hasToken(RPGAbility ability)
     // {
@@ -260,7 +260,6 @@ public class RPGAbilityComponent implements AbstractComponent,NbtSerializable,Bu
 
     @Override
     public void deserializeNBT(CompoundTag tag) {
-        //Util.debug(tag);
         ListTag lt = tag.getList(ABILITY_LIST,10);
         int i;
         for(i = 0; i < lt.size(); i++)
@@ -268,8 +267,7 @@ public class RPGAbilityComponent implements AbstractComponent,NbtSerializable,Bu
             specialAbilities.add( getAbility(new Identifier(lt.getString(i))));
         }
         lt = tag.getList(ABILITY_BAR, 10);
-        Util.debug(lt.size());
-        //Util.debug(lt);
+        Biow0rks.debug("listtagSize %s",lt.size());
         for(i = 0; i < 9 && lt.size() > 0 ; i++)
         {
             RpgAbilityContext rac = new RpgAbilityContext(null, -1, null);
@@ -288,8 +286,6 @@ public class RPGAbilityComponent implements AbstractComponent,NbtSerializable,Bu
             CompoundTag ct = lt.getCompoundTag(i);
             cooldowns.put(new Identifier(ct.getString(COOLDOWN_NAME)), ct.getInt(COOLDOWN_DURATION));
         }
-        //TODO: add Passive/Named abilities
-        
     }
 
     @Override

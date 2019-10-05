@@ -2,11 +2,10 @@ package com.biom4st3r.minerpg.components;
 
 import java.util.HashMap;
 
-import com.biom4st3r.minerpg.api.Stat;
-import com.biom4st3r.minerpg.api.Stat.Stats;
+import com.biom4st3r.biow0rks.Biow0rks;
+import com.biom4st3r.minerpg.api.Stats;
 import com.biom4st3r.minerpg.util.BufferSerializable;
 import com.biom4st3r.minerpg.util.NbtSerializable;
-import com.biom4st3r.minerpg.util.Util;
 import com.google.common.collect.Maps;
 
 import net.minecraft.nbt.CompoundTag;
@@ -66,31 +65,31 @@ public class RPGStatsComponent implements AbstractComponent, BufferSerializable,
             int clientStat = client.stats.get(stat);
             if(clientStat < serverStat)
             {
-                Util.errorMSG("Client stat lower than Server.");
+                Biow0rks.error("Client stat lower than Server.");
                 return false;
             }
             delta+= clientStat-serverStat;
         }
         if(delta > this.remainingPoints)
         {
-            Util.errorMSG("Client delta from server > remainingPoints");
+            Biow0rks.error("Client delta from server greater than remainingPoints");
             return false;
         }
         if(delta <= this.remainingPoints)
         {
-            Util.debug(this.remainingPoints);
-            Util.debug(delta);
+            Biow0rks.debug("remainingPoints %s",this.remainingPoints);
+            Biow0rks.debug("point delta: %s",delta);
             this.remainingPoints -= delta;
             for(Stats stat : Stats.values())
             {
                 this.stats.put(stat, client.stats.get(stat));
-                Util.debug(stat + " " + client.getStat(stat));
+                Biow0rks.debug(stat + " " + client.getStat(stat));
             }
-            Util.debug(this.remainingPoints);
-            Util.debug("Success");
+            Biow0rks.debug("remaining points after transaction: %s", this.remainingPoints);
+            Biow0rks.debug("Success");
             return true;
         }
-        Util.errorMSG("unknown issue in stat compare");
+        Biow0rks.error("unknown issue in stat compare");
         return false;
     }
 
@@ -134,7 +133,7 @@ public class RPGStatsComponent implements AbstractComponent, BufferSerializable,
         return this.remainingPoints;
     }
 
-    public int getModifier(Stat.Stats s)
+    public int getModifier(Stats s)
     {
         return (int)Math.floor((this.getStat(s)-10)/2);
     }

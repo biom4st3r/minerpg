@@ -1,6 +1,8 @@
 package com.biom4st3r.minerpg.mixin;
 
-    /*
+    import com.biom4st3r.biow0rks.Biow0rks;
+
+/*
     Purpose
         allows for the custom controls
 
@@ -16,7 +18,6 @@ import com.biom4st3r.minerpg.mixin_interfaces.InGameHudHelper;
 import com.biom4st3r.minerpg.mixin_interfaces.RPGPlayer;
 import com.biom4st3r.minerpg.networking.Packets;
 import com.biom4st3r.minerpg.registery.RpgAbilities;
-import com.biom4st3r.minerpg.util.Util;
 
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -68,7 +69,7 @@ public abstract class MinecraftClientMixin
           (ability.getType() == Type.LEFT_CLICK || ability.getType() == Type.USE))
         {
             
-            Util.debug(ability.id.getPath());
+            Biow0rks.debug(ability.id.getPath());
             ability.doAbility(rpgPlayer);
             rpgPlayer.getNetworkHandlerC().sendPacket(Packets.CLIENT.useAbility(player.inventory.selectedSlot));
             ci.cancel();
@@ -85,7 +86,7 @@ public abstract class MinecraftClientMixin
          this.attackCooldown <= 0 && ability != RpgAbilities.NONE &&
           (ability.getType() == Type.RIGHT_CLICK || ability.getType() == Type.USE))
         {
-            Util.debug(ability.id.getPath());
+            Biow0rks.debug(ability.id.getPath());
             ability.doAbility(rpgPlayer);
             rpgPlayer.getNetworkHandlerC().sendPacket(Packets.CLIENT.useAbility(player.inventory.selectedSlot));
             

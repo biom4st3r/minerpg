@@ -49,7 +49,7 @@ public class BarbarianClass extends RPGClass {
                 abilities.add(RpgAbilities.EVOKER_FANGS);
                 abilities.add(RpgAbilities.RECKLESS_ATK);
                 abilities.add(RpgAbilities.FIREBALL_ABILITY);
-                abilities.add(RpgAbilities.UNARMORED_DEFENCE);
+                //abilities.add(RpgAbilities.UNARMORED_DEFENCE);
                 abilities.add(RpgAbilities.RAGE_ABILITY);
                 break;
         }

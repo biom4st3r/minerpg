@@ -1,5 +1,7 @@
 package com.biom4st3r.minerpg.util;
 
+import com.biom4st3r.biow0rks.Biow0rks;
+
 public class DefaultedObj<T> {
     private T defaultValue;
     private T value;
@@ -7,7 +9,7 @@ public class DefaultedObj<T> {
     public DefaultedObj(T value, T defaultValue) {
         if(defaultValue == null)
         {
-            Util.errorMSG(String.format("A NNObj has been assigned null;\n%s\nNNObj's should never be assigned null", new Exception().getCause().getMessage()));
+            Biow0rks.error("A NNObj has been assigned null;\n%s\nNNObj's should never be assigned null", new Exception().getCause().getMessage());
         }
 
         this.defaultValue = defaultValue;

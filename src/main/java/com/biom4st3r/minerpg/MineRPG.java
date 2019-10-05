@@ -1,5 +1,6 @@
 package com.biom4st3r.minerpg;
 
+import com.biom4st3r.biow0rks.PotionEffectHelper;
 import com.biom4st3r.minerpg.components.RPGAbilityComponent;
 import com.biom4st3r.minerpg.components.RPGClassComponent;
 import com.biom4st3r.minerpg.components.RPGStatsComponent;
@@ -8,7 +9,6 @@ import com.biom4st3r.minerpg.items.ItemReg;
 import com.biom4st3r.minerpg.mixin_interfaces.RPGPlayer;
 import com.biom4st3r.minerpg.networking.Packets;
 import com.biom4st3r.minerpg.particles.RpgDamageEffect;
-import com.biom4st3r.minerpg.registery.MinerpgStatusEffect;
 import com.biom4st3r.minerpg.registery.RPG_Registry;
 import com.biom4st3r.minerpg.registery.RpgAbilities;
 import com.biom4st3r.minerpg.registery.RpgClasses;
@@ -20,6 +20,8 @@ import net.fabricmc.fabric.api.entity.FabricEntityTypeBuilder;
 import net.fabricmc.fabric.impl.registry.CommandRegistryImpl;
 import net.minecraft.entity.EntityCategory;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.effect.StatusEffect;
+import net.minecraft.entity.effect.StatusEffectType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.text.LiteralText;
@@ -32,6 +34,8 @@ public class MineRPG implements ModInitializer
     public static final String MODID = "minerpg";
     public static final Identifier COMPONENT_BAG_ID = new Identifier(MODID, "componentbag");
 
+    public static final StatusEffect PAPER_SKIN = PotionEffectHelper.createAndRegisterEffect(new Identifier(MODID,"paper_skin"), StatusEffectType.HARMFUL, 0xFFFFFF);
+
     @SuppressWarnings({"unchecked"})
     public static final EntityType<Fireball> FIREBALL = (EntityType<Fireball>)(Object)Registry.register(
         Registry.ENTITY_TYPE, new Identifier(MODID,"fireball"), 
@@ -43,9 +47,7 @@ public class MineRPG implements ModInitializer
     @Override
     public void onInitialize() 
     {
-        Util.errorMSG("\n~~~Starting MineRPG API~~~\n");
         Registry.register(Registry.PARTICLE_TYPE, new Identifier(MineRPG.MODID,"rpg_damage"), RpgDamageEffect.TYPE);
-        MinerpgStatusEffect.init();
         RpgAbilities.init();
         RpgClasses.init();
         ItemReg.init();

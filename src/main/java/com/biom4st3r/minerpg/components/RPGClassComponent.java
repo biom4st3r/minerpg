@@ -1,10 +1,10 @@
 package com.biom4st3r.minerpg.components;
 
-import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Iterator;
 
+import com.biom4st3r.biow0rks.Biow0rks;
 import com.biom4st3r.minerpg.api.RPGAbility;
 import com.biom4st3r.minerpg.api.RPGClass;
 import com.biom4st3r.minerpg.mixin_interfaces.RPGPlayer;
@@ -14,7 +14,6 @@ import com.biom4st3r.minerpg.registery.RpgAbilities;
 import com.biom4st3r.minerpg.util.BufferSerializable;
 import com.biom4st3r.minerpg.util.NbtSerializable;
 import com.biom4st3r.minerpg.util.RpgClassContext;
-import com.biom4st3r.minerpg.util.Util;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -71,7 +70,7 @@ public class RPGClassComponent implements AbstractComponent, BufferSerializable,
 
     public void addExperience(int index, float value)
     {
-        Util.debug(value);
+        Biow0rks.debug("adding %s xp",value);
         this.setExperience(index, this.experience[index]+value);
         this.owner.getNetworkHandlerS().sendPacket(Packets.SERVER.sendExperience(this.experience[index]));
     }
@@ -120,7 +119,7 @@ public class RPGClassComponent implements AbstractComponent, BufferSerializable,
     {
         if(rpgClasses.size() >= maxClasses)
         {
-            Util.errorMSG("class list already max size");
+            Biow0rks.error("class list already max size");
             return;
         }
         rpgClasses.put(rpgClass, 1);

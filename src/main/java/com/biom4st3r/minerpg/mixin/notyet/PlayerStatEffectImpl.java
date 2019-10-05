@@ -148,7 +148,7 @@
 //                         totaldamage+=this.random.nextInt((int)weaponDamage)+1;
 //                     }
                     
-//                     Util.debug(totaldamage);
+//                     Biow0rks.debug(totaldamage);
 //                     if(totaldamage == 0.0f)
 //                     {
 //                         totaldamage = (this.random.nextFloat() * this.statsComponent.getStat(Stats.STRENGTH))/10f;
@@ -176,7 +176,7 @@
 //                             hasFireAspect = true;
 //                             target.setOnFireFor(1);
 //                         }
-//                         Util.debug(String.format("\nweaponDamage: %s\nbaseDamage: %s\nstrDamage: %s\ncoolDownNerf: %s\nmagicDamage: %s\ncoolDown: %s", weaponDamage,baseDamage,strDamage,coolDownNerf,magicDamage,this.getPlayer().getAttackCooldownProgress(0.5f)));
+//                         Biow0rks.debug(String.format("\nweaponDamage: %s\nbaseDamage: %s\nstrDamage: %s\ncoolDownNerf: %s\nmagicDamage: %s\ncoolDown: %s", weaponDamage,baseDamage,strDamage,coolDownNerf,magicDamage,this.getPlayer().getAttackCooldownProgress(0.5f)));
 //                         if(target.damage(DamageSource.player(this.getPlayer()),totaldamage))
 //                         {
 

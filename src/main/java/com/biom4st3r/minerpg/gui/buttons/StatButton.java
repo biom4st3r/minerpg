@@ -1,7 +1,7 @@
 package com.biom4st3r.minerpg.gui.buttons;
 
 import com.biom4st3r.minerpg.MineRPG;
-import com.biom4st3r.minerpg.api.Stat.Stats;
+import com.biom4st3r.minerpg.api.Stats;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.util.Identifier;

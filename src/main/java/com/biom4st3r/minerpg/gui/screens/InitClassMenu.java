@@ -1,5 +1,6 @@
 package com.biom4st3r.minerpg.gui.screens;
 
+import com.biom4st3r.biow0rks.Biow0rks;
 import com.biom4st3r.minerpg.MineRPG;
 import com.biom4st3r.minerpg.api.RPGClass;
 import com.biom4st3r.minerpg.gui.GUIhelper;
@@ -8,9 +9,7 @@ import com.biom4st3r.minerpg.gui.buttons.ClassButton;
 import com.biom4st3r.minerpg.mixin_interfaces.RPGPlayer;
 import com.biom4st3r.minerpg.networking.Packets;
 import com.biom4st3r.minerpg.registery.RPG_Registry;
-import com.biom4st3r.minerpg.registery.RpgAbilities;
 import com.biom4st3r.minerpg.registery.RpgClasses;
-import com.biom4st3r.minerpg.util.Util;
 import com.mojang.blaze3d.platform.GlStateManager;
 
 import net.minecraft.client.MinecraftClient;
@@ -116,7 +115,7 @@ public class InitClassMenu extends Screen
                         focusedButton = cb.index;
                     }
                     cb.setFocused(true);
-                    Util.debug(cb.rpgClass.id);
+                    Biow0rks.debug("classButton ID: %s",cb.rpgClass.id);
                     
                 },index));
                 classButtons[index].visible = false;

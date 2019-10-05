@@ -1,14 +1,14 @@
 package com.biom4st3r.minerpg.gui.screens;
 
+import com.biom4st3r.biow0rks.Biow0rks;
 import com.biom4st3r.minerpg.MineRPG;
-import com.biom4st3r.minerpg.api.Stat.Stats;
+import com.biom4st3r.minerpg.api.Stats;
 import com.biom4st3r.minerpg.components.RPGStatsComponent;
 import com.biom4st3r.minerpg.gui.GUIhelper;
 import com.biom4st3r.minerpg.gui.buttons.AcceptanceButton;
 import com.biom4st3r.minerpg.gui.buttons.StatButton;
 import com.biom4st3r.minerpg.mixin_interfaces.RPGPlayer;
 import com.biom4st3r.minerpg.networking.Packets;
-import com.biom4st3r.minerpg.util.Util;
 import com.mojang.blaze3d.platform.GlStateManager;
 
 import net.minecraft.client.MinecraftClient;
@@ -129,7 +129,7 @@ public class StatMenu extends AbstractAbilitiesContainer {
                 .getInstance()
                 .getNetworkHandler()
                 .sendPacket(Packets.CLIENT.statChange(rpgStatComponent));
-            Util.debug("Checking rpgComponent 1");
+            Biow0rks.debug("Checking rpgComponent 1");
             confirmButton.visible = false;
             denyButton.visible = false;
         }));
@@ -140,7 +140,7 @@ public class StatMenu extends AbstractAbilitiesContainer {
             statButtons[j] = this.addButton(new StatButton(xMod, yGrid(i)-1, (button) ->
             { // minus
                 Stats s = ((StatButton)button).stat;
-                Util.debug(s + " " + this.backupComponent.getStat(s));
+                Biow0rks.debug(s + " " + this.backupComponent.getStat(s));
                 if(this.rpgStatComponent.getStat(s) > this.backupComponent.getStat(s))
                 {
                     this.confirmButton.visible = true;
@@ -176,7 +176,7 @@ public class StatMenu extends AbstractAbilitiesContainer {
         //         .getInstance()
         //         .getNetworkHandler()
         //         .sendPacket(Packets.CLIENT.statChange(rpgStatComponent));
-        //     Util.debug("Checking rpgComponent 1");
+        //     Biow0rks.debug("Checking rpgComponent 1");
         //     button.visible = false;
         // }));
         // if(this.rpgStatComponent.remainingPoints > 0)

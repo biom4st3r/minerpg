@@ -6,8 +6,7 @@ Purpose
 
 */
 
-import com.biom4st3r.minerpg.api.RPGAbility;
-import com.biom4st3r.minerpg.api.abilities.ArmorOverrideAbility;
+import com.biom4st3r.biow0rks.Biow0rks;
 import com.biom4st3r.minerpg.components.RPGAbilityComponent;
 import com.biom4st3r.minerpg.components.RPGClassComponent;
 import com.biom4st3r.minerpg.components.RPGStatsComponent;
@@ -56,7 +55,7 @@ public abstract class RPGPlayerEntity extends LivingEntity implements RPGPlayer 
     // {
     //     RPGPlayer player = ((RPGPlayer)this);
     //     player.getRPGClassComponent().processStat(stat,i);
-    //     Util.debug("processing Stat " + stat.getName());
+    //     Biow0rks.debug("processing Stat " + stat.getName());
     // }
 
     @Inject(at = @At("RETURN"), method = "<init>*")
@@ -111,7 +110,7 @@ public abstract class RPGPlayerEntity extends LivingEntity implements RPGPlayer 
         {
             try
             {
-                Util.debug(this.rpgClassComponent.getExperiance(0));
+                Biow0rks.debug("current Player Exp %s",this.rpgClassComponent.getExperiance(0));
             }
             catch(Exception e)
             {
@@ -160,7 +159,7 @@ public abstract class RPGPlayerEntity extends LivingEntity implements RPGPlayer 
 
     public ListTag serialize(BasicInventory bi) {
         ListTag lt = new ListTag();
-        Util.debug("write: ");
+        Biow0rks.debug("write: ");
 
         for (int i = 0; i < bi.getInvSize(); i++) {
             ItemStack iS = bi.getInvStack(i);
@@ -179,7 +178,7 @@ public abstract class RPGPlayerEntity extends LivingEntity implements RPGPlayer 
     public BasicInventory deserialize(ListTag lt, int size) {
         BasicInventory bi = bag;
 
-        Util.debug("read: ");
+        Biow0rks.debug("read: ");
         for (int i = 0; i < lt.size(); i++) {
             CompoundTag ct = lt.getCompoundTag(i);
             int slot = ct.getByte(SLOT) & 255;
@@ -190,13 +189,13 @@ public abstract class RPGPlayerEntity extends LivingEntity implements RPGPlayer 
         return bi;
     }
 
-    @Override
-    public int getArmor()
-    {
-        if(this.rpgAbilityComponent.getNamedAbilitySlot(RPGAbility.PASSIVE_NAMES.ARMOR_OVERRIDE).isEmpty())
-            return super.getArmor();
-        return ((ArmorOverrideAbility)this.rpgAbilityComponent.getNamedAbilitySlot(RPGAbility.PASSIVE_NAMES.ARMOR_OVERRIDE).ability).getArmor(this);
-    }
+    // @Override
+    // public int getArmor()
+    // {
+    //     if(this.rpgAbilityComponent.getNamedAbilitySlot(RPGAbility.PASSIVE_NAMES.ARMOR_OVERRIDE).isEmpty())
+    //         return super.getArmor();
+    //     return ((ArmorOverrideAbility)this.rpgAbilityComponent.getNamedAbilitySlot(RPGAbility.PASSIVE_NAMES.ARMOR_OVERRIDE).ability).getArmor(this);
+    // }
 
     @Inject(at = @At("HEAD"), method = "jump")
     public void jump(CallbackInfo ci)

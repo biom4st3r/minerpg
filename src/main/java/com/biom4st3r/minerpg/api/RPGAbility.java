@@ -12,11 +12,7 @@ import net.minecraft.util.SystemUtil;
 
 public abstract class RPGAbility
 {
-    public final class PASSIVE_NAMES
-    {
-        public static final String ARMOR_OVERRIDE = "armoroverride";
-
-    }
+    public final Identifier id;
 
     public void onCooledDown(RPGPlayer player) {}
 
@@ -52,8 +48,6 @@ public abstract class RPGAbility
         return new TranslatableText(this.getTranslationKey());
     }
 
-    public final Identifier id;
-
     public Identifier getIcon()
     {
         return new Identifier(id.getNamespace(),"abilities/icons/" + id.getPath() + ".png");
@@ -69,8 +63,6 @@ public abstract class RPGAbility
     public abstract Type getType();
 
     public enum Type{
-        PASSIVE,
-        PASSIVE_NAMED,
         RIGHT_CLICK,
         LEFT_CLICK, 
         USE
@@ -81,13 +73,6 @@ public abstract class RPGAbility
         t.add(this.getType().name());
         return  t;
     }
-
-    public String getPassiveName()
-    {
-        return "";
-    }
-
-
 
     @Override
     public String toString() {

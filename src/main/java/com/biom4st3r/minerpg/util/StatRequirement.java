@@ -1,6 +1,6 @@
 package com.biom4st3r.minerpg.util;
 
-import com.biom4st3r.minerpg.api.Stat.Stats;
+import com.biom4st3r.minerpg.api.Stats;
 import com.biom4st3r.minerpg.components.RPGStatsComponent;
 
 public class StatRequirement
