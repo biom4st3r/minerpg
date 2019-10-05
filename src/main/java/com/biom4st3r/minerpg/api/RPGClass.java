@@ -3,6 +3,7 @@ package com.biom4st3r.minerpg.api;
 
 import java.util.List;
 
+import com.biom4st3r.minerpg.interfaces.Reward;
 import com.google.common.collect.Lists;
 
 import net.minecraft.stat.Stat;
@@ -33,6 +34,8 @@ public abstract class RPGClass
             return (float)Math.pow(2, Lvl*0.8)*0.850145f;
         }
     }
+
+    public abstract Reward givePlayerRewards(int level);
 
     public abstract ExpType getExpType();
 

@@ -4,9 +4,9 @@ import java.util.List;
 
 import com.biom4st3r.biow0rks.Biow0rks;
 import com.biom4st3r.minerpg.MineRPG;
-import com.biom4st3r.minerpg.api.RPGAbility;
 import com.biom4st3r.minerpg.api.RPGClass;
 import com.biom4st3r.minerpg.impl.rpgclass.BarbarianClass;
+import com.biom4st3r.minerpg.interfaces.Reward;
 import com.google.common.collect.Lists;
 
 import net.minecraft.util.Identifier;
@@ -32,7 +32,7 @@ class NoClass extends RPGClass {
     public NoClass() {
         super(new Identifier(MineRPG.MODID, "noclass"));
     }
-    
+
     @Override
     public List<String> getToolTips() {
         return Lists.newArrayList("ERROR");
@@ -41,5 +41,13 @@ class NoClass extends RPGClass {
     @Override
     public ExpType getExpType() {
         return ExpType.CUSTOM;
+    }
+
+    @Override
+    public Reward givePlayerRewards(int level) {
+        return ((player,list)->
+        {
+
+        });
     }
 }

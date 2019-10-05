@@ -1,8 +1,8 @@
 package com.biom4st3r.minerpg.api;
 
-public interface AbstractComponent 
+public interface IComponent 
 {
-    public <T extends AbstractComponent> void clone(T origin);
+    public <T extends IComponent> void clone(T origin);
 
     // public void serializeNBT(CompoundTag tag);
 
@@ -12,6 +12,6 @@ public interface AbstractComponent
 
     // public void deserializeBuffer(PacketByteBuf buf);
 
-    public <T extends AbstractComponent> T getCopy();
+    public <T extends IComponent> T getCopy();
 
 }

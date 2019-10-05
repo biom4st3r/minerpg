@@ -3,18 +3,16 @@ package com.biom4st3r.minerpg.components;
 import java.util.HashMap;
 
 import com.biom4st3r.biow0rks.Biow0rks;
-import com.biom4st3r.minerpg.api.AbstractComponent;
 import com.biom4st3r.minerpg.api.BufferSerializable;
+import com.biom4st3r.minerpg.api.IComponent;
 import com.biom4st3r.minerpg.api.NbtSerializable;
 import com.biom4st3r.minerpg.api.Stat;
 import com.google.common.collect.Maps;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.PacketByteBuf;
 
-public class RPGStatsComponent implements AbstractComponent, BufferSerializable, NbtSerializable
+public class RPGStatsComponent implements IComponent, BufferSerializable, NbtSerializable
 {
     HashMap<Stat, Integer> stats;
 
@@ -173,7 +171,7 @@ public class RPGStatsComponent implements AbstractComponent, BufferSerializable,
         pbb.writeByte(this.getStatPoints());
     }
 
-    public <T extends AbstractComponent> void clone(T origin)
+    public <T extends IComponent> void clone(T origin)
     {
         RPGStatsComponent original = (RPGStatsComponent)origin;
         for(Stat s : Stat.values())
@@ -199,7 +197,7 @@ public class RPGStatsComponent implements AbstractComponent, BufferSerializable,
     }
 
     @Override
-    public <T extends AbstractComponent> T getCopy() {
+    public <T extends IComponent> T getCopy() {
         return null;
     }
 }

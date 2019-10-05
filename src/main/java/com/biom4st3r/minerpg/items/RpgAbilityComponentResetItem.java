@@ -16,7 +16,6 @@ public class RpgAbilityComponentResetItem extends Item
 
     public RpgAbilityComponentResetItem(Settings item$Settings_1) {
         super(item$Settings_1);
-        // TODO Auto-generated constructor stub
     }
 
     @Override
@@ -24,7 +23,7 @@ public class RpgAbilityComponentResetItem extends Item
         // if(!world_1.isClient)
         // {
         RPGPlayer rpgPe = (RPGPlayer)pe;
-        rpgPe.getRPGAbilityComponent().clone(new RPGAbilityComponent(pe));
+        rpgPe.getRPGAbilityComponent().clone(new RPGAbilityComponent((RPGPlayer)pe));
         
         //rpgPe.getNetworkHandlerS().sendPacket(Packets.SERVER.sendRPGClassComponent(rpgPe));
         //}StatusEffect
