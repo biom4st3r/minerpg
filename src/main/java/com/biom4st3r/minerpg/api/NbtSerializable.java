@@ -1,4 +1,4 @@
-package com.biom4st3r.minerpg.util;
+package com.biom4st3r.minerpg.api;
 
 import net.minecraft.nbt.CompoundTag;
 

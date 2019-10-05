@@ -9,7 +9,7 @@ public class DefaultedObj<T> {
     public DefaultedObj(T value, T defaultValue) {
         if(defaultValue == null)
         {
-            Biow0rks.error("A NNObj has been assigned null;\n%s\nNNObj's should never be assigned null", new Exception().getCause().getMessage());
+            Biow0rks.error("A NNObj has been assigned null;\n%s\nNNObj's should never be assigned null...", new Exception().getCause().getMessage());
         }
 
         this.defaultValue = defaultValue;
@@ -24,7 +24,16 @@ public class DefaultedObj<T> {
     }
 
     public void set(T value) {
+        if(value == null)
+        {
+            this.value = this.defaultValue;
+        }
         this.value = value;
+    }
+
+    public boolean isDefault()
+    {
+        return this.getValue() == this.defaultValue;
     }
 
     @SuppressWarnings("unchecked")

@@ -62,7 +62,7 @@ public abstract class MinecraftClientMixin
     private void handleInputAttack(CallbackInfo ci)
     {
         RPGPlayer rpgPlayer = (RPGPlayer)player;
-        RPGAbility ability = rpgPlayer.getRPGAbilityComponent().abilityBar.get(player.inventory.selectedSlot).ability;
+        RPGAbility ability = rpgPlayer.getRPGAbilityComponent().abilityBar.get(player.inventory.selectedSlot);
             
         if(((InGameHudHelper)this.inGameHud).isAbilityBarActive() &&
          this.attackCooldown <= 0 && ability != RpgAbilities.NONE &&
@@ -80,7 +80,7 @@ public abstract class MinecraftClientMixin
     private void handleInputUse(CallbackInfo ci)
     {
         RPGPlayer rpgPlayer = (RPGPlayer)player;
-        RPGAbility ability = rpgPlayer.getRPGAbilityComponent().abilityBar.get(player.inventory.selectedSlot).ability;
+        RPGAbility ability = rpgPlayer.getRPGAbilityComponent().abilityBar.get(player.inventory.selectedSlot);
 
         if(((InGameHudHelper)this.inGameHud).isAbilityBarActive() &&
          this.attackCooldown <= 0 && ability != RpgAbilities.NONE &&

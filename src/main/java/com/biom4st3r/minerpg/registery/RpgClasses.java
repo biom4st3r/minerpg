@@ -32,12 +32,7 @@ class NoClass extends RPGClass {
     public NoClass() {
         super(new Identifier(MineRPG.MODID, "noclass"));
     }
-
-    @Override
-    public RPGAbility[] abilitysAvalibleAtLevel(int Lvl) {
-        return new RPGAbility[] { RpgAbilities.NONE };
-    }
-
+    
     @Override
     public List<String> getToolTips() {
         return Lists.newArrayList("ERROR");

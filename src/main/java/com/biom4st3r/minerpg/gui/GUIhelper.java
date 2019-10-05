@@ -10,7 +10,7 @@ import com.biom4st3r.minerpg.gui.screens.InitClassMenu;
 import com.biom4st3r.minerpg.gui.screens.StatMenu;
 import com.biom4st3r.minerpg.mixin_interfaces.RPGPlayer;
 import com.biom4st3r.minerpg.networking.Packets;
-import com.biom4st3r.minerpg.util.RpgAbilityContext;
+import com.biom4st3r.minerpg.registery.RpgAbilities;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -81,11 +81,11 @@ public class GUIhelper
         {
             if(!(i >= bw.length/2))
             {
-                bw[i] = new AbilityButton(xPos+(i*24) , yPos, RpgAbilityContext.EMPTY, b->{});
+                bw[i] = new AbilityButton(xPos+(i*24) , yPos, RpgAbilities.NONE, b->{});
             }
             else
             {
-                bw[i] = new AbilityButton(xPos+((i-(bw.length/2))*24) , yPos+24, RpgAbilityContext.EMPTY, b->{});
+                bw[i] = new AbilityButton(xPos+((i-(bw.length/2))*24) , yPos+24, RpgAbilities.NONE, b->{});
             }
         }
         return bw;

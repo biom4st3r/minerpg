@@ -3,17 +3,20 @@ package com.biom4st3r.minerpg.components;
 import java.util.HashMap;
 
 import com.biom4st3r.biow0rks.Biow0rks;
-import com.biom4st3r.minerpg.api.Stats;
-import com.biom4st3r.minerpg.util.BufferSerializable;
-import com.biom4st3r.minerpg.util.NbtSerializable;
+import com.biom4st3r.minerpg.api.AbstractComponent;
+import com.biom4st3r.minerpg.api.BufferSerializable;
+import com.biom4st3r.minerpg.api.NbtSerializable;
+import com.biom4st3r.minerpg.api.Stat;
 import com.google.common.collect.Maps;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.PacketByteBuf;
 
 public class RPGStatsComponent implements AbstractComponent, BufferSerializable, NbtSerializable
 {
-    HashMap<Stats, Integer> stats;
+    HashMap<Stat, Integer> stats;
 
     private final String STATS = "rpgstatscomp";
     private final String SPAREPOINTS = "points";
@@ -26,8 +29,7 @@ public class RPGStatsComponent implements AbstractComponent, BufferSerializable,
         this.initStats();
     }
 
-
-    public void increaseStatProtected(Stats s)
+    public void increaseStatProtected(Stat s)
     {
         int old = this.stats.get(s);
         if(old < 20 && this.remainingPoints > 0)
@@ -37,7 +39,7 @@ public class RPGStatsComponent implements AbstractComponent, BufferSerializable,
         }
     }
 
-    public void decreaseStatUnProtected(Stats s)
+    public void decreaseStatUnProtected(Stat s)
     {
         int old = this.stats.get(s);
         this.stats.put(s, old-1);
@@ -47,7 +49,7 @@ public class RPGStatsComponent implements AbstractComponent, BufferSerializable,
     public RPGStatsComponent copyOfStats()
     {
         RPGStatsComponent rpgc = new RPGStatsComponent();
-        for(Stats stat : Stats.values())
+        for(Stat stat : Stat.values())
         {
             rpgc.stats.put(stat, this.getStat(stat));
         }
@@ -59,7 +61,7 @@ public class RPGStatsComponent implements AbstractComponent, BufferSerializable,
     {
         int delta = 0;
 
-        for(Stats stat : Stats.values())
+        for(Stat stat : Stat.values())
         {
             int serverStat = this.stats.get(stat);
             int clientStat = client.stats.get(stat);
@@ -80,7 +82,7 @@ public class RPGStatsComponent implements AbstractComponent, BufferSerializable,
             Biow0rks.debug("remainingPoints %s",this.remainingPoints);
             Biow0rks.debug("point delta: %s",delta);
             this.remainingPoints -= delta;
-            for(Stats stat : Stats.values())
+            for(Stat stat : Stat.values())
             {
                 this.stats.put(stat, client.stats.get(stat));
                 Biow0rks.debug(stat + " " + client.getStat(stat));
@@ -98,7 +100,7 @@ public class RPGStatsComponent implements AbstractComponent, BufferSerializable,
         CompoundTag statTag = new CompoundTag();
         if(this.stats.size() == 6)
         {
-            for(Stats s : Stats.values())
+            for(Stat s : Stat.values())
             {
                 statTag.putByte(s.text, (byte)(int)this.stats.get(s));
             }
@@ -114,14 +116,14 @@ public class RPGStatsComponent implements AbstractComponent, BufferSerializable,
         {
             //this.serialize(tag);
             this.remainingPoints = 27;
-            for(Stats i : Stats.values())
+            for(Stat i : Stat.values())
             {
                 this.stats.put(i, 8);
             }
             return;
         }
         CompoundTag statsTag = tag.getCompound(STATS);
-        for(Stats i : Stats.values())
+        for(Stat i : Stat.values())
         {
             this.stats.put(i, (int)statsTag.getByte(i.text));
         }
@@ -133,14 +135,14 @@ public class RPGStatsComponent implements AbstractComponent, BufferSerializable,
         return this.remainingPoints;
     }
 
-    public int getModifier(Stats s)
+    public int getModifier(Stat s)
     {
         return (int)Math.floor((this.getStat(s)-10)/2);
     }
 
     public void deserializeBuffer(PacketByteBuf pbb)
     {
-        for(Stats s :Stats.values())
+        for(Stat s :Stat.values())
         {
             this.stats.put(s, (int)pbb.readByte());
         }
@@ -150,7 +152,7 @@ public class RPGStatsComponent implements AbstractComponent, BufferSerializable,
 
     public void initStats()
     {
-        for(Stats stat : Stats.values())
+        for(Stat stat : Stat.values())
         {
             this.stats.put(stat, 8);
         }
@@ -164,7 +166,7 @@ public class RPGStatsComponent implements AbstractComponent, BufferSerializable,
         {
             initStats();
         }
-        for(Stats s :Stats.values())
+        for(Stat s :Stat.values())
         {
             pbb.writeByte(this.stats.get(s));
         }
@@ -174,14 +176,14 @@ public class RPGStatsComponent implements AbstractComponent, BufferSerializable,
     public <T extends AbstractComponent> void clone(T origin)
     {
         RPGStatsComponent original = (RPGStatsComponent)origin;
-        for(Stats s : Stats.values())
+        for(Stat s : Stat.values())
         {
             this.stats.put(s, original.getStats().get(s).intValue());
         }
         this.remainingPoints = original.getStatPoints();
     }
 
-    public int getStat(Stats name)
+    public int getStat(Stat name)
     {
         return this.stats.get(name) != null ? this.stats.get(name) : -1;
     }
@@ -191,7 +193,7 @@ public class RPGStatsComponent implements AbstractComponent, BufferSerializable,
         this.remainingPoints = i;
     }
 
-    public HashMap<Stats, Integer> getStats()
+    public HashMap<Stat, Integer> getStats()
     {
         return this.stats;
     }

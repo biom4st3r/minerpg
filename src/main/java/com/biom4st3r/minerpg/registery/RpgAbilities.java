@@ -21,7 +21,7 @@ public final class RpgAbilities {
     public static final RPGAbility RAGE_ABILITY = new MultiPotionAbility(new Identifier(MineRPG.MODID, "rage"), 600, new StatusEffect[]{StatusEffects.RESISTANCE,StatusEffects.STRENGTH}, new int[]{1000,1000}, new int[]{2,0});//new RageAbility(new Identifier(MineRPG.MODID, "rage"));
     public static final RPGAbility NONE = new No_Ability();
     public static final RPGAbility FIREBALL_ABILITY = new FireballAbility(new Identifier(MineRPG.MODID, "fireball"), 20);
-//    public static final RPGAbility UNARMORED_DEFENCE = new UnarmoredDefenceAbility(new Identifier(MineRPG.MODID,"unarmereddefencebarb"));
+    //public static final RPGAbility UNARMORED_DEFENCE = new UnarmoredDefenceAbility(new Identifier(MineRPG.MODID,"unarmereddefencebarb"));
     public static final RPGAbility RECKLESS_ATK = new MultiPotionAbility(new Identifier(MineRPG.MODID,"recklessatk"), 600, new StatusEffect[]{MineRPG.PAPER_SKIN,StatusEffects.STRENGTH}, new int[]{20*15,20*15}, new int[]{1,2});
     public static final RPGAbility EVOKER_FANGS = new EvokerFangsAbility(new Identifier(MineRPG.MODID,"evokerfangs"), 1);
     public static final RPGAbility EVOKER_AOE = new EvokerFangsAOEAbility(new Identifier(MineRPG.MODID,"evokeraoe"), 1);

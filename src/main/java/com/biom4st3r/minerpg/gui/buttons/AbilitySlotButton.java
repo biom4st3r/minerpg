@@ -3,7 +3,6 @@ package com.biom4st3r.minerpg.gui.buttons;
 import com.biom4st3r.minerpg.api.RPGAbility;
 import com.biom4st3r.minerpg.components.RPGAbilityComponent;
 import com.biom4st3r.minerpg.registery.RpgAbilities;
-import com.biom4st3r.minerpg.util.RpgAbilityContext;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.widget.ButtonWidget;
@@ -23,15 +22,15 @@ public class AbilitySlotButton extends ButtonWidget
 
     public RPGAbility getAbility()
     {  
-        return this.abilitiesC.abilityBar.get(index).ability;
+        return this.abilitiesC.abilityBar.get(index);
     }
     
     @Override
     public void renderButton(int int_1, int int_2, float float_1) {
-        if(abilitiesC.abilityBar.get(index).ability != RpgAbilities.NONE)
+        if(abilitiesC.abilityBar.get(index) != RpgAbilities.NONE)
         {
             //
-            MinecraftClient.getInstance().getTextureManager().bindTexture(abilitiesC.abilityBar.get(index).ability.getIcon());
+            MinecraftClient.getInstance().getTextureManager().bindTexture(abilitiesC.abilityBar.get(index).getIcon());
             blit(this.x,this.y ,16,16,16,16,16,16);//x y u v w h
         
         }
@@ -41,14 +40,14 @@ public class AbilitySlotButton extends ButtonWidget
         }
     }
 
-    public void setAbiliy(RpgAbilityContext a)
+    public void setAbiliy(RPGAbility a)
     {
         this.abilitiesC.abilityBar.set(index, a);
         //MinecraftClient.getInstance().getNetworkHandler().sendPacket(Packets.CLIENT.reqChangeAbilityBar(this.index, a, sourceClass, currentLvl, abilityAtLvlIndex));
     }
     public void resetAbility()
     {
-        this.abilitiesC.abilityBar.set(index, RpgAbilityContext.EMPTY);
+        this.abilitiesC.abilityBar.set(index, RpgAbilities.NONE);
         //MinecraftClient.getInstance().getNetworkHandler().sendPacket(Packets.CLIENT.reqChangeAbilityBar(this.index, RpgAbilities.NONE, null, -1, -1));
     }
 

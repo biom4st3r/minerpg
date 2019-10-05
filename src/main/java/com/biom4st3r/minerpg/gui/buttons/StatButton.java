@@ -1,7 +1,7 @@
 package com.biom4st3r.minerpg.gui.buttons;
 
 import com.biom4st3r.minerpg.MineRPG;
-import com.biom4st3r.minerpg.api.Stats;
+import com.biom4st3r.minerpg.api.Stat;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.util.Identifier;
@@ -14,11 +14,11 @@ public class StatButton extends ButtonWidget
 
     public Identifier BG_Texture = new Identifier(MineRPG.MODID, "textures/gui/rpgmenu.png");
 
-    public Stats stat;
+    public Stat stat;
 
     boolean add;
 
-    public StatButton(int xPos, int yPos, PressAction action, boolean add, Stats stat) {
+    public StatButton(int xPos, int yPos, PressAction action, boolean add, Stat stat) {
         super(xPos, yPos, 9, 9, "", action);
         this.add = add;
         this.stat = stat;

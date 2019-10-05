@@ -2,7 +2,7 @@ package com.biom4st3r.minerpg.gui.screens;
 
 import com.biom4st3r.biow0rks.Biow0rks;
 import com.biom4st3r.minerpg.MineRPG;
-import com.biom4st3r.minerpg.api.Stats;
+import com.biom4st3r.minerpg.api.Stat;
 import com.biom4st3r.minerpg.components.RPGStatsComponent;
 import com.biom4st3r.minerpg.gui.GUIhelper;
 import com.biom4st3r.minerpg.gui.buttons.AcceptanceButton;
@@ -45,7 +45,7 @@ public class StatMenu extends AbstractAbilitiesContainer {
     @Override
     public void tick() {
         super.tick();
-        Stats[] stats = Stats.values();
+        Stat[] stats = Stat.values();
         if(this.rpgStatComponent.remainingPoints > 0)
         {
             for(int i = 0, j = 0; i < stats.length; i++, j+=2)
@@ -80,7 +80,7 @@ public class StatMenu extends AbstractAbilitiesContainer {
         //         statButtons[i].visible = true;
         //     }
         // }
-        if(backupComponent.getStat(Stats.CONSTITUTION) == -1)
+        if(backupComponent.getStat(Stat.CONSTITUTION) == -1)
         {
             this.backupComponent = this.rpgStatComponent.copyOfStats();
         }
@@ -139,7 +139,7 @@ public class StatMenu extends AbstractAbilitiesContainer {
             int xMod = xMid()-7;
             statButtons[j] = this.addButton(new StatButton(xMod, yGrid(i)-1, (button) ->
             { // minus
-                Stats s = ((StatButton)button).stat;
+                Stat s = ((StatButton)button).stat;
                 Biow0rks.debug(s + " " + this.backupComponent.getStat(s));
                 if(this.rpgStatComponent.getStat(s) > this.backupComponent.getStat(s))
                 {
@@ -147,7 +147,7 @@ public class StatMenu extends AbstractAbilitiesContainer {
                     this.denyButton.visible    = true;
                     this.rpgStatComponent.decreaseStatUnProtected(s);
                 }
-            }, false,Stats.values()[i]));
+            }, false,Stat.values()[i]));
 
 
             statButtons[j+1] = this.addButton(new StatButton(xMod+25 , yGrid(i)-1, (button) ->
@@ -155,7 +155,7 @@ public class StatMenu extends AbstractAbilitiesContainer {
                 this.confirmButton.visible = true;
                 this.denyButton.visible    = true;
                 this.rpgStatComponent.increaseStatProtected(((StatButton)button).stat);
-            }, true,Stats.values()[i]));
+            }, true,Stat.values()[i]));
 
             statButtons[j].visible = false;
             statButtons[j+1].visible = false;

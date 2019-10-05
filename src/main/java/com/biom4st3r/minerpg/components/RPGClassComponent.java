@@ -3,17 +3,17 @@ package com.biom4st3r.minerpg.components;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 
 import com.biom4st3r.biow0rks.Biow0rks;
-import com.biom4st3r.minerpg.api.RPGAbility;
+import com.biom4st3r.minerpg.api.AbstractComponent;
+import com.biom4st3r.minerpg.api.BufferSerializable;
+import com.biom4st3r.minerpg.api.NbtSerializable;
 import com.biom4st3r.minerpg.api.RPGClass;
 import com.biom4st3r.minerpg.mixin_interfaces.RPGPlayer;
 import com.biom4st3r.minerpg.networking.Packets;
 import com.biom4st3r.minerpg.registery.RPG_Registry;
-import com.biom4st3r.minerpg.registery.RpgAbilities;
-import com.biom4st3r.minerpg.util.BufferSerializable;
-import com.biom4st3r.minerpg.util.NbtSerializable;
-import com.biom4st3r.minerpg.util.RpgClassContext;
+import com.google.common.collect.Maps;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -24,15 +24,15 @@ import net.minecraft.util.PacketByteBuf;
 public class RPGClassComponent implements AbstractComponent, BufferSerializable, NbtSerializable
 {
     RPGPlayer owner;
-    //private List<RPGClass> rpgclasses;
-    public Hashtable<RPGClass,Integer> rpgClasses;
+
+    public LinkedHashMap<RPGClass,Integer> rpgClasses;
 
     private int maxClasses = 1;
 
     public static final String EXPERIENCE = "exp",
-    RPG_COMPONENT = "rpgclasscomponent",
-    CLASS_ID = "id",
-    LEVEL = "lvl";
+        RPG_COMPONENT = "rpgclasscomponent",
+        CLASS_ID = "id",
+        LEVEL = "lvl";
 
     private float[] experience;
 
@@ -43,7 +43,7 @@ public class RPGClassComponent implements AbstractComponent, BufferSerializable,
     }
     private void init()
     {
-        rpgClasses = new Hashtable<RPGClass,Integer>(1);
+        rpgClasses = Maps.newLinkedHashMap();//LinkedHashMap()<RPGClass,Integer>(1);
         experience = new float[1];
         //abilities = new ArrayList<RPGAbility>(20);
         //abilityBar = new RPGAbility[9];
@@ -75,16 +75,16 @@ public class RPGClassComponent implements AbstractComponent, BufferSerializable,
         this.owner.getNetworkHandlerS().sendPacket(Packets.SERVER.sendExperience(this.experience[index]));
     }
 
-    public RPGAbility[] getAvalibleAbilities()
-    {
-        RPGClass rpgc = getRpgClass(0);
-        if(rpgc != null)
-        {
-            int lvl = getRpgClassContext(rpgc).Lvl;
-            return rpgc.abilitysAvalibleAtLevel(lvl);
-        }
-        return new RPGAbility[] {RpgAbilities.NONE};
-    }
+    // public RPGAbility[] getAvalibleAbilities()
+    // {
+    //     RPGClass rpgc = getRpgClass(0);
+    //     if(rpgc != null)
+    //     {
+    //         int lvl = getRpgClassContext(rpgc).Lvl;
+    //         return rpgc.abilitysAvalibleAtLevel(lvl);
+    //     }
+    //     return new RPGAbility[] {RpgAbilities.NONE};
+    // }
 
     public RPGClass getRpgClass(int index)
     {
@@ -94,19 +94,6 @@ public class RPGClassComponent implements AbstractComponent, BufferSerializable,
             return (RPGClass)t[index];
         }
         return null;
-    }
-    
-
-    public RpgClassContext getRpgClassContext(RPGClass rpgclass)
-    {   
-        try
-        {
-            return new RpgClassContext(rpgclass, rpgClasses.get(rpgclass).intValue());
-        }
-        catch(NullPointerException e)
-        {
-            return RpgClassContext.EMPTY;
-        }
     }
 
     public boolean hasRpgClass()
@@ -139,13 +126,13 @@ public class RPGClassComponent implements AbstractComponent, BufferSerializable,
 
     public void serializeBuffer(PacketByteBuf pbb)
     {
-        Enumeration<RPGClass> classes = rpgClasses.keys();
+        Iterator<RPGClass> classes = rpgClasses.keySet().iterator();
         RPGClass rpgclass;
         pbb.writeInt(rpgClasses.size());
         int i = 0;
-        while(classes.hasMoreElements())
+        while(classes.hasNext())
         {
-            rpgclass = classes.nextElement();
+            rpgclass = classes.next();
             pbb.writeIdentifier(rpgclass.id);
             pbb.writeInt(rpgClasses.get(rpgclass));
             pbb.writeFloat(experience[i]);
@@ -167,12 +154,12 @@ public class RPGClassComponent implements AbstractComponent, BufferSerializable,
     public void serializeNBT(CompoundTag ct)
     {
         ListTag lt = new ListTag();
-        Enumeration<RPGClass> e = this.rpgClasses.keys();
+        Iterator<RPGClass> e = this.rpgClasses.keySet().iterator();
         RPGClass rpgclass;
         int i = 0;
-        while(e.hasMoreElements())
+        while(e.hasNext())
         {
-            rpgclass = e.nextElement();
+            rpgclass = e.next();
             CompoundTag set = new CompoundTag();
             set.putString(CLASS_ID, rpgclass.id.toString());
             set.putInt(LEVEL, this.rpgClasses.get(rpgclass));
