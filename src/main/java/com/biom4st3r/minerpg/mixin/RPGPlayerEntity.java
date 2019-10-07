@@ -31,6 +31,8 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.server.network.ServerPlayNetworkHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.text.LiteralText;
+import net.minecraft.text.Text;
 import net.minecraft.world.World;
 
 @Mixin(PlayerEntity.class)
@@ -57,6 +59,16 @@ public abstract class RPGPlayerEntity extends LivingEntity implements RPGPlayer 
     //     player.getRPGClassComponent().processStat(stat,i);
     //     Biow0rks.debug("processing Stat " + stat.getName());
     // }
+
+    public void sendMessage(Text... texts)
+    {
+        String s = "";
+        for(Text t : texts)
+        {
+            s += t.asFormattedString() + " ";
+        }
+        this.getPlayer().sendMessage(new LiteralText(s));
+    }
 
     @Inject(at = @At("RETURN"), method = "<init>*")
     private void onConst(CallbackInfo ci) {
@@ -106,20 +118,6 @@ public abstract class RPGPlayerEntity extends LivingEntity implements RPGPlayer 
     public void tick(CallbackInfo ci)
     {
         this.rpgAbilityComponent.tick();
-        if(i%20 == 0)
-        {
-            try
-            {
-                Biow0rks.debug("current Player Exp %s",this.rpgClassComponent.getExperiance(0));
-            }
-            catch(Exception e)
-            {
-
-            }
-            
-        }
-        
-        i++;
     }
 
     @Inject(at = @At("HEAD"),method = "addExperience")
@@ -159,8 +157,6 @@ public abstract class RPGPlayerEntity extends LivingEntity implements RPGPlayer 
 
     public ListTag serialize(BasicInventory bi) {
         ListTag lt = new ListTag();
-        Biow0rks.debug("write: ");
-
         for (int i = 0; i < bi.getInvSize(); i++) {
             ItemStack iS = bi.getInvStack(i);
 
@@ -177,8 +173,6 @@ public abstract class RPGPlayerEntity extends LivingEntity implements RPGPlayer 
 
     public BasicInventory deserialize(ListTag lt, int size) {
         BasicInventory bi = bag;
-
-        Biow0rks.debug("read: ");
         for (int i = 0; i < lt.size(); i++) {
             CompoundTag ct = lt.getCompoundTag(i);
             int slot = ct.getByte(SLOT) & 255;
@@ -205,8 +199,9 @@ public abstract class RPGPlayerEntity extends LivingEntity implements RPGPlayer 
     @Inject(at = @At("HEAD"), method = "readCustomDataFromTag", cancellable = false)
     public void readCustomDataFromTag(CompoundTag tag, CallbackInfo ci) 
     {
+        Biow0rks.debug("read: ");
         this.statsComponent.deserializeNBT(tag);
-        bag = deserialize(tag.getList(COMPONENT_BAG, 10), componentInvSize);
+        bag = deserialize((ListTag)tag.getTag(COMPONENT_BAG), componentInvSize);
         this.rpgClassComponent.deserializeNBT(tag);
         this.rpgAbilityComponent.deserializeNBT(tag);
     }
@@ -214,6 +209,7 @@ public abstract class RPGPlayerEntity extends LivingEntity implements RPGPlayer 
     @Inject(at = @At("HEAD"), method = "writeCustomDataToTag", cancellable = false)
     public void writeCustomDataToTag(CompoundTag tag, CallbackInfo ci) 
     {
+        Biow0rks.debug("write: ");
         this.statsComponent.serializeNBT(tag);
         tag.put(COMPONENT_BAG, serialize(this.componentInventory.bag));
         this.rpgClassComponent.serializeNBT(tag);

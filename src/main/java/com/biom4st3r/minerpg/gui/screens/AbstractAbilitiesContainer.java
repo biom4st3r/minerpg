@@ -50,20 +50,10 @@ public abstract class AbstractAbilitiesContainer extends Screen {
             this.addButton(abilityDisplay[i]);
             ((AbilityButton)abilityDisplay[i]).pressAction = bu -> {
                 RPGAbility ab = ((AbilityButton)bu).ability.getValue();
-                // if(ab.ability.getType() != Type.PASSIVE || true)
-                // {
-                    this.mouseSlot.set(ab);
-                    Biow0rks.debug(ab.toString());
-                // }
-                // else if(ab.ability.getType() == Type.PASSIVE)
-                // {
-                //     ab.ability.doAbility(player);
-                //     player.getNetworkHandlerC().sendPacket(Packets.CLIENT.usePassiveAbility(ab.abilityIndexInClass));
-                // }
-                // else if(ab.ability.getType() == Type.PASSIVE_NAMED)
-                // {
-                    
-                // }
+
+                this.mouseSlot.set(ab);
+                Biow0rks.debug(ab.toString());
+
             };
             if(abilities.size() <= i || abilities.get(i).isNone())
             {
@@ -71,8 +61,6 @@ public abstract class AbstractAbilitiesContainer extends Screen {
             }
             else
             {
-                // RPGClassComponent classComp = player.getRPGClassComponent();
-                // RPGClass rpgClass = classComp.getRpgClass(0);
                 ((AbilityButton) abilityDisplay[i]).ability.set(abilities.get(i));// = new RpgAbilityContext(classComp.getRpgClassContext(rpgClass),i,abilities[i]);
             }
         }
@@ -109,18 +97,18 @@ public abstract class AbstractAbilitiesContainer extends Screen {
         {
             if(this.abilityIndex == 0)
             {
-                this.arrowbuttons[0].visible = false;
+                this.arrowbuttons[0].active = false;
             }
             else{
-                this.arrowbuttons[0].visible = true;
+                this.arrowbuttons[0].active = true;
             }
-            if(this.abilities.size() <= 12)
+            if((abilityIndex+1) * 12 < this.abilities.size())
             {
-                this.arrowbuttons[1].visible = false;
+                this.arrowbuttons[1].active = true;
             }
             else
             {
-                this.arrowbuttons[1].visible = false;
+                this.arrowbuttons[1].active = false;
             }
         }
         super.render(mouseX, mouseY, float_1);

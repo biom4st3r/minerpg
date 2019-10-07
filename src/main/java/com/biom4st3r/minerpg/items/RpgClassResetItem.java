@@ -18,13 +18,8 @@ public class RpgClassResetItem extends Item
     }
     @Override
     public TypedActionResult<ItemStack> use(World world_1, PlayerEntity pe, Hand hand) {
-        // if(!world_1.isClient)
-        // {
         RPGPlayer rpgPe = (RPGPlayer)pe;
         rpgPe.getRPGClassComponent().clone(new RPGClassComponent((RPGPlayer)pe));
-        
-        //rpgPe.getNetworkHandlerS().sendPacket(Packets.SERVER.sendRPGClassComponent(rpgPe));
-        //}
         return new TypedActionResult<ItemStack>(ActionResult.SUCCESS,pe.getStackInHand(hand));
     }
 }

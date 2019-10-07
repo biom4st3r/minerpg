@@ -1,5 +1,7 @@
 package com.biom4st3r.minerpg.gui;
 
+import java.util.List;
+
 import com.biom4st3r.minerpg.gui.buttons.AbilityButton;
 import com.biom4st3r.minerpg.gui.buttons.AbilitySlotButton;
 import com.biom4st3r.minerpg.gui.buttons.ArrowButton;
@@ -11,6 +13,7 @@ import com.biom4st3r.minerpg.gui.screens.StatMenu;
 import com.biom4st3r.minerpg.mixin_interfaces.RPGPlayer;
 import com.biom4st3r.minerpg.networking.Packets;
 import com.biom4st3r.minerpg.registery.RpgAbilities;
+import com.mojang.blaze3d.platform.GlStateManager;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -130,8 +133,48 @@ public class GUIhelper
         tr.draw(lvlString, (float)(width - 1), (float)height, 0);
         tr.draw(lvlString, (float)width, (float)(height + 1), 0);
         tr.draw(lvlString, (float)width, (float)(height - 1), 0);
-        tr.draw(lvlString, (float)width, (float)height, 8453920);
+        tr.draw(lvlString, (float)width, (float)height, 0xDDAA00);
+
+        
     }
+
+	public static void renderXpSideBar(TextRenderer tr, int scaledWidth, int scaledHeight, List<Float> xpEarned,
+            List<Integer> visiblity) 
+    {
+        //GlStateManager.enableAlphaTest();
+        GlStateManager.pushMatrix();
+        GlStateManager.enableAlphaTest();
+        GlStateManager.enableBlend();
+        GlStateManager.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
+
+        float scale = 1f;
+        //float spacer = 10;
+        GlStateManager.scalef(scale, scale, scale);
+        for(int i = 0; i < xpEarned.size(); i++)
+        {
+            if(((visiblity.get(i) << 24) & -67108864) == 0) 
+            {
+                xpEarned.remove(i);
+                visiblity.remove(i);
+                //spacer--;
+                continue;
+            }
+            // if(spacer < 10)
+            // {
+            //     if(scale < 1) spacer = 10;
+            //     --spacer;
+            // }
+            //Biow0rks.log(Integer.toHexString(0x00000000^(visiblity.get(i)<<24)));
+            tr.drawWithShadow(String.format("+%.2f Exp", xpEarned.get(i)), (scaledWidth-50)*scale, (5+(i*10))*scale, 0x00FFAA00^(visiblity.get(i)<<24));
+            //GUIhelper.drawString(tr, String.format("+%.2f", xpEarned.get(i)), (int)((scaledWidth-20)*0.5f), (int)((i*5)*0.5f), 0xFFFFFF);
+            
+            visiblity.set(i, visiblity.get(i)-1);
+        }
+        GlStateManager.disableBlend();
+        GlStateManager.disableAlphaTest();
+        GlStateManager.popMatrix();
+        //
+	}
 }
 /*
 	METHOD blit (IIFFIIII)V

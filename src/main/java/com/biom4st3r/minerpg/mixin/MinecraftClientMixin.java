@@ -54,6 +54,7 @@ public abstract class MinecraftClientMixin
     {
         while(ClientInit.swapHotBar.wasPressed())
         {
+            
             ((InGameHudHelper)inGameHud).toggleRenderAbilityBar();
         }
     }

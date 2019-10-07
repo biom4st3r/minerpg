@@ -1,13 +1,14 @@
 package com.biom4st3r.minerpg.mixin;
-    /*
-    Purpose
-        Maintains synconization between client and server for
-        all cusotm RPGPlayer data
+    
+/*
+Purpose
+    Maintains synconization between client and server for
+    all cusotm RPGPlayer data
 
 
 
 
-    */
+*/
 import com.biom4st3r.minerpg.util.Util;
 
 import org.spongepowered.asm.mixin.Mixin;
@@ -24,6 +25,7 @@ public abstract class CreateClientPlayerMixin
     @Inject(at = @At("RETURN"), method = "createPlayer")
     public void createPlayer(CallbackInfoReturnable<ClientPlayerEntity> ci) 
     {
+        //RPGPlayer player = (RPGPlayer) MinecraftClient.getInstance().player;
         Util.requestAllComponents(ci.getReturnValue().networkHandler);
     }
 }

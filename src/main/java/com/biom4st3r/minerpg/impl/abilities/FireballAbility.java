@@ -4,12 +4,19 @@ import java.util.List;
 
 import com.biom4st3r.biow0rks.Biow0rks;
 import com.biom4st3r.minerpg.api.RPGAbility;
+import com.biom4st3r.minerpg.components.RPGStatsComponent;
 import com.biom4st3r.minerpg.entities.Fireball;
+import com.biom4st3r.minerpg.interfaces.DestructiveItemRequirement;
+import com.biom4st3r.minerpg.interfaces.ItemRequirement;
+import com.biom4st3r.minerpg.interfaces.Requirement;
+import com.biom4st3r.minerpg.interfaces.StatRequirement;
 import com.biom4st3r.minerpg.mixin_interfaces.RPGPlayer;
 import com.google.common.collect.Lists;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
@@ -87,7 +94,26 @@ public class FireballAbility extends RPGAbility {
 
     @Override
     public boolean hasCost(RPGPlayer player) {
-        return true;
+        StatRequirement sr =  ()->
+        {
+            return new RPGStatsComponent(0, 0, 10, 12, 0, 0).getStats();
+        };
+        DestructiveItemRequirement dir = ()->
+        {
+            return Lists.newArrayList(new ItemStack(Items.GUNPOWDER,2));
+        };
+        ItemRequirement ir = ()->
+        {
+            return Lists.newArrayList(new ItemStack(Items.FLINT_AND_STEEL));
+        };
+        if( sr.meetsRequirements(player, player.getStatsComponent()) &&
+            dir.meetsRequirements(player, player.getComponentContainer().bag) &&
+            ir.meetsRequirements(player, player.getComponentContainer().bag))
+        {
+            dir.destory(player.getComponentContainer().bag);
+            return true;
+        }
+        return false;
     }
     
 }

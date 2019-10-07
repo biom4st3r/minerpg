@@ -1,17 +1,15 @@
 package com.biom4st3r.minerpg.mixin;
 
-    import com.biom4st3r.biow0rks.Biow0rks;
-
-/*
-    Purpose
-        Provides the hotbar overriding for the Ability Bar
-        
+    /*
+Purpose
+Provides the hotbar overriding for the Ability Bar
 
 
 
 
 
-    */
+
+*/
 
 import com.biom4st3r.minerpg.MineRPG;
 import com.biom4st3r.minerpg.api.RPGAbility;
@@ -137,6 +135,10 @@ public abstract class InGameHudMixin extends DrawableHelper implements InGameHud
         }
         else
         {
+            //CraftingTableScreen
+            //CraftingContainer
+            //CraftingTableContainer
+            //RecipeManager
             this.custom_heldItemTooltipFade = 0;
         }
     }
@@ -146,7 +148,6 @@ public abstract class InGameHudMixin extends DrawableHelper implements InGameHud
     {
         if(this.abilityBar && this.client.player.inventory.getMainHandStack().isEmpty())
         {
-            //Biow0rks.debug("Hello");
 
             RPGPlayer pe = (RPGPlayer)this.client.player;
             if(!(pe.getRPGAbilityComponent().abilityBar.get(this.getSelectedSlot()).isNone()))
@@ -180,8 +181,9 @@ public abstract class InGameHudMixin extends DrawableHelper implements InGameHud
                 }
 
             }
+            ci.cancel();
         }
-        ci.cancel();
+        
     }
 
 
@@ -191,6 +193,9 @@ public abstract class InGameHudMixin extends DrawableHelper implements InGameHud
         PlayerEntity player = this.getCameraPlayer();
         if(abilityBar)
         {
+
+
+            
             GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
             this.client.getTextureManager().bindTexture(BG_Texture);
             ItemStack offHandStack = player.getOffHandStack();
@@ -246,12 +251,17 @@ public abstract class InGameHudMixin extends DrawableHelper implements InGameHud
                 this.client.getTextureManager().bindTexture(BG_Texture);
 
                 int lvl = rcc.rpgClasses.get(rcc.getRpgClass(0));
-                float currentExp = rcc.getExperiance(0);
+                float currentExp = rcc.getExperience(0);
                 float targetExp = rcc.getRpgClass(0).getExpRequiredForLvl(lvl+1);
+                float prevTargetExp = rcc.getRpgClass(0).getExpRequiredForLvl(lvl);
+                float expDeltaForLevelup = targetExp-prevTargetExp;
+                float gainsThisLevel = currentExp-prevTargetExp;
                 int progressWidth = //(int)(182*(currentExp/targetExp));
-                (int)(182*(targetExp-currentExp)/(targetExp-rcc.getRpgClass(0).getExpRequiredForLvl(lvl)));
-                Biow0rks.debug("currentPlayerLvl", lvl);
-                Biow0rks.debug("current: %s\ntarget: %s\ndivid: %s\nresult: %s", currentExp,targetExp,(currentExp/targetExp),progressWidth);
+                (int)(182*(gainsThisLevel/expDeltaForLevelup));
+                //Biow0rks.debug("182 * (%s-%s)/(%s-%s)", targetExp,currentExp,targetExp,rcc.getRpgClass(0).getExpRequiredForLvl(lvl));
+                
+                //Biow0rks.debug("currentPlayerLvl", lvl);
+                //Biow0rks.debug("current: %s\ntarget: %s\ndivid: %s\nresult: %s", currentExp,targetExp,(currentExp/targetExp),progressWidth);
                 this.blit(xPos,this.scaledHeight - 32 + 3,0,46,182,5);
                 if(progressWidth > 0)
                 {
@@ -263,12 +273,9 @@ public abstract class InGameHudMixin extends DrawableHelper implements InGameHud
                 String lvlString = "" + lvl;
                 int stringWidth = (this.scaledWidth - tr.getStringWidth(lvlString))/2;
                 int stringHeight = this.scaledHeight - 31 - 4;
-                //tr.draw(lvlString, (float)(stringWidth + 1), (float)stringHeight, 0);
-                //tr.draw(lvlString, (float)(stringWidth - 1), (float)stringHeight, 0);
-                //tr.draw(lvlString, (float)stringWidth, (float)(stringHeight + 1), 0);
-                //tr.draw(lvlString, (float)stringWidth, (float)(stringHeight - 1), 0);
-                //tr.draw(lvlString, (float)stringWidth, (float)stringHeight, 8453920);
+
                 GUIhelper.drawLevel(tr, lvlString, stringWidth, stringHeight);
+
                 this.client.getProfiler().pop();
 
             }
@@ -283,8 +290,22 @@ public abstract class InGameHudMixin extends DrawableHelper implements InGameHud
     {
         if(rpgA != RpgAbilities.NONE)
         {
+            GlStateManager.pushMatrix();
+            GlStateManager.enableRescaleNormal();
+            GlStateManager.enableAlphaTest();
+            GlStateManager.alphaFunc(516, 0.1F);
+            GlStateManager.enableBlend();
+            GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
+           
+
+
             this.client.getTextureManager().bindTexture(rpgA.getIcon());
             blit(xPos,yPos ,16,16,16,16,16,16);//x y u v w h
+
+            GlStateManager.disableAlphaTest();
+            GlStateManager.disableRescaleNormal();
+            GlStateManager.disableLighting();
+            GlStateManager.popMatrix();
 
         }
     }

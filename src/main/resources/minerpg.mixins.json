@@ -16,7 +16,8 @@
     "MinecraftClientMixin",
     "InGameHudMixin",
     "CreateClientPlayerMixin",
-    "ParticleManagerMixin"
+    "ParticleManagerMixin",
+    "XpGettySideBar"
   ],
   "injectors": {
     "defaultRequire": 1
