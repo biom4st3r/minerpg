@@ -1,6 +1,7 @@
 package com.biom4st3r.minerpg.gui.screens;
 
 import com.biom4st3r.minerpg.MineRPG;
+import com.biom4st3r.minerpg.components.RPGClassComponent;
 import com.biom4st3r.minerpg.gui.GUIhelper;
 import com.biom4st3r.minerpg.gui.buttons.ClassButton;
 import com.biom4st3r.minerpg.mixin_interfaces.RPGPlayer;
@@ -18,6 +19,7 @@ public class ClassMenu extends AbstractAbilitiesContainer {
     protected int containerWidth = 176;
     protected int containerHeight = 166;
     RPGPlayer player;
+    RPGClassComponent classComp ;
     ClassButton cb;
 
     public ClassMenu() {
@@ -33,12 +35,13 @@ public class ClassMenu extends AbstractAbilitiesContainer {
     protected void init() {
         super.init();
         this.player = ((RPGPlayer)MinecraftClient.getInstance().player);
+        this.classComp = player.getRPGClassComponent();
         this.left = (this.width - this.containerWidth) / 2;
         this.top = (this.height - this.containerHeight) / 2;
-        System.out.println(player.getRPGClassComponent().getRpgClass(0));
-        cb = this.addButton(new ClassButton(this.xMid()-29, this.yGrid(0), player.getRPGClassComponent().getRpgClass(0), button ->
+        //System.out.println(player.getRPGClassComponent().getRpgClass(0));
+        cb = this.addButton(new ClassButton(this.xMid()-29, this.yGrid(0), classComp.getRpgClass(0), button ->
         {
-            //RPGClassComponent
+            
         }, 0));
         cb.active = false;
 
@@ -72,6 +75,13 @@ public class ClassMenu extends AbstractAbilitiesContainer {
     public void render(int mouseX, int mouseY, float float_1) {
         this.renderBackground();
         
+        int lvl = classComp.rpgClasses.get(classComp.getRpgClass(0));
+        float currentExp = classComp.getExperience(0);
+        float targetExp = classComp.getRpgClass(0).getExpRequiredForLvl(lvl+1);
+        float prevTargetExp = classComp.getRpgClass(0).getExpRequiredForLvl(lvl);
+        float expDeltaForLevelup = targetExp-prevTargetExp;
+        float gainsThisLevel = currentExp-prevTargetExp;
+
         this.minecraft.getTextureManager().bindTexture(BG_Texture);
         int left = this.left;
         int top = this.top;
@@ -79,8 +89,12 @@ public class ClassMenu extends AbstractAbilitiesContainer {
         super.render(mouseX, mouseY, float_1);
         InventoryScreen.drawEntity(left + 51-18, top + 75, 30, (float)(left + 51) - mouseX, (float)(top + 75 - 50) - mouseY, this.minecraft.player);
         super.render(mouseX, mouseY, float_1);
-        GUIhelper.drawString(this.font, cb.rpgClass.getDisplayName().asFormattedString(), xMid()-(28-22), yGrid(1)+3, 0x000000);
-        
+        int xPos= xMid()-(28-22)+4;
+        GUIhelper.drawString(this.font, cb.rpgClass.getDisplayName().asFormattedString(), xPos, yGrid(0)+3, 0x000000);
+        GUIhelper.drawString(this.font, String.format("Lvl%s", lvl), xPos, yGrid(1)+3, 0x000000);
+        xPos =  xMid()-28; 
+        GUIhelper.drawString(this.font, String.format("%.2f%s to Lvl %s", (gainsThisLevel/expDeltaForLevelup)*100f, "%", classComp.rpgClasses.get(cb.rpgClass)+1),xPos, yGrid(3), 0x000000);
+        GUIhelper.drawString(this.font, String.format("You need %.1f Exp",targetExp-currentExp),xPos,yGrid(4),0x000000);
         //renderStats(player.getStatsComponent());
         // for(ButtonWidget bw : abilityButtons)
         // {
@@ -93,6 +107,7 @@ public class ClassMenu extends AbstractAbilitiesContainer {
 
     private int xMid()
     {
+
         return this.width/2;
     }
 

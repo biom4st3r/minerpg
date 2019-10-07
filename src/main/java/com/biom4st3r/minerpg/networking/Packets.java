@@ -6,8 +6,10 @@ import com.biom4st3r.biow0rks.Biow0rks;
 import com.biom4st3r.minerpg.MineRPG;
 import com.biom4st3r.minerpg.api.RPGAbility;
 import com.biom4st3r.minerpg.api.RPGClass;
+import com.biom4st3r.minerpg.components.RPGAbilityComponent;
 import com.biom4st3r.minerpg.components.RPGStatsComponent;
 import com.biom4st3r.minerpg.mixin_interfaces.BasicInventoryHelper;
+import com.biom4st3r.minerpg.mixin_interfaces.HudExpDisplayer;
 import com.biom4st3r.minerpg.mixin_interfaces.RPGPlayer;
 import com.biom4st3r.minerpg.particles.RpgDamageEffect;
 import com.biom4st3r.minerpg.registery.RPG_Registry;
@@ -51,7 +53,14 @@ public final class Packets
     {
         ClientSidePacketRegistry.INSTANCE.register(Packets.SEND_TOTAL_EXPEREINCE,(context,buffer)->
         {
-            ((RPGPlayer)context.getPlayer()).getRPGClassComponent().setExperience(0, buffer.readFloat());
+            float newExp = buffer.readFloat();
+            context.getTaskQueue().execute(()->
+            {
+                float oldValue = ((RPGPlayer)context.getPlayer()).getRPGClassComponent().getExperience(0);
+                ((HudExpDisplayer)MinecraftClient.getInstance().inGameHud).displayExp(newExp-oldValue);
+                ((RPGPlayer)context.getPlayer()).getRPGClassComponent().setExperience(0, newExp);
+            });
+            
         });
         ClientSidePacketRegistry.INSTANCE.register(Packets.SEND_RPG_CLASS_COMPONENT, (context,buffer) ->
         {
@@ -67,7 +76,7 @@ public final class Packets
         ClientSidePacketRegistry.INSTANCE.register(Packets.SEND_ABILITY_COMPONENT, (context,buffer)->
         {
             RPGPlayer player = ((RPGPlayer)context.getPlayer());
-            player.getRPGAbilityComponent().deserializeBuffer(buffer);
+            player.getRPGAbilityComponent().clone(new RPGAbilityComponent(player, buffer));
         });
         ClientSidePacketRegistry.INSTANCE.register(SEND_COMPONENT_BAG, (context,buffer)->
         {
@@ -85,6 +94,7 @@ public final class Packets
             float velocityY = 0.054f;
             float velocityZ = (rand.nextFloat()-0.5f)*.1f;
             red = rand.nextFloat(); green = rand.nextFloat(); blue = rand.nextFloat();
+
             for(int i = 0; i < s.length(); i++)
             {
                 context.getPlayer().getEntityWorld().addParticle(new RpgDamageEffect(new Integer(s.charAt(i)+""),red,green,blue,velocityX,velocityY,velocityZ), true, 
@@ -117,8 +127,10 @@ public final class Packets
         {
             RPGStatsComponent rpgClientc = new RPGStatsComponent();
             rpgClientc.deserializeBuffer(buffer);
-            ((RPGPlayer)context.getPlayer()).getStatsComponent().clientRequestChanges(rpgClientc);
-
+            context.getTaskQueue().execute(()->
+            {
+                ((RPGPlayer)context.getPlayer()).getStatsComponent().clientRequestChanges(rpgClientc);
+            });
         });
         ServerSidePacketRegistry.INSTANCE.register(REQ_ADD_CLASS, (context,buffer) ->
         {
@@ -146,10 +158,6 @@ public final class Packets
                     player.getRPGAbilityComponent().abilityBar.set(barIndex, RpgAbilities.NONE);
                     Biow0rks.debug(String.format("reset slot %s", barIndex));
                     return;
-                }
-                else if(rac==null)
-                {
-                    Biow0rks.error("Ability %s not registered. ", id);
                 }
                 else
                 {
@@ -246,13 +254,6 @@ public final class Packets
             pbb.writeByte(barIndex);
             return new CustomPayloadC2SPacket(USE_ABILITY,pbb);
         }
-
-        // public static CustomPayloadC2SPacket usePassiveAbility(int rpgClassAbilityIndex)
-        // {
-        //     PacketByteBuf pbb = new PacketByteBuf(Unpooled.buffer());
-        //     pbb.writeByte(rpgClassAbilityIndex);
-        //     return new CustomPayloadC2SPacket(USE_PASSIVE_ABILITY,pbb);
-        // }
 
         public static CustomPayloadC2SPacket requestComponentBag()
         {

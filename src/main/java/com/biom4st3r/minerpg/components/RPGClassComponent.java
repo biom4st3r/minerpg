@@ -9,12 +9,15 @@ import com.biom4st3r.minerpg.api.BufferSerializable;
 import com.biom4st3r.minerpg.api.IComponent;
 import com.biom4st3r.minerpg.api.NbtSerializable;
 import com.biom4st3r.minerpg.api.RPGClass;
+import com.biom4st3r.minerpg.interfaces.Reward;
 import com.biom4st3r.minerpg.mixin_interfaces.RPGPlayer;
 import com.biom4st3r.minerpg.networking.Packets;
 import com.biom4st3r.minerpg.registery.RPG_Registry;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
+import net.minecraft.entity.ItemEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -28,7 +31,7 @@ public class RPGClassComponent implements IComponent, BufferSerializable, NbtSer
 
     public LinkedHashMap<RPGClass,Integer> rpgClasses;
 
-    private int maxClasses = 1;
+    private static final int maxClasses = 1;
 
     public static final String EXPERIENCE = "exp",
         RPG_COMPONENT = "rpgclasscomponent",
@@ -50,9 +53,14 @@ public class RPGClassComponent implements IComponent, BufferSerializable, NbtSer
         //abilityBar = new RPGAbility[9];
     }
 
-    public float getExperiance(int index)
+    public float getExperience(int index)
     {
         return experience[index];
+    }
+
+    public int getLevel(int index)
+    {
+        return rpgClasses.get(this.getRpgClass(index));
     }
 
     public void setExperience(int index, float value)
@@ -66,8 +74,7 @@ public class RPGClassComponent implements IComponent, BufferSerializable, NbtSer
         while(this.experience[index] > selectedClass.getExpRequiredForLvl(this.rpgClasses.get(selectedClass)+1))
         {
             int newLevel = this.rpgClasses.get(selectedClass)+1;
-            List<ItemStack> items = Lists.newArrayList();
-            selectedClass.givePlayerRewards(newLevel).give(this.owner, items);
+            applyRewards(selectedClass.givePlayerRewards(newLevel));
             this.rpgClasses.replace(selectedClass, newLevel);
         }
     }
@@ -106,6 +113,23 @@ public class RPGClassComponent implements IComponent, BufferSerializable, NbtSer
         return rpgClasses.size() > 0;
     }
 
+    public void applyRewards(Reward reward)
+    {
+        if(this.owner.getPlayer().world.isClient) return;
+        
+        Biow0rks.debug("isClient %s", this.owner.getPlayer().world.isClient);
+        List<ItemStack> items = Lists.newArrayList();
+        reward.give(owner, items);
+        PlayerEntity pe = this.owner.getPlayer();
+        for(ItemStack iS : items)
+        {
+            if(!pe.inventory.insertStack(iS))
+            {
+                pe.world.spawnEntity(new ItemEntity(pe.world,pe.x,pe.y,pe.z,iS));
+            }
+        }
+    }
+
     public void addRpgClass(RPGClass rpgClass)
     {
         if(rpgClasses.size() >= maxClasses)
@@ -114,6 +138,7 @@ public class RPGClassComponent implements IComponent, BufferSerializable, NbtSer
             return;
         }
         rpgClasses.put(rpgClass, 1);
+        applyRewards(rpgClass.givePlayerRewards(1));
         float[] temp = experience.clone();
         experience = new float[rpgClasses.size()];
         for(int i = 0; i < temp.length; i++)
@@ -177,7 +202,7 @@ public class RPGClassComponent implements IComponent, BufferSerializable, NbtSer
 
     public void deserializeNBT(CompoundTag ct)
     {
-        ListTag lt = ct.getList(RPG_COMPONENT, 10);
+        ListTag lt = (ListTag)ct.getTag(RPG_COMPONENT);
         RPGClass rpgclass;
         int lvl;
         experience = new float[lt.size()];
@@ -191,6 +216,10 @@ public class RPGClassComponent implements IComponent, BufferSerializable, NbtSer
             experience[i] = lt.getCompoundTag(i).getFloat(EXPERIENCE);
             lvl = lt.getCompoundTag(i).getInt(LEVEL);
             this.rpgClasses.put(rpgclass, lvl);
+        }
+        for(int i = 0; i < rpgClasses.size();i++)
+        {
+            updateLvl(i);
         }
     }
 

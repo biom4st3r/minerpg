@@ -21,6 +21,17 @@ public class RPGStatsComponent implements IComponent, BufferSerializable, NbtSer
 
     public int remainingPoints;
 
+    public RPGStatsComponent(int str, int dex,int intel,int wis,int con,int cha)
+    {
+        this.stats = Maps.newHashMap();
+        stats.put(Stat.STRENGTH, str);
+        stats.put(Stat.DEXTERITY,dex);
+        stats.put(Stat.INTELLIGENCE,intel);
+        stats.put(Stat.WISDOW, wis);
+        stats.put(Stat.CONSTITUTION,con);
+        stats.put(Stat.CHARISMA,cha);
+    }
+
     public RPGStatsComponent()
     {
         stats = Maps.newHashMap();
@@ -42,17 +53,6 @@ public class RPGStatsComponent implements IComponent, BufferSerializable, NbtSer
         int old = this.stats.get(s);
         this.stats.put(s, old-1);
         this.remainingPoints++;
-    }
-
-    public RPGStatsComponent copyOfStats()
-    {
-        RPGStatsComponent rpgc = new RPGStatsComponent();
-        for(Stat stat : Stat.values())
-        {
-            rpgc.stats.put(stat, this.getStat(stat));
-        }
-        rpgc.remainingPoints = this.remainingPoints;
-        return rpgc;
     }
 
     public boolean clientRequestChanges(RPGStatsComponent client)
@@ -102,7 +102,6 @@ public class RPGStatsComponent implements IComponent, BufferSerializable, NbtSer
             {
                 statTag.putByte(s.text, (byte)(int)this.stats.get(s));
             }
-        //}
             statTag.putByte(SPAREPOINTS, (byte)remainingPoints);
             tag.put(STATS, statTag);
         }
@@ -110,9 +109,8 @@ public class RPGStatsComponent implements IComponent, BufferSerializable, NbtSer
 
     public void deserializeNBT(CompoundTag tag)
     {
-        if(tag.getCompound(STATS).isEmpty() )//|| true)
+        if(tag.getCompound(STATS).isEmpty())
         {
-            //this.serialize(tag);
             this.remainingPoints = 27;
             for(Stat i : Stat.values())
             {
@@ -197,7 +195,14 @@ public class RPGStatsComponent implements IComponent, BufferSerializable, NbtSer
     }
 
     @Override
-    public <T extends IComponent> T getCopy() {
-        return null;
+    @SuppressWarnings("unchecked")
+    public RPGStatsComponent getCopy() {
+        RPGStatsComponent rpgc = new RPGStatsComponent();
+        for(Stat stat : Stat.values())
+        {
+            rpgc.stats.put(stat, this.getStat(stat));
+        }
+        rpgc.remainingPoints = this.remainingPoints;
+        return rpgc;
     }
 }

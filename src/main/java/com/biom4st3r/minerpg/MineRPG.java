@@ -1,6 +1,7 @@
 package com.biom4st3r.minerpg;
 
 import com.biom4st3r.biow0rks.PotionEffectHelper;
+import com.biom4st3r.minerpg.api.RPGAbility;
 import com.biom4st3r.minerpg.components.RPGAbilityComponent;
 import com.biom4st3r.minerpg.components.RPGClassComponent;
 import com.biom4st3r.minerpg.components.RPGStatsComponent;
@@ -68,7 +69,7 @@ public class MineRPG implements ModInitializer
                     RPGPlayer player = ((RPGPlayer)command.getSource().getPlayer());
                     player.getRPGAbilityComponent().clone(new RPGAbilityComponent(player));
                     player.getRPGClassComponent().clone(new RPGClassComponent(player));
-                    player.getStatsComponent().clone(new RPGStatsComponent());;
+                    player.getStatsComponent().clone(new RPGStatsComponent());
                     Util.sendAllComponents(player);
                     return 0;
                 })
@@ -96,6 +97,17 @@ public class MineRPG implements ModInitializer
             });
             return 0;
         })));
+        CommandRegistryImpl.INSTANCE.register(false, serverCommandSource -> serverCommandSource.register(
+            CommandManager.literal("myabilities").executes(command->
+            {
+                RPGPlayer player = (RPGPlayer)command.getSource().getPlayer();
+                for(RPGAbility a : player.getRPGAbilityComponent().getAbilities())
+                {
+                    player.getPlayer().sendMessage(new LiteralText(a.id.toString()));
+                }
+                return 0;
+            })
+        ));
         //SetBlockCommand
     }
 }

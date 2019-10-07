@@ -82,7 +82,7 @@ public class StatMenu extends AbstractAbilitiesContainer {
         // }
         if(backupComponent.getStat(Stat.CONSTITUTION) == -1)
         {
-            this.backupComponent = this.rpgStatComponent.copyOfStats();
+            this.backupComponent = this.rpgStatComponent.getCopy();
         }
         
         // else if(this.rpgComponent.remainingPoints <= 0 && this.statButtons[0].visible)
@@ -108,12 +108,12 @@ public class StatMenu extends AbstractAbilitiesContainer {
         this.left = (this.width - this.containerWidth) / 2;
         this.top = (this.height - this.containerHeight) / 2;
         this.rpgStatComponent = ((RPGPlayer)this.minecraft.player).getStatsComponent();
-        this.backupComponent = this.rpgStatComponent.copyOfStats();
+        this.backupComponent = this.rpgStatComponent.getCopy();
         statButtons =  new StatButton[12];
 
         denyButton = this.addButton(new AcceptanceButton(xMid()+47, yGrid(0), 15, 15, true, (button)->
         {
-            this.rpgStatComponent = backupComponent.copyOfStats();
+            this.rpgStatComponent = backupComponent.getCopy();
             confirmButton.visible = false;
             denyButton.visible = false;
         }));
@@ -124,7 +124,7 @@ public class StatMenu extends AbstractAbilitiesContainer {
             {
                 statbuttons.visible = false;
             }
-            backupComponent = this.rpgStatComponent.copyOfStats();
+            backupComponent = this.rpgStatComponent.getCopy();
             MinecraftClient
                 .getInstance()
                 .getNetworkHandler()

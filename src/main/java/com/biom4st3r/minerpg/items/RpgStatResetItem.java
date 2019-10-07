@@ -21,12 +21,8 @@ public class RpgStatResetItem extends Item
 
     @Override
     public TypedActionResult<ItemStack> use(World world, PlayerEntity pe, Hand hand) {
-        // if(!world.isClient)
-        // {
         RPGPlayer rpgPe = (RPGPlayer)pe;
         rpgPe.getStatsComponent().clone(new RPGStatsComponent());
-        //rpgPe.getNetworkHandlerS().sendPacket(Packets.SERVER.sendStats(rpgPe));
-        //}
         return new TypedActionResult<ItemStack>(ActionResult.SUCCESS, pe.getStackInHand(hand));
     }
 }

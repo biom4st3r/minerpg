@@ -11,5 +11,9 @@
     "rpgability.minerpg.evokerfangs": "Evoker Fangs",
     "rpgability.minerpg.evokeraoe": "Evoker AOE",
     "rpgclass.minerpg.barbarian": "Barbarian",
-    "effect.minerpg.paper_skin": "Paper Skin"
+    "effect.minerpg.paper_skin": "Paper Skin",
+
+    "dialog.minerpg.learnedability":"You just learned the ability",
+    "dialog.minerpg.givenitem":"You found an",
+    "dialog.minerpg.givenskillpoint":"You earned %s skill points"
 }

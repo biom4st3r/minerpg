@@ -8,13 +8,12 @@ import com.biom4st3r.minerpg.api.IComponent;
 import com.biom4st3r.minerpg.api.NbtSerializable;
 import com.biom4st3r.minerpg.api.RPGAbility;
 import com.biom4st3r.minerpg.mixin_interfaces.RPGPlayer;
+import com.biom4st3r.minerpg.networking.Packets;
 import com.biom4st3r.minerpg.registery.RPG_Registry;
 import com.biom4st3r.minerpg.registery.RpgAbilities;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.StringTag;
@@ -24,9 +23,10 @@ import net.minecraft.util.PacketByteBuf;
 
 public class RPGAbilityComponent implements IComponent,NbtSerializable,BufferSerializable {
 
-    protected List<RPGAbility> abilities = Lists.newArrayList();
+    protected List<RPGAbility> abilities;
     public DefaultedList<RPGAbility> abilityBar;
     protected Map<Identifier,Integer> cooldowns; 
+    public boolean isDirty_abilities = false;
 
     //protected Map<Identifier,Integer> tokens;
     
@@ -37,21 +37,28 @@ public class RPGAbilityComponent implements IComponent,NbtSerializable,BufferSer
         return this.abilities;
     }
 
+    public void addAbility(RPGAbility ability)
+    {
+        this.isDirty_abilities = true;
+        this.abilities.add(ability);
+    }
+
     @Override
-    public <T extends IComponent> void clone(T origin) {
-        RPGAbilityComponent original = (RPGAbilityComponent)origin;
-        for(RPGAbility a : original.abilities)
+    public <T extends IComponent> void clone(T newData) {
+        RPGAbilityComponent source = (RPGAbilityComponent)newData;
+        this.init();
+        for(RPGAbility a : source.abilities)
         {
             this.abilities.add(a);
         }
         for(int i = 0; i < 9; i++)
         {
-            this.abilityBar.set(i, original.abilityBar.get(i));
+            this.abilityBar.set(i, source.abilityBar.get(i));
         }
         this.cooldowns = Maps.newHashMap();
         for(Identifier i : cooldowns.keySet())
         {
-            this.cooldowns.put(i, original.cooldowns.get(i));
+            this.cooldowns.put(i, source.cooldowns.get(i));
         }
         // this.tokens = Maps.newHashMap();
         // for(Identifier i : tokens.keySet())
@@ -67,19 +74,37 @@ public class RPGAbilityComponent implements IComponent,NbtSerializable,BufferSer
             for(Identifier i : this.cooldowns.keySet())
             {
                 this.cooldowns.replace(i, this.cooldowns.get(i)-1);
+                if(this.cooldowns.get(i) < 1){
+                    this.cooldowns.remove(i);
+                    break;
+                }
+            }
+        }
+        if(!this.owner.getPlayer().world.isClient)
+        {
+            if(isDirty_abilities)
+            {
+                isDirty_abilities = false;
+                this.owner.getNetworkHandlerS().sendPacket(Packets.SERVER.sendAbilityComponent(owner));
             }
         }
     }
 
     public RPGAbilityComponent(RPGPlayer player)
     {
-        abilities = Lists.newArrayList();
-        abilityBar = DefaultedList.ofSize(9, RpgAbilities.NONE);
-        cooldowns = Maps.newHashMap();
+        this.init();
         // tokens = Maps.newHashMap();
 
         this.owner = player;
     }
+
+    public void init()
+    {
+        abilities = Lists.newArrayList();
+        abilityBar = DefaultedList.ofSize(9, RpgAbilities.NONE);
+        cooldowns = Maps.newHashMap();
+    }
+
     public RPGAbilityComponent(RPGPlayer player, PacketByteBuf pbb)
     {
         this(player);
@@ -152,6 +177,7 @@ public class RPGAbilityComponent implements IComponent,NbtSerializable,BufferSer
     }
 
     public static final String 
+        ABILITY_COMPONENT = "abicomp",
         ABILITY_LIST = "rpgAbilList",
         //ABILITY_LIST_SIZE = "rpgAbLSize",
         SLOT_ID = "slotid",
@@ -172,6 +198,8 @@ public class RPGAbilityComponent implements IComponent,NbtSerializable,BufferSer
 
     @Override
     public void serializeNBT(CompoundTag tag) {
+        CompoundTag ct = new CompoundTag();
+
         ListTag lt;
 
         lt = new ListTag();
@@ -179,7 +207,7 @@ public class RPGAbilityComponent implements IComponent,NbtSerializable,BufferSer
         { // abilities
             lt.add(new StringTag(abilities.get(i).id.toString()));
         }
-        tag.put(ABILITY_LIST, lt);
+        ct.put(ABILITY_LIST, lt);
 
         lt = new ListTag();
         for(int i = 0; i < 9; i++)
@@ -187,7 +215,7 @@ public class RPGAbilityComponent implements IComponent,NbtSerializable,BufferSer
             RPGAbility ability = abilityBar.get(i);
             lt.add(new StringTag(ability.id.toString()));   
         }
-        tag.put(ABILITY_BAR, lt);
+        ct.put(ABILITY_BAR, lt);
         //lt = new ListTag();
         // Tokens
         // for(Identifier i : tokens.keySet())
@@ -202,26 +230,31 @@ public class RPGAbilityComponent implements IComponent,NbtSerializable,BufferSer
         //Cooldowns
         for(Identifier i : cooldowns.keySet())
         {
-            CompoundTag ct = new CompoundTag();
-            ct.putString(COOLDOWN_NAME,i.toString());
-            ct.putInt(COOLDOWN_DURATION, cooldowns.get(i));
+            CompoundTag set = new CompoundTag();
+            set.putString(COOLDOWN_NAME,i.toString());
+            set.putInt(COOLDOWN_DURATION, cooldowns.get(i));
             lt.add(ct);
         }
-        tag.put(COOLDOWN_LIST,lt);
+        ct.put(COOLDOWN_LIST,lt);
+
+        tag.put(ABILITY_COMPONENT, ct);
     }
 
     @Override
-    @Environment(EnvType.CLIENT)
     public void deserializeNBT(CompoundTag tag) {
+        this.init();
+        CompoundTag ct = tag.getCompound(ABILITY_COMPONENT);
         ListTag lt;
         int i;
 
-        lt = tag.getList(ABILITY_LIST,10);
-        for(i = 0; i < lt.size(); i++)
+
+        lt = (ListTag)ct.getTag(ABILITY_LIST);
+        for(i = 0; lt.size() > i; i++)
         {
-            this.abilities.add(getAbility(new Identifier(lt.getString(i))));
+            String id = lt.getString(i);
+            this.abilities.add(getAbility( new Identifier(id) ));
         }
-        lt = tag.getList(ABILITY_BAR, 10);
+        lt = (ListTag)ct.getTag(ABILITY_BAR);
         for(i = 0; i < 9 && lt.size() > 0 ; i++)
         {
             RPGAbility ability = RPG_Registry.ABILITY_REGISTRY.get(new Identifier(lt.getString(i)));
@@ -233,11 +266,11 @@ public class RPGAbilityComponent implements IComponent,NbtSerializable,BufferSer
         //     CompoundTag ct = lt.getCompoundTag(i);
         //     tokens.put(new Identifier(ct.getString(TOKEN_NAME)), ct.getInt(TOKEN_AMOUNT));
         // }
-        lt = tag.getList(COOLDOWN_LIST, 10);
+        lt = (ListTag)ct.getTag(COOLDOWN_LIST);
         for(i = 0; i < lt.size();i++)
         {
-            CompoundTag ct = lt.getCompoundTag(i);
-            cooldowns.put(new Identifier(ct.getString(COOLDOWN_NAME)), ct.getInt(COOLDOWN_DURATION));
+            CompoundTag set = lt.getCompoundTag(i);
+            cooldowns.put(new Identifier(set.getString(COOLDOWN_NAME)), set.getInt(COOLDOWN_DURATION));
         }
     }
 
@@ -276,11 +309,11 @@ public class RPGAbilityComponent implements IComponent,NbtSerializable,BufferSer
         int size = buf.readShort();
         for(int i = 0; i< size; i++)
         {
-            abilities.add(getAbility(buf.readIdentifier()));
+            this.abilities.add(getAbility(buf.readIdentifier()));
         }
         for(int i = 0; i < 9; i++)
         {
-            abilityBar.set(i, RPG_Registry.ABILITY_REGISTRY.get(buf.readIdentifier()));
+            this.abilityBar.set(i, RPG_Registry.ABILITY_REGISTRY.get(buf.readIdentifier()));
         }
         // size = buf.readShort();
         // for(int i = 0; i < size; i++)
@@ -290,7 +323,7 @@ public class RPGAbilityComponent implements IComponent,NbtSerializable,BufferSer
         size = buf.readShort();
         for(int i = 0; i < size; i++)
         {
-            cooldowns.put(buf.readIdentifier(), buf.readInt());
+            this.cooldowns.put(buf.readIdentifier(), buf.readInt());
         }
     }
     @SuppressWarnings("unchecked")

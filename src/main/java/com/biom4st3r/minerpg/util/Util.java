@@ -2,6 +2,7 @@ package com.biom4st3r.minerpg.util;
 
 import java.lang.reflect.Array;
 
+import com.biom4st3r.biow0rks.Biow0rks;
 import com.biom4st3r.minerpg.api.RPGAbility;
 import com.biom4st3r.minerpg.mixin_interfaces.RPGPlayer;
 import com.biom4st3r.minerpg.networking.Packets;
@@ -43,6 +44,7 @@ public class Util
 
     public static void requestAllComponents(ClientPlayNetworkHandler networkhandler)
     {
+        Biow0rks.debug("All Components Requested");
         networkhandler.sendPacket(Packets.CLIENT.requestRpgClassComponent());
         networkhandler.sendPacket(Packets.CLIENT.requestStatComp());
         networkhandler.sendPacket(Packets.CLIENT.requestAbilityComp());
@@ -151,4 +153,34 @@ public class Util
     //     for(int i = 0; i < lt.size(); i++)
         
     // }
+
+    public static float dndLevelingAlgo(int lvl)
+    {
+        if(lvl == 1) return 0;
+        return (float)((3.7825f*Math.pow(lvl, 4))-(134.59*Math.pow(lvl, 3))+(2572.6*Math.pow(lvl, 2))-(10699*lvl)+10703);
+    }
+
+    public static float plagurmonLevelingAlgoFast(int lvl)
+    {
+        if(lvl == 1) return 0;
+        return (float)(Math.pow(lvl, 3)*4)/5;
+    }
+
+    public static float plagurmonLevelingAlgoMedFast(int lvl)
+    {
+        if(lvl == 1) return 0;
+        return (float)Math.pow(lvl, 3);
+    }
+
+    public static float plagurmonLevelingAlgoMedSlow(int lvl)
+    {
+        if(lvl == 1) return 0;
+        return (float)((6f/5f)*Math.pow(lvl, 3)-(15f*Math.pow(lvl, 2))+(100f*lvl)-140);
+    }
+
+    public static float plagurmonLevelingAlgoSlow(int lvl)
+    {
+        if(lvl == 1) return 0;
+        return (float)(Math.pow(lvl, 3)*5)/4f;
+    }
 }

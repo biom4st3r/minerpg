@@ -25,6 +25,10 @@ public abstract class RPGClass
 
     public float getExpRequiredForLvl(int Lvl)
     {
+        if(Lvl <= 1)
+        {
+            return 0;
+        }
         if(Lvl < 11)
         {
             return Lvl*20;
