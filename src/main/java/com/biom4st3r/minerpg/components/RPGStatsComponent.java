@@ -205,4 +205,8 @@ public class RPGStatsComponent implements IComponent, BufferSerializable, NbtSer
         rpgc.remainingPoints = this.remainingPoints;
         return rpgc;
     }
+
+    @Override
+    public void tick() {
+    }
 }

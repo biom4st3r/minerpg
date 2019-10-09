@@ -67,6 +67,7 @@ public class RPGAbilityComponent implements IComponent,NbtSerializable,BufferSer
         // }
     }
 
+    @Override
     public void tick()
     {
         if(this.cooldowns.size() != 0)

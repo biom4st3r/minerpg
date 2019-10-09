@@ -3,6 +3,7 @@ package com.biom4st3r.minerpg.mixin_interfaces;
 import com.biom4st3r.minerpg.components.RPGAbilityComponent;
 import com.biom4st3r.minerpg.components.RPGClassComponent;
 import com.biom4st3r.minerpg.components.RPGStatsComponent;
+import com.biom4st3r.minerpg.components.RPGTraitComponent;
 import com.biom4st3r.minerpg.gui.ComponentContainer;
 
 import net.minecraft.client.network.ClientPlayNetworkHandler;
@@ -28,6 +29,8 @@ public interface RPGPlayer
     public ServerPlayNetworkHandler getNetworkHandlerS();
 
     public ClientPlayNetworkHandler getNetworkHandlerC();
+
+    public RPGTraitComponent getRPGTraitComponent();
 
     public PlayerEntity getPlayer();
 

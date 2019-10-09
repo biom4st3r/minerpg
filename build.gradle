@@ -13,7 +13,7 @@ group = project.maven_group
 repositories
 {
 	maven { url 'http://server.bbkr.space:8081/artifactory/libs-snapshot' }
-
+	maven { url 'https://jitpack.io' }
 }
 
 
@@ -33,6 +33,8 @@ dependencies {
 	include "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 	modCompile "com.biom4st3r.biow0rks:biow0rks:0.2.3"
 	include "com.biom4st3r.biow0rks:biow0rks:0.2.3"
+	//modCompile "com.github.chocohead:fabric-asm:v1.8"
+	//include "com.github.chocohead:fabric-asm:v1.8"
 	// PSA: Some older mods, compiled on Loom 0.2.1, might have outdated Maven POMs.
 	// You may need to force-disable transitiveness on them.
 }
