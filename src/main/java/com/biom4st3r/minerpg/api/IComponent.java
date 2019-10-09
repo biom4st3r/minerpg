@@ -1,6 +1,8 @@
 package com.biom4st3r.minerpg.api;
 
-public interface IComponent 
+import net.minecraft.util.Tickable;
+
+public interface IComponent extends Tickable
 {
     public <T extends IComponent> void clone(T origin);
 

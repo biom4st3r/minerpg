@@ -30,30 +30,27 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.PacketByteBuf;
 import net.minecraft.util.registry.Registry;
 
-public class MineRPG implements ModInitializer
-{
+public class MineRPG implements ModInitializer {
     public static final String MODID = "minerpg";
     public static final Identifier COMPONENT_BAG_ID = new Identifier(MODID, "componentbag");
 
-    public static final StatusEffect PAPER_SKIN = PotionEffectHelper.createAndRegisterEffect(new Identifier(MODID,"paper_skin"), StatusEffectType.HARMFUL, 0xFFFFFF);
+    public static final StatusEffect PAPER_SKIN = PotionEffectHelper
+            .createAndRegisterEffect(new Identifier(MODID, "paper_skin"), StatusEffectType.HARMFUL, 0xFFFFFF);
 
-    @SuppressWarnings({"unchecked"})
-    public static final EntityType<Fireball> FIREBALL = (EntityType<Fireball>)(Object)Registry.register(
-        Registry.ENTITY_TYPE, new Identifier(MODID,"fireball"), 
-        FabricEntityTypeBuilder.create(EntityCategory.MISC, (type,world) ->
-        {
-            return new Fireball((EntityType<Fireball>)(Object)type,world);
-        }).build());
+    @SuppressWarnings({ "unchecked" })
+    public static final EntityType<Fireball> FIREBALL = (EntityType<Fireball>) (Object) Registry.register(
+            Registry.ENTITY_TYPE, new Identifier(MODID, "fireball"),
+            FabricEntityTypeBuilder.create(EntityCategory.MISC, (type, world) -> {
+                return new Fireball((EntityType<Fireball>) (Object) type, world);
+            }).build());
 
     @Override
-    public void onInitialize() 
-    {
-        Registry.register(Registry.PARTICLE_TYPE, new Identifier(MineRPG.MODID,"rpg_damage"), RpgDamageEffect.TYPE);
+    public void onInitialize() {
+        Registry.register(Registry.PARTICLE_TYPE, new Identifier(MineRPG.MODID, "rpg_damage"), RpgDamageEffect.TYPE);
         RpgAbilities.init();
         RpgClasses.init();
         ItemReg.init();
         Packets.serverPacketReg();
-        
         ContainerProviderRegistry.INSTANCE.registerFactory(
             COMPONENT_BAG_ID,
             (int syncId, Identifier identifier, PlayerEntity player, PacketByteBuf buf) ->

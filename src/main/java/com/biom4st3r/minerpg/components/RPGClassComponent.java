@@ -265,4 +265,8 @@ public class RPGClassComponent implements IComponent, BufferSerializable, NbtSer
             i++;
         }
     }
+
+    @Override
+    public void tick() {
+    }
 }

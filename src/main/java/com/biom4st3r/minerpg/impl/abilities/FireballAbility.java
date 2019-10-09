@@ -8,7 +8,6 @@ import com.biom4st3r.minerpg.components.RPGStatsComponent;
 import com.biom4st3r.minerpg.entities.Fireball;
 import com.biom4st3r.minerpg.interfaces.DestructiveItemRequirement;
 import com.biom4st3r.minerpg.interfaces.ItemRequirement;
-import com.biom4st3r.minerpg.interfaces.Requirement;
 import com.biom4st3r.minerpg.interfaces.StatRequirement;
 import com.biom4st3r.minerpg.mixin_interfaces.RPGPlayer;
 import com.google.common.collect.Lists;

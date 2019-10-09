@@ -1,16 +1,45 @@
-# Fabric Example Mod
+
+# MineRPG
+
+  
 
 ## Setup
 
-1. Edit build.gradle and mod.json to suit your needs.
-    * The "mixins" object can be removed from mod.json if you do not need to use mixins.
-    * Please replace all occurences of "modid" with your own mod ID - sometimes, a different string may also suffice.
-2. Run the following command:
+  1. Add Jitpack to your build.gradle
+  ```
+  ...
+archivesBaseName = project.archives_base_name
 
-```
-./gradlew idea
-```
+version = project.mod_version
+
+group = project.maven_group
+
+repositories
+
+{
+
+maven { url 'https://jitpack.io' }
+
+}
+
+minecraft {
+
+}
+...
+  ```
+  2. Add MineRPG to your dependencies
+  ```
+  modCompile "com.gitlab.biom4st3r:minerpg:0.0.1
+  include "com.gitlab.biom4st3r:minerpg:0.0.1
+  ```
+
+3. ```.\gradlew vscode``` or what ever ide you use
+4. Done
+
+  
 
 ## License
 
-This template is available under the CC0 license. Feel free to learn from it and incorporate it in your own projects.
+ 
+Check LICENSE
+

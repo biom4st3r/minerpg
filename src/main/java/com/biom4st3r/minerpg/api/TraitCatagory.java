@@ -1,30 +1,28 @@
-// package com.biom4st3r.minerpg.api;
+package com.biom4st3r.minerpg.api;
 
-// import com.biom4st3r.minerpg.MineRPG;
+import com.biom4st3r.minerpg.MineRPG;
 
-// import net.minecraft.util.Identifier;
+import net.minecraft.util.Identifier;
 
-// public class TraitCatagory 
-// {
-//     public static TraitCatagory ARMOR_OVERRIDE = TraitCatagory.create(
-//         new Identifier(MineRPG.MODID, "armoroverride"));
+public class TraitCatagory {
+    public static final TraitCatagory 
+        ARMOR_OVERRIDE  = TraitCatagory.create(new Identifier(MineRPG.MODID, "armoroverride")),
+        DAMAGE_OVERRIDE = TraitCatagory.create(new Identifier(MineRPG.MODID, "damageoverride")),
+        JUMP_OVERRIDE   = TraitCatagory.create(new Identifier(MineRPG.MODID, "jumpoverride")),
+        SPEED_OVERRIDE  = TraitCatagory.create(new Identifier(MineRPG.MODID, "speedoverride")),
+        NONE            = TraitCatagory.create(new Identifier(MineRPG.MODID, "NONE"))
+        
+        
+        ;
 
-//     public static TraitCatagory DAMAGE_OVERRIDE = TraitCatagory.create(
-//         new Identifier(MineRPG.MODID, "damageoverride"));
+    public TraitCatagory(Identifier name) {
+        this.name = name;
+    }
 
-//     public static TraitCatagory JUMP_OVERRIDE = TraitCatagory.create(
-//         new Identifier(MineRPG.MODID, "jumpoverride"));
+    public Identifier name;
 
-//     private TraitCatagory(Identifier name)
-//     {
-//         this.name = name;
-//     }
+    public static TraitCatagory create(Identifier name) {
+        return new TraitCatagory(name);
+    }
 
-//     public Identifier name;
-
-//     public static TraitCatagory create(Identifier name)
-//     {
-//         return new TraitCatagory(name);
-//     }
-
-// }
+}
