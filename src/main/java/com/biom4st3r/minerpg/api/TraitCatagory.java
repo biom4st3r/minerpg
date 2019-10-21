@@ -11,8 +11,6 @@ public class TraitCatagory {
         JUMP_OVERRIDE   = TraitCatagory.create(new Identifier(MineRPG.MODID, "jumpoverride")),
         SPEED_OVERRIDE  = TraitCatagory.create(new Identifier(MineRPG.MODID, "speedoverride")),
         NONE            = TraitCatagory.create(new Identifier(MineRPG.MODID, "NONE"))
-        
-        
         ;
 
     public TraitCatagory(Identifier name) {

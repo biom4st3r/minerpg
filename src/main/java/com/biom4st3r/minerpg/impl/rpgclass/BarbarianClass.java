@@ -5,12 +5,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.biom4st3r.minerpg.api.RPGClass;
-import com.biom4st3r.minerpg.interfaces.ItemRequirement;
 import com.biom4st3r.minerpg.interfaces.Reward;
 import com.biom4st3r.minerpg.registery.RpgAbilities;
 import com.biom4st3r.minerpg.util.DialogKeys;
 import com.biom4st3r.minerpg.util.Util;
-import com.google.common.collect.Lists;
 
 import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.EntityType;

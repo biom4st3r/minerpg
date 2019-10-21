@@ -1,16 +1,6 @@
 package com.biom4st3r.minerpg.mixin;
 
 import com.biom4st3r.minerpg.mixin_interfaces.ParticleRegHelper;
-
-/*
-Purpose: Allow Registration of Particles and setting spirit on particle
-TODO: example to be usable in api
-
-
-
-
-*/
-
 import com.biom4st3r.minerpg.particles.RpgDamageEffect;
 import com.biom4st3r.minerpg.particles.RpgDamageParticle;
 
@@ -27,6 +17,10 @@ import net.minecraft.client.texture.SpriteAtlasTexture;
 import net.minecraft.particle.ParticleEffect;
 import net.minecraft.particle.ParticleType;
 
+/**
+Purpose: Allow Registration of Particles and setting spirit on particle
+    was made before Fabric api support
+*/
 @Mixin(ParticleManager.class)
 public abstract class ParticleManagerMixin implements ParticleRegHelper {
 

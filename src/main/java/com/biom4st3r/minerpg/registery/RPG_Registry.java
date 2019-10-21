@@ -2,7 +2,6 @@ package com.biom4st3r.minerpg.registery;
 
 import com.biom4st3r.minerpg.api.RPGAbility;
 import com.biom4st3r.minerpg.api.RPGClass;
-import com.biom4st3r.minerpg.api.TraitCatagory;
 import com.google.common.base.Supplier;
 
 import net.minecraft.util.Identifier;
@@ -12,17 +11,15 @@ import net.minecraft.util.registry.SimpleRegistry;
 
 public final class RPG_Registry
 {
-    public static Registry<RPGClass> CLASS_REGISTRY = create("rpgclasses", () -> 
+    public static final Registry<RPGClass> CLASS_REGISTRY = create("rpgclasses", () -> 
     {
         return RpgClasses.NONE;
     });
 
-    public static Registry<RPGAbility> ABILITY_REGISTRY = create("rpgabilities", ()->
+    public static final Registry<RPGAbility> ABILITY_REGISTRY = create("rpgabilities", ()->
     {
         return RpgAbilities.NONE;
     });
-
-    //public static final RPGClass barbarianClass = new BarbarianClass(new Identifier(MineRPG.MODID, "barbarian"));
 
     public static <T> Registry<T> create(String string_1, Supplier<T> supplier_1) 
     {

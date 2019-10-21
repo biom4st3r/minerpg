@@ -1,13 +1,6 @@
 package com.biom4st3r.minerpg.mixin;
 
-/*
-    Purpose: Visible display to the player when gaining xp
-    i hope this doesn't look to much like "Item get" because
-    i purposfully didn't look at their source.
 
-
-
-*/
 
 import java.util.List;
 
@@ -26,6 +19,11 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.hud.InGameHud;
 
+/*
+    Purpose: Visible display to the player when gaining xp
+    i hope this doesn't look to much like "Item get" because
+    i purposfully didn't look at their source.
+*/
 @Mixin(InGameHud.class)
 public abstract class XpGettySideBar implements HudExpDisplayer {
     List<Float> xpEarned = Lists.newArrayList();

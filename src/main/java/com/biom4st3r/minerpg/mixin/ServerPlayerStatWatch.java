@@ -1,10 +1,6 @@
 package com.biom4st3r.minerpg.mixin;
 
-/*
-Hook for listening to stats for Class levelup
 
-
-*/
 
 import com.biom4st3r.minerpg.mixin_interfaces.RPGPlayer;
 
@@ -16,6 +12,11 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.stat.Stat;
 
+/**
+Hook for listening to stats for Class levelup
+
+
+*/
 @Mixin(ServerPlayerEntity.class)
 public abstract class ServerPlayerStatWatch
 {

@@ -2,7 +2,6 @@ package com.biom4st3r.minerpg.api;
 
 import com.biom4st3r.minerpg.MineRPG;
 import com.biom4st3r.minerpg.mixin_interfaces.RPGPlayer;
-import com.google.common.base.Optional;
 
 import net.minecraft.util.Identifier;
 
@@ -12,7 +11,6 @@ public abstract class RPGTrait<T>
     public final TraitCatagory tc;
 
     public static final RPGTrait<Void> NONE = new RPGTrait<Void>(new Identifier(MineRPG.MODID, "NONE"), null) {
-
         @Override
         public Void output(RPGPlayer player) {
             return null;

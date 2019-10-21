@@ -32,11 +32,19 @@ public class RPGAbilityComponent implements IComponent,NbtSerializable,BufferSer
     
     RPGPlayer owner;
 
+    /**
+     * 
+     * @return list of abilities that the player currently has.
+     */
     public List<RPGAbility> getAbilities()
     {
         return this.abilities;
     }
 
+    /**
+     * 
+     * @param ability gives the player a new ability. Commonly used for {@link com.biom4st3r.minerpg.interfaces.Reward}
+     */
     public void addAbility(RPGAbility ability)
     {
         this.isDirty_abilities = true;
@@ -67,6 +75,8 @@ public class RPGAbilityComponent implements IComponent,NbtSerializable,BufferSer
         // }
     }
 
+
+    /** ticked with the {@link RPGPlayer#tick()} */
     @Override
     public void tick()
     {
@@ -99,6 +109,7 @@ public class RPGAbilityComponent implements IComponent,NbtSerializable,BufferSer
         this.owner = player;
     }
 
+    /** resets an {@link RPGAbilityComponent} to empty */
     public void init()
     {
         abilities = Lists.newArrayList();
@@ -157,21 +168,40 @@ public class RPGAbilityComponent implements IComponent,NbtSerializable,BufferSer
     //     return false;
     // }
 
+    /**
+     * 
+     * @param ability ability to be added to {@link RPGAbilityComponent#cooldowns}
+     */
     public void addCooldown(RPGAbility ability)
     {
-        addCooldown(ability.id, ability.getCoolDown());
+        addCooldown(ability.id, ability.getCoolDownDuration());
     }
 
+    /**
+     * 
+     * @param i identifier of ability to be aded to {@link RPGAbilityComponent#cooldowns}
+     * @param coolDown duration of cooldown. Usually via {@link RPGAbility#getCoolDownDuration()}
+     */
     public void addCooldown(Identifier i, int coolDown)
     {
         cooldowns.put(i,coolDown);
     }
 
-    public boolean isOnCooldown(Identifier i)
+    /**
+     * 
+     * @param id identifier of Ability to be checked
+     * @return true if id in {@link RPGAbilityComponent#cooldowns}  
+     */
+    public boolean isOnCooldown(Identifier id)
     {
-        return cooldowns.containsKey(i);
+        return cooldowns.containsKey(id);
     }
 
+    /**
+     * 
+     * @param rpga RPGAbility to be added to {@link RPGAbilityComponent#cooldowns}
+     * @return true is rpga is in {@link RPGAbilityComponent#cooldowns}
+     */
     public boolean isOnCooldown(RPGAbility rpga)
     {
         return isOnCooldown(rpga.id);
@@ -192,6 +222,7 @@ public class RPGAbilityComponent implements IComponent,NbtSerializable,BufferSer
         COOLDOWN_DURATION = "cdtm";
 
 
+    
     private static RPGAbility getAbility(Identifier i)
     {
         return RPG_Registry.ABILITY_REGISTRY.get(i);

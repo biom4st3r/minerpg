@@ -1,10 +1,6 @@
 package com.biom4st3r.minerpg.mixin;
 
-/*
-Provides synconization for the ComponentBag
 
-
-*/
 
 import com.biom4st3r.minerpg.mixin_interfaces.RPGPlayer;
 
@@ -16,6 +12,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import net.minecraft.server.network.ServerPlayerEntity;
 
 @Mixin(ServerPlayerEntity.class)
+/**
+Provides synconization for the ComponentBag
+*/
 public abstract class ServerPEAddListener
 {
     @Inject(at = @At("TAIL"),method = "method_14235")
