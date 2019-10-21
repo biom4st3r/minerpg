@@ -1,4 +1,3 @@
-
 # MineRPG
 
   
@@ -42,4 +41,6 @@ minecraft {
 
  
 Check LICENSE
+
+![Hits](https://hitcounter.pythonanywhere.com/count/tag.svg?url=https%3A%2F%2Fgitlab.com%2Fbiom4st3r%2Fminerpg)
 
