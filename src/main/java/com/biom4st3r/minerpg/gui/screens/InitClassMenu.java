@@ -115,7 +115,7 @@ public class InitClassMenu extends Screen
                         focusedButton = cb.index;
                     }
                     cb.setFocused(true);
-                    Biow0rks.debug("classButton ID: %s",cb.rpgClass.id);
+                    Biow0rks.logger.debug("classButton ID: %s",cb.rpgClass.id);
                     
                 },index));
                 classButtons[index].visible = false;

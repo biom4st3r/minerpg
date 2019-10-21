@@ -4,9 +4,9 @@
   "version": "${version}",
 
   "name": "MineRPG",
-  "description": "This is an example description! Tell everyone what your mod is about!",
+  "description": "API for adding RPG element to minecraft",
   "authors": [
-    "Me!"
+    "biom4st3r"
   ],
   "contact": {
     "homepage": "https://fabricmc.net/",

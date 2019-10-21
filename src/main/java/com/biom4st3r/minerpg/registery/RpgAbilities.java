@@ -28,7 +28,7 @@ public final class RpgAbilities {
     
     public static RPGAbility register(RPGAbility rpgability)
     {
-        //Biow0rks.debug("Adding RPGAbility: " + rpgability.toString());
+        //Biow0rks.logger.debug("Adding RPGAbility: " + rpgability.toString());
         return (RPGAbility)((MutableRegistry<RPGAbility>)RPG_Registry.ABILITY_REGISTRY).add(rpgability.id, rpgability);
     }
 

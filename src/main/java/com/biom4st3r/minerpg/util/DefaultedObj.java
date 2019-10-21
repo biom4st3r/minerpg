@@ -9,7 +9,7 @@ public class DefaultedObj<T> {
     public DefaultedObj(T value, T defaultValue) {
         if(defaultValue == null)
         {
-            Biow0rks.error("A NNObj has been assigned null;\n%s\nNNObj's should never be assigned null...", new Exception().getCause().getMessage());
+            Biow0rks.logger.error("A NNObj has been assigned null;\n%s\nNNObj's should never be assigned null...", new Exception().getCause().getMessage());
         }
 
         this.defaultValue = defaultValue;

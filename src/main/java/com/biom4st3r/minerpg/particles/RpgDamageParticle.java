@@ -29,7 +29,7 @@ public class RpgDamageParticle extends SpriteBillboardParticle {
         this.colorAlpha = 1f;
         this.scale = 0.25f;
         this.maxAge = 30;
-        //Biow0rks.debug(value);
+        //Biow0rks.logger.debug(value);
         
         this.setSprite(((ParticleRegHelper)MinecraftClient.getInstance().particleManager)
             .getAtlas().getSprite(new Identifier(MineRPG.MODID, "rpg_damage"+((int)Math.floor(value)) )));

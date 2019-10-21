@@ -87,31 +87,31 @@ public class RPGStatsComponent implements IComponent, BufferSerializable, NbtSer
             int clientStat = client.stats.get(stat);
             if(clientStat < serverStat)
             {
-                Biow0rks.error("Client stat lower than Server.");
+                Biow0rks.logger.error("Client stat lower than Server.");
                 return false;
             }
             delta+= clientStat-serverStat;
         }
         if(delta > this.remainingPoints)
         {
-            Biow0rks.error("Client delta from server greater than remainingPoints");
+            Biow0rks.logger.error("Client delta from server greater than remainingPoints");
             return false;
         }
         if(delta <= this.remainingPoints)
         {
-            Biow0rks.debug("remainingPoints %s",this.remainingPoints);
-            Biow0rks.debug("point delta: %s",delta);
+            Biow0rks.logger.debug("remainingPoints %s",this.remainingPoints);
+            Biow0rks.logger.debug("point delta: %s",delta);
             this.remainingPoints -= delta;
             for(Stat stat : Stat.values())
             {
                 this.stats.put(stat, client.stats.get(stat));
-                Biow0rks.debug(stat + " " + client.getStat(stat));
+                Biow0rks.logger.debug(stat + " " + client.getStat(stat));
             }
-            Biow0rks.debug("remaining points after transaction: %s", this.remainingPoints);
-            Biow0rks.debug("Success");
+            Biow0rks.logger.debug("remaining points after transaction: %s", this.remainingPoints);
+            Biow0rks.logger.debug("Success");
             return true;
         }
-        Biow0rks.error("unknown issue in stat compare");
+        Biow0rks.logger.error("unknown issue in stat compare");
         return false;
     }
 

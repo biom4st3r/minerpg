@@ -43,7 +43,7 @@ public class FireballAbility extends RPGAbility {
             // fbe.prevYaw = pe.yaw;
 
             //fbe.setPositionAndAngles(fbe.x, fbe.y, fbe.z, player.getPlayer().pitch, player.getPlayer().yaw);
-            Biow0rks.debug("did fireball spawn: %s", world.spawnEntity(fbe));
+            Biow0rks.logger.debug("did fireball spawn: %s", world.spawnEntity(fbe));
 
             player.getRPGAbilityComponent().addCooldown(this);
             return true;

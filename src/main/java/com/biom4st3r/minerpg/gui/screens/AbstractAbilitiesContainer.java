@@ -52,7 +52,7 @@ public abstract class AbstractAbilitiesContainer extends Screen {
                 RPGAbility ab = ((AbilityButton)bu).ability.getValue();
 
                 this.mouseSlot.set(ab);
-                Biow0rks.debug(ab.toString());
+                Biow0rks.logger.debug(ab.toString());
 
             };
             if(abilities.size() <= i || abilities.get(i).isNone())

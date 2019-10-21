@@ -58,7 +58,7 @@ public abstract class RPGPlayerEntity extends LivingEntity implements RPGPlayer 
     // {
     //     RPGPlayer player = ((RPGPlayer)this);
     //     player.getRPGClassComponent().processStat(stat,i);
-    //     Biow0rks.debug("processing Stat " + stat.getName());
+    //     Biow0rks.logger.debug("processing Stat " + stat.getName());
     // }
 
     public void sendMessage(Text... texts)
@@ -200,7 +200,7 @@ public abstract class RPGPlayerEntity extends LivingEntity implements RPGPlayer 
     @Inject(at = @At("HEAD"), method = "readCustomDataFromTag", cancellable = false)
     public void readCustomDataFromTag(CompoundTag tag, CallbackInfo ci) 
     {
-        Biow0rks.debug("read: ");
+        Biow0rks.logger.debug("read: ");
         this.statsComponent.deserializeNBT(tag);
         bag = deserialize((ListTag)tag.getTag(COMPONENT_BAG), componentInvSize);
         this.rpgClassComponent.deserializeNBT(tag);
@@ -210,7 +210,7 @@ public abstract class RPGPlayerEntity extends LivingEntity implements RPGPlayer 
     @Inject(at = @At("HEAD"), method = "writeCustomDataToTag", cancellable = false)
     public void writeCustomDataToTag(CompoundTag tag, CallbackInfo ci) 
     {
-        Biow0rks.debug("write: ");
+        Biow0rks.logger.debug("write: ");
         this.statsComponent.serializeNBT(tag);
         tag.put(COMPONENT_BAG, serialize(this.componentInventory.bag));
         this.rpgClassComponent.serializeNBT(tag);

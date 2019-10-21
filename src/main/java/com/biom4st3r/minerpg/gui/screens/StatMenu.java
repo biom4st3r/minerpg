@@ -129,7 +129,7 @@ public class StatMenu extends AbstractAbilitiesContainer {
                 .getInstance()
                 .getNetworkHandler()
                 .sendPacket(Packets.CLIENT.statChange(rpgStatComponent));
-            Biow0rks.debug("Checking rpgComponent 1");
+            Biow0rks.logger.debug("Checking rpgComponent 1");
             confirmButton.visible = false;
             denyButton.visible = false;
         }));
@@ -140,7 +140,7 @@ public class StatMenu extends AbstractAbilitiesContainer {
             statButtons[j] = this.addButton(new StatButton(xMod, yGrid(i)-1, (button) ->
             { // minus
                 Stat s = ((StatButton)button).stat;
-                Biow0rks.debug(s + " " + this.backupComponent.getStat(s));
+                Biow0rks.logger.debug(s + " " + this.backupComponent.getStat(s));
                 if(this.rpgStatComponent.getStat(s) > this.backupComponent.getStat(s))
                 {
                     this.confirmButton.visible = true;
@@ -176,7 +176,7 @@ public class StatMenu extends AbstractAbilitiesContainer {
         //         .getInstance()
         //         .getNetworkHandler()
         //         .sendPacket(Packets.CLIENT.statChange(rpgStatComponent));
-        //     Biow0rks.debug("Checking rpgComponent 1");
+        //     Biow0rks.logger.debug("Checking rpgComponent 1");
         //     button.visible = false;
         // }));
         // if(this.rpgStatComponent.remainingPoints > 0)

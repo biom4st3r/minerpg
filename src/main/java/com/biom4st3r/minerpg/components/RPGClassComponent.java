@@ -115,7 +115,7 @@ public class RPGClassComponent implements IComponent, BufferSerializable, NbtSer
      */
     public void addExperience(int index, float value)
     {
-        Biow0rks.debug("adding %s xp",value);
+        Biow0rks.logger.debug("adding %s xp",value);
         this.setExperience(index, this.experience[index]+value);
         if(this.owner instanceof ServerPlayerEntity)
             this.owner.getNetworkHandlerS().sendPacket(Packets.SERVER.sendExperience(this.experience[index]));
@@ -168,7 +168,7 @@ public class RPGClassComponent implements IComponent, BufferSerializable, NbtSer
     {
         if(this.owner.getPlayer().world.isClient) return;
         
-        Biow0rks.debug("isClient %s", this.owner.getPlayer().world.isClient);
+        Biow0rks.logger.debug("isClient %s", this.owner.getPlayer().world.isClient);
         List<ItemStack> items = Lists.newArrayList();
         reward.give(owner, items);
         PlayerEntity pe = this.owner.getPlayer();
@@ -190,7 +190,7 @@ public class RPGClassComponent implements IComponent, BufferSerializable, NbtSer
     {
         if(rpgClasses.size() >= maxClasses)
         {
-            Biow0rks.error("class list already max size");
+            Biow0rks.logger.error("class list already max size");
             return false;
         }
         rpgClasses.put(rpgClass, 1);

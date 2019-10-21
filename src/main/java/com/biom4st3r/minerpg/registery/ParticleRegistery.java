@@ -23,7 +23,7 @@ public class ParticleRegistery {
     {
         if(id != null)
         {
-            Biow0rks.error("You must register texture ids seperatly");
+            Biow0rks.logger.error("You must register texture ids seperatly");
             ClientSpriteRegistryCallback.event(SpriteAtlasTexture.BLOCK_ATLAS_TEX).register((atlasTexture,registry)->
             {
                 registry.register(id);

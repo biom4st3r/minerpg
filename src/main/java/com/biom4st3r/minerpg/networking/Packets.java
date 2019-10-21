@@ -87,7 +87,7 @@ public final class Packets
             BlockPos pos = buff.readBlockPos();
             float damage = buff.readFloat();
             String s = ""+(int)Math.floor(damage);
-            //Biow0rks.debug("Damage: " + damage);
+            //Biow0rks.logger.debug("Damage: " + damage);
             float red,green,blue;
             Random rand = context.getPlayer().getRand(); 
             float velocityX = (rand.nextFloat()-0.5f)*0.1f; 
@@ -156,7 +156,7 @@ public final class Packets
                 if(rac.isNone())
                 {
                     player.getRPGAbilityComponent().abilityBar.set(barIndex, RpgAbilities.NONE);
-                    Biow0rks.debug(String.format("reset slot %s", barIndex));
+                    Biow0rks.logger.debug(String.format("reset slot %s", barIndex));
                     return;
                 }
                 else
@@ -164,7 +164,7 @@ public final class Packets
                     if(player.getRPGAbilityComponent().getAbilities().contains(rac))
                     {
                         player.getRPGAbilityComponent().abilityBar.set(barIndex, rac);
-                        Biow0rks.debug(String.format("set slot %s to %s", barIndex,rac.id.toString()));
+                        Biow0rks.logger.debug(String.format("set slot %s to %s", barIndex,rac.id.toString()));
                         return;
                     }
                 }
@@ -192,7 +192,7 @@ public final class Packets
         //     RPGAbility ability = player.getRPGClassComponent().getAvalibleAbilities()[classIndex];
         //     if(ability.getType() == Type.PASSIVE)
         //     {
-        //         Biow0rks.debug("success");
+        //         Biow0rks.logger.debug("success");
         //         ability.doAbility(player);
         //     }
         // });

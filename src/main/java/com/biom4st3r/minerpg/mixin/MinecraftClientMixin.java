@@ -69,7 +69,7 @@ public abstract class MinecraftClientMixin
           (ability.getType() == Type.LEFT_CLICK || ability.getType() == Type.USE))
         {
             
-            Biow0rks.debug(ability.id.getPath());
+            Biow0rks.logger.debug(ability.id.getPath());
             ability.doAbility(rpgPlayer);
             rpgPlayer.getNetworkHandlerC().sendPacket(Packets.CLIENT.useAbility(player.inventory.selectedSlot));
             ci.cancel();
@@ -86,7 +86,7 @@ public abstract class MinecraftClientMixin
          this.attackCooldown <= 0 && ability != RpgAbilities.NONE &&
           (ability.getType() == Type.RIGHT_CLICK || ability.getType() == Type.USE))
         {
-            Biow0rks.debug(ability.id.getPath());
+            Biow0rks.logger.debug(ability.id.getPath());
             ability.doAbility(rpgPlayer);
             rpgPlayer.getNetworkHandlerC().sendPacket(Packets.CLIENT.useAbility(player.inventory.selectedSlot));
             

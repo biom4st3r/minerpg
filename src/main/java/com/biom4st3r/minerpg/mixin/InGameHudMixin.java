@@ -256,10 +256,10 @@ public abstract class InGameHudMixin extends DrawableHelper implements InGameHud
                 float gainsThisLevel = currentExp-prevTargetExp;
                 int progressWidth = //(int)(182*(currentExp/targetExp));
                 (int)(182*(gainsThisLevel/expDeltaForLevelup));
-                //Biow0rks.debug("182 * (%s-%s)/(%s-%s)", targetExp,currentExp,targetExp,rcc.getRpgClass(0).getExpRequiredForLvl(lvl));
+                //Biow0rks.logger.debug("182 * (%s-%s)/(%s-%s)", targetExp,currentExp,targetExp,rcc.getRpgClass(0).getExpRequiredForLvl(lvl));
                 
-                //Biow0rks.debug("currentPlayerLvl", lvl);
-                //Biow0rks.debug("current: %s\ntarget: %s\ndivid: %s\nresult: %s", currentExp,targetExp,(currentExp/targetExp),progressWidth);
+                //Biow0rks.logger.debug("currentPlayerLvl", lvl);
+                //Biow0rks.logger.debug("current: %s\ntarget: %s\ndivid: %s\nresult: %s", currentExp,targetExp,(currentExp/targetExp),progressWidth);
                 this.blit(xPos,this.scaledHeight - 32 + 3,0,46,182,5);
                 if(progressWidth > 0)
                 {

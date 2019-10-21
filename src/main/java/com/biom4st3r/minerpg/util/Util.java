@@ -44,7 +44,7 @@ public class Util
 
     public static void requestAllComponents(ClientPlayNetworkHandler networkhandler)
     {
-        Biow0rks.debug("All Components Requested");
+        Biow0rks.logger.debug("All Components Requested");
         networkhandler.sendPacket(Packets.CLIENT.requestRpgClassComponent());
         networkhandler.sendPacket(Packets.CLIENT.requestStatComp());
         networkhandler.sendPacket(Packets.CLIENT.requestAbilityComp());

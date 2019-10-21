@@ -24,7 +24,7 @@ public class EvokerFangsAOEAbility extends EvokerFangsAbility {
             PlayerEntity pe = player.getPlayer();
             Box area = new Box(pe.getBlockPos().add(-10, -3, -10), pe.getBlockPos().add(10,3,10));
             List<Entity> eList = pe.world.getEntities(pe , area);
-            Biow0rks.debug("Evoker AOE Entity List Size: ", eList.size());
+            Biow0rks.logger.debug("Evoker AOE Entity List Size: ", eList.size());
             for(Entity e : eList.subList(0, eList.size() >= 7 ? 7 : 0))
             {
                 if(e instanceof LivingEntity)

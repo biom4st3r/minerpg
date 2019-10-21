@@ -30,11 +30,9 @@ dependencies {
 
 	// Fabric API. This is technically optional, but you probably want it anyway.
 	modCompile "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
-	include "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
-	modCompile "com.gitlab.biom4st3r:biow0rks:0.2.7"
-	include "com.gitlab.biom4st3r:biow0rks:0.2.7"
-	//modCompile "com.github.chocohead:fabric-asm:v1.8"
-	//include "com.github.chocohead:fabric-asm:v1.8"
+	//include "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+	modCompile "com.gitlab.biom4st3r:biow0rks:0.2.9"
+	include "com.gitlab.biom4st3r:biow0rks:0.2.9"
 	// PSA: Some older mods, compiled on Loom 0.2.1, might have outdated Maven POMs.
 	// You may need to force-disable transitiveness on them.
 }

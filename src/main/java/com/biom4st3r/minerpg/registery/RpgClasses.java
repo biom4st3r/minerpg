@@ -15,7 +15,7 @@ public final class RpgClasses {
     public static final RPGClass NONE = new NoClass();
 
     public static RPGClass register(RPGClass rpgclass) {
-        //Biow0rks.debug("Adding RPGClass: %s",rpgclass.id);
+        //Biow0rks.logger.debug("Adding RPGClass: %s",rpgclass.id);
         return (RPGClass) ((MutableRegistry<RPGClass>) RPG_Registry.CLASS_REGISTRY).add(rpgclass.id, rpgclass);
     }
 

@@ -41,11 +41,11 @@ public class ClientInit implements ClientModInitializer {
             ComponentMenu::new);
 
         Packets.clientPacketReg();
-        //Biow0rks.debug("Added minerpg keybind catagory %s", Key);
+        //Biow0rks.logger.debug("Added minerpg keybind catagory %s", Key);
         KeyBindingRegistry.INSTANCE.addCategory(MineRPG.MODID);
         swapHotBar = FabricKeyBinding.Builder.create(new Identifier(MineRPG.MODID,"swaphotbars"), InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_GRAVE_ACCENT/*`*/ , MineRPG.MODID).build();
         KeyBindingRegistry.INSTANCE.register((FabricKeyBinding)swapHotBar);
-        //Biow0rks.debug("` keybind registered %s", KeyBindingRegistry.INSTANCE.register((FabricKeyBinding)swapHotBar));
+        //Biow0rks.logger.debug("` keybind registered %s", KeyBindingRegistry.INSTANCE.register((FabricKeyBinding)swapHotBar));
         //RecipeManager
         //CraftingTableContainer
     }
