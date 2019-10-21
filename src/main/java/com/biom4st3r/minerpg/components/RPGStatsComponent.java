@@ -38,23 +38,45 @@ public class RPGStatsComponent implements IComponent, BufferSerializable, NbtSer
         this.initStats();
     }
 
-    public void increaseStatProtected(Stat s)
+    /**
+     * increases a {@link Stat} by 1. Also prevents stats from exceeding 20 and makes sure their are points to spend.
+     * 
+     * Only used in {@link com.biom4st3r.minerpg.gui.screens.StatMenu}
+     * @param stat affected stat
+     */
+    public void increaseStatProtected(Stat stat)
     {
-        int old = this.stats.get(s);
+        int old = this.stats.get(stat);
         if(old < 20 && this.remainingPoints > 0)
         {
-            this.stats.put(s, old+1);
+            this.stats.put(stat, old+1);
             this.remainingPoints-=1;
         }
     }
 
-    public void decreaseStatUnProtected(Stat s)
+    /**
+     * Removes points from a {@link Stat}. also adds that point back to {@link RPGStatsComponent#remainingPoints}
+     * 
+     * Only used in {@link com.biom4st3r.minerpg.gui.screens.StatMenu}
+     * @param stat affected stat
+     */
+    public void decreaseStatUnProtected(Stat stat)
     {
-        int old = this.stats.get(s);
-        this.stats.put(s, old-1);
+        int old = this.stats.get(stat);
+        this.stats.put(stat, old-1);
         this.remainingPoints++;
     }
 
+    /**
+     * Only used in {@link com.biom4st3r.minerpg.gui.screens.StatMenu}. 
+     * Makes sure the total check to the Clients RPGStatComponet is valid. 
+     *  * Stat hasn't decreased since last requested check
+     *  * Stats increased don't exceed {@link RPGStatsComponent#remainingPoints}
+     * 
+     * Called whenever the player finalizes changes to their stats.
+     * @param client copy of the clients 
+     * @return false if the changes were not valid
+     */
     public boolean clientRequestChanges(RPGStatsComponent client)
     {
         int delta = 0;
@@ -126,14 +148,20 @@ public class RPGStatsComponent implements IComponent, BufferSerializable, NbtSer
         this.remainingPoints = ((int)statsTag.getByte(SPAREPOINTS));
     }
 
+
     public int getStatPoints()
     {
         return this.remainingPoints;
     }
 
-    public int getModifier(Stat s)
+    /**
+     * 
+     * @param stat the stat in question
+     * @return a typical tabletop style modifier derived from stat
+     */
+    public int getModifier(Stat stat)
     {
-        return (int)Math.floor((this.getStat(s)-10)/2);
+        return (int)Math.floor((this.getStat(stat)-10)/2);
     }
 
     public void deserializeBuffer(PacketByteBuf pbb)
@@ -146,6 +174,10 @@ public class RPGStatsComponent implements IComponent, BufferSerializable, NbtSer
         this.setRemainingPoints(i);
     }
 
+    /**
+     * Destructive
+     * Resets all stats to 8
+     */
     public void initStats()
     {
         for(Stat stat : Stat.values())
@@ -179,16 +211,26 @@ public class RPGStatsComponent implements IComponent, BufferSerializable, NbtSer
         this.remainingPoints = original.getStatPoints();
     }
 
-    public int getStat(Stat name)
+    /**
+     * 
+     * @param stat stat in question
+     * @return the current value of stat.
+     */
+    public int getStat(Stat stat)
     {
-        return this.stats.get(name) != null ? this.stats.get(name) : -1;
+        return this.stats.get(stat) != null ? this.stats.get(stat) : -1;
     }
 
+    /**
+     * Destructive. sets the value of {@link RPGStatsComponent#remainingPoints}
+     * @param i
+     */
     public void setRemainingPoints(int i)
     {
         this.remainingPoints = i;
     }
 
+    
     public HashMap<Stat, Integer> getStats()
     {
         return this.stats;

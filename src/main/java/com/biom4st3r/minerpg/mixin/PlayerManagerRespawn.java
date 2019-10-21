@@ -1,9 +1,6 @@
 package com.biom4st3r.minerpg.mixin;
 
-/*
-Purpose: Properly transfers component to new PlayerEntity on death
 
-*/
 
 import com.biom4st3r.minerpg.mixin_interfaces.RPGPlayer;
 
@@ -17,6 +14,9 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.world.dimension.DimensionType;
 
 @Mixin(PlayerManager.class)
+/**
+Purpose: Properly transfers component to new PlayerEntity on death
+*/
 public abstract class PlayerManagerRespawn
 {
     @Inject(at = @At("RETURN"),method = "respawnPlayer",cancellable = true)

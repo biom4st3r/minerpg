@@ -18,12 +18,10 @@ public class EvokerFangsAbility extends RPGAbility {
 
     public EvokerFangsAbility(Identifier id, int coolDownDuration) {
         super(id, coolDownDuration);
-        
     }
 
     @Override
     public void applyCost(RPGPlayer player) {
-        // TODO Auto-generated method stub
 
     }
 
@@ -101,7 +99,7 @@ public class EvokerFangsAbility extends RPGAbility {
 
     @Override
     public boolean hasCost(RPGPlayer player) {
-        // TODO Auto-generated method stub
+        
         return false;
     }
 
@@ -123,7 +121,7 @@ public class EvokerFangsAbility extends RPGAbility {
 
     @Override
     public Type getType() {
-        // TODO Auto-generated method stub
+        
         return Type.LEFT_CLICK;
     }
     

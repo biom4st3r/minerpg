@@ -23,43 +23,43 @@ public class RPGTraitComponent implements IComponent, BufferSerializable, NbtSer
 
     @Override
     public void tick() {
-        // TODO Auto-generated method stub
+        
 
     }
 
     @Override
     public void serializeNBT(CompoundTag tag) {
-        // TODO Auto-generated method stub
+        
 
     }
 
     @Override
     public void deserializeNBT(CompoundTag tag) {
-        // TODO Auto-generated method stub
+        
 
     }
 
     @Override
     public void serializeBuffer(PacketByteBuf buf) {
-        // TODO Auto-generated method stub
+        
 
     }
 
     @Override
     public void deserializeBuffer(PacketByteBuf buf) {
-        // TODO Auto-generated method stub
+        
 
     }
 
     @Override
     public <T extends IComponent> void clone(T origin) {
-        // TODO Auto-generated method stub
+        
 
     }
 
     @Override
     public <T extends IComponent> T getCopy() {
-        // TODO Auto-generated method stub
+        
         return null;
     }
 

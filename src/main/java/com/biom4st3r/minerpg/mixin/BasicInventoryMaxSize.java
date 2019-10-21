@@ -1,12 +1,6 @@
 package com.biom4st3r.minerpg.mixin;
 
-    /*
-    Purpose
-        Allows the Very custom things done with ComponentInventory.
-        i should have just made my own Inventory Object, but
-        ¯\_(ツ)_/¯
 
-    */
 
 import java.util.List;
 
@@ -24,6 +18,11 @@ import net.minecraft.util.DefaultedList;
 import net.minecraft.util.PacketByteBuf;
 
 @Mixin(BasicInventory.class)
+    /**
+    Purpose
+        Allows the Very custom things done with ComponentInventory.
+        Will eventually be made into it's own object
+    */
 public abstract class BasicInventoryMaxSize implements BasicInventoryHelper {
 
     @Shadow
@@ -68,10 +67,4 @@ public abstract class BasicInventoryMaxSize implements BasicInventoryHelper {
             stackList.set(i, Util.BufferToShortItemStack(pbb));
         }
     }
-
-    // @Override
-    // public void deserializeBuffer(PacketByteBuf pbb) {
-
-    // }
-
 }

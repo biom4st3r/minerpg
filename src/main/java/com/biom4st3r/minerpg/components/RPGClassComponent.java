@@ -21,6 +21,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.stat.Stat;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.PacketByteBuf;
@@ -29,6 +30,7 @@ public class RPGClassComponent implements IComponent, BufferSerializable, NbtSer
 {
     RPGPlayer owner;
 
+    /** Map of RPGClass, Level */
     public LinkedHashMap<RPGClass,Integer> rpgClasses;
 
     private static final int maxClasses = 1;
@@ -45,6 +47,8 @@ public class RPGClassComponent implements IComponent, BufferSerializable, NbtSer
         init();
         this.owner = owner;
     }
+
+    /** resets this {@link RPGClassComponent} to default */
     private void init()
     {
         rpgClasses = Maps.newLinkedHashMap();//LinkedHashMap()<RPGClass,Integer>(1);
@@ -53,22 +57,46 @@ public class RPGClassComponent implements IComponent, BufferSerializable, NbtSer
         //abilityBar = new RPGAbility[9];
     }
 
+    /**
+     * 
+     * @param index index of RPGClass to want
+     * @return the current RpgEXP that class has
+     */
     public float getExperience(int index)
     {
         return experience[index];
     }
 
+    /**
+     * 
+     * @param index of RPGClass to want
+     * @return current level of rpgclass
+     */
     public int getLevel(int index)
     {
         return rpgClasses.get(this.getRpgClass(index));
     }
 
+    /**
+     * Destructive. Replaces old value
+     * @param index index of RPGClass to want
+     * @param value expereince that the RPGClass has
+     * 
+     */
     public void setExperience(int index, float value)
     {
         this.experience[index] = value;
         this.updateLvl(index);
     }
 
+
+    /**
+     * Continually checks weather the player has enough RpgEXP to levelup and will level up the RPGClass if they do.
+     * @param index index of RPGClass to want
+     * 
+     * 
+     * 
+     */
     private void updateLvl(int index) {
         RPGClass selectedClass = this.getRpgClass(index);
         while(this.experience[index] > selectedClass.getExpRequiredForLvl(this.rpgClasses.get(selectedClass)+1))
@@ -79,11 +107,18 @@ public class RPGClassComponent implements IComponent, BufferSerializable, NbtSer
         }
     }
 
+    /**
+     * 
+     * @param index index of RPGClass to want
+     * @param value amount of RpgEXP to be added to the player
+     * 
+     */
     public void addExperience(int index, float value)
     {
         Biow0rks.debug("adding %s xp",value);
         this.setExperience(index, this.experience[index]+value);
-        this.owner.getNetworkHandlerS().sendPacket(Packets.SERVER.sendExperience(this.experience[index]));
+        if(this.owner instanceof ServerPlayerEntity)
+            this.owner.getNetworkHandlerS().sendPacket(Packets.SERVER.sendExperience(this.experience[index]));
     }
 
     // public RPGAbility[] getAvalibleAbilities()
@@ -97,6 +132,11 @@ public class RPGClassComponent implements IComponent, BufferSerializable, NbtSer
     //     return new RPGAbility[] {RpgAbilities.NONE};
     // }
 
+    /**
+     * 
+     * @param index index of RPGClass to want
+     * @return the rpgclass in {@link RPGClassComponent#rpgClasses} from {@link java.util.Map#keySet()}
+     */
     public RPGClass getRpgClass(int index)
     {
         if(hasRpgClass())
@@ -107,12 +147,23 @@ public class RPGClassComponent implements IComponent, BufferSerializable, NbtSer
         return null;
     }
 
+    /**
+     * 
+     * @return true is player has any classes in {@link RPGClassComponent#rpgClasses}
+     */
     public boolean hasRpgClass()
     {
 
         return rpgClasses.size() > 0;
     }
 
+    //Inject
+
+    /**
+     * 
+     * @param reward the reward obtained from {@link RPGClass#givePlayerRewards(int)} called from 
+     *  {@link RPGClassComponent#updateLvl(int)}
+     */
     public void applyRewards(Reward reward)
     {
         if(this.owner.getPlayer().world.isClient) return;
@@ -130,12 +181,17 @@ public class RPGClassComponent implements IComponent, BufferSerializable, NbtSer
         }
     }
 
-    public void addRpgClass(RPGClass rpgClass)
+    /**
+     * Checks if he {@link RPGClassComponent#maxClasses} has been reached. if not the class is added
+     * @param rpgClass class to be added to {@link RPGClassComponent#rpgClasses}
+     * @return true if {@link RPGClassComponent#maxClasses} has not been reached
+     */
+    public boolean addRpgClass(RPGClass rpgClass)
     {
         if(rpgClasses.size() >= maxClasses)
         {
             Biow0rks.error("class list already max size");
-            return;
+            return false;
         }
         rpgClasses.put(rpgClass, 1);
         applyRewards(rpgClass.givePlayerRewards(1));
@@ -145,12 +201,25 @@ public class RPGClassComponent implements IComponent, BufferSerializable, NbtSer
         {
             experience[i] = temp[i];
         }
+        return true;
     }
 
-    public void replaceClass(RPGClass OldrpgClass, RPGClass NewrpgClass)
+    /**
+     * Destructive. Removes all infomation about previous class
+     * @param OldrpgClass class to be replaced
+     * @param NewrpgClass class to be added
+     * @return if the {@link RPGClassComponent#rpgClasses} had has OldrpgClass it returns true
+     */
+    public boolean replaceClass(RPGClass OldrpgClass, RPGClass NewrpgClass)
     {
-        rpgClasses.remove(OldrpgClass);
-        rpgClasses.put(NewrpgClass,1);
+        if(rpgClasses.containsKey(OldrpgClass))
+        {
+            rpgClasses.remove(OldrpgClass);
+            rpgClasses.put(NewrpgClass,1);
+            return true;
+        }
+        return false;
+
     }
 
     public void serializeBuffer(PacketByteBuf pbb)
@@ -241,6 +310,11 @@ public class RPGClassComponent implements IComponent, BufferSerializable, NbtSer
         return null;
     }
 
+    /**
+     * Handles adding Expereince to RPGClass for {@link RPGClass.ExpType#VANILLA_STAT} RPGClasses
+     * @param stat stat to be check at {@link RPGClass#getStatWorthAtLevel(Stat, int, int)}
+     * @param amount amount the stat was incremented
+     */
     public void processStat(Stat<?> stat,int amount) 
     {    
         int i = 0;
@@ -254,6 +328,10 @@ public class RPGClassComponent implements IComponent, BufferSerializable, NbtSer
         }
     }
     
+    /**
+     * Handles adding Expereince to RPGClass for {@link RPGClass.ExpType#VANILLA_EXP}
+     * @param amount amount of VanillaEXP added
+     */
     public void processExperience(int amount)
     {
         int i = 0;
@@ -265,7 +343,6 @@ public class RPGClassComponent implements IComponent, BufferSerializable, NbtSer
             i++;
         }
     }
-
     @Override
     public void tick() {
     }

@@ -24,13 +24,12 @@ public class MultiPotionAbility extends RPGAbility {
         this.effects = effects;
         this.durations = durations;
         this.amps = amps;
-        // TODO Auto-generated constructor stub
     }
 
     @Override
     public void applyCost(RPGPlayer player) 
     {
-        // TODO Auto-generated method stub
+        
     }
 
     @Override
@@ -55,7 +54,7 @@ public class MultiPotionAbility extends RPGAbility {
 
     @Override
     public Type getType() {
-        // TODO Auto-generated method stub
+        
         return Type.USE;
     }
     

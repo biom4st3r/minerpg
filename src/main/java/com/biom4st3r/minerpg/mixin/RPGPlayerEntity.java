@@ -1,10 +1,5 @@
 package com.biom4st3r.minerpg.mixin;
-/*
-Purpose
-    Hub for all player based mods. May switched to LivingEntity 
-    to provide for functionallity and flexiblity in the future.
 
-*/
 
 import com.biom4st3r.biow0rks.Biow0rks;
 import com.biom4st3r.minerpg.components.RPGAbilityComponent;
@@ -36,6 +31,12 @@ import net.minecraft.text.Text;
 import net.minecraft.world.World;
 
 @Mixin(PlayerEntity.class)
+/**
+Purpose
+    Hub for all player based mods. May switched to LivingEntity 
+    to provide for functionallity and flexiblity in the future.
+
+*/
 public abstract class RPGPlayerEntity extends LivingEntity implements RPGPlayer { // Entity
 
     protected RPGPlayerEntity(EntityType<? extends LivingEntity> entityType_1, World world_1) {

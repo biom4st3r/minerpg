@@ -1,15 +1,6 @@
 package com.biom4st3r.minerpg.mixin;
 
-    /*
-Purpose
-Provides the hotbar overriding for the Ability Bar
 
-
-
-
-
-
-*/
 
 import com.biom4st3r.minerpg.MineRPG;
 import com.biom4st3r.minerpg.api.RPGAbility;
@@ -45,6 +36,13 @@ import net.minecraft.util.Arm;
 import net.minecraft.util.Identifier;
 
 @Mixin(InGameHud.class)
+    /**
+Purpose
+Provides the hotbar overriding for the Ability Bar
+    and New exp bar
+
+
+*/
 public abstract class InGameHudMixin extends DrawableHelper implements InGameHudHelper 
 {
     private Identifier BG_Texture = new Identifier(MineRPG.MODID, "textures/gui/widgets.png");

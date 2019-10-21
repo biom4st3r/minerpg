@@ -1,16 +1,6 @@
 package com.biom4st3r.minerpg.mixin;
 
     import com.biom4st3r.biow0rks.Biow0rks;
-
-/*
-    Purpose
-        allows for the custom controls
-
-
-
-
-    */
-
 import com.biom4st3r.minerpg.ClientInit;
 import com.biom4st3r.minerpg.api.RPGAbility;
 import com.biom4st3r.minerpg.api.RPGAbility.Type;
@@ -30,6 +20,15 @@ import net.minecraft.client.gui.hud.InGameHud;
 import net.minecraft.client.network.ClientPlayerEntity;
 
 @Mixin(MinecraftClient.class)
+
+/**
+    Purpose
+        allows for the custom controls
+
+
+
+
+    */
 public abstract class MinecraftClientMixin
 {
     @Shadow

@@ -1,8 +1,5 @@
 package com.biom4st3r.minerpg.mixin;
-    /*
-    Purpose
-        Provides custom tabs for the the mods menus 
-    */
+
     
 import com.biom4st3r.minerpg.gui.GUIhelper;
 
@@ -21,6 +18,10 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.text.TranslatableText;
 
 @Mixin(InventoryScreen.class)
+    /**
+    Purpose
+        Provides custom tabs for the the mods menus 
+    */
 public abstract class VanillaInventory extends AbstractInventoryScreen<PlayerContainer> implements RecipeBookProvider {
     public VanillaInventory(PlayerContainer container_1, PlayerInventory playerInventory_1, TranslatableText component_1) {
         super(container_1, playerInventory_1, component_1);

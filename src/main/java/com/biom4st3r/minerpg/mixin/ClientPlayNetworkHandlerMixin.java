@@ -1,12 +1,5 @@
 package com.biom4st3r.minerpg.mixin;
-    /*
-    Purpose
-        Nasty ass patch for Custom entity spawning. Gross
 
-
-
-
-    */
 
 
 import com.biom4st3r.minerpg.MineRPG;
@@ -25,6 +18,11 @@ import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.Entity;
 
 @Mixin(ClientPlayNetworkHandler.class)
+    /**
+    Purpose
+        Nasty patch for Custom entity spawning. Gross
+
+    */
 public abstract class ClientPlayNetworkHandlerMixin
 {
 
